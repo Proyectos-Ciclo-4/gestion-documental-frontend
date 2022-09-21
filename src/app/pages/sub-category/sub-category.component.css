@@ -1,0 +1,11 @@
+.formSubCategory{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.listSubCategory{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
