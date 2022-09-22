@@ -1,6 +1,5 @@
 .menu-container {
-    margin-top: 10%;
-    height: 60vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     align-items: center;

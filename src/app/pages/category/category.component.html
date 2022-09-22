@@ -1,27 +1,22 @@
-<p>category works!</p>
+<div class="location_pag">
+  <span>Inicio/ Categorias</span>
+</div>
 <div class="formCategory">
-  <button (click)="revealForm()">CREAR CATEGORÍA</button>
-  <div class="login-box" *ngIf="formState">
-    <h2>CREAR CATEGORÍA</h2>
-    <form (ngSubmit)="createCategory(body)">
-      <div class="user-box">
-        <h5>Nombre</h5>
-        <input type="text" name="1" required="">
-        <button type="submit">
-          Guardar
-        </button>
-      </div>
+  <button class="btn_ok" (click)="revealForm()">CREAR NUEVA CATEGORÍA</button>
+  <div class="create_category_box" *ngIf="formState">
+    <form class="create_category_box-form" (ngSubmit)="createCategory(body)">
+      <label for="text_new_category">Nombre</label>
+      <input type="text" name="text_new_category" required>
+      <button class="btn_cancel" type="submit">Guardar</button>
     </form>
   </div>
 </div>
 
-<div class="listCategory">
-  <table class="default">
-    <tr>
-      <th>Lista de categorías</th>
-    </tr>
-    <tr>
-      <td>categoria 1</td>
-    </tr>
-  </table>
+<div class="list_categories">
+  <span class="list_categories-title">Listado de Categorias</span>
+  <ul>
+    <li>Categoria 1</li>
+    <li>Categoria 2</li>
+    <li>Categoria 3</li>
+  </ul>
 </div>
