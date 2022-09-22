@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "sofkadocdoc"
+  },
+  "targets": {
+    "sofkadocdoc": {
+      "hosting": {
+        "frontend": [
+          "sofkadocdoc"
+        ]
+      }
+    }
+  }
+}
