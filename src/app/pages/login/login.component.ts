@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
             this.controlSesion.writeSesionUser(data);
 
             if (data.tipo == 700) this.router.navigate(['/menu-admin']);
-            else this.router.navigate(['/list-documents']);
+            else this.router.navigate(['/document']);
           }
 
         });
