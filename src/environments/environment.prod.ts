@@ -9,5 +9,9 @@ export const environment = {
     messagingSenderId: '954298867566',
     measurementId: 'G-TQ53SY842K',
   },
+  host: {
+    verifyUser: 'http://localhost:8080/usuario/',
+    createDocument: 'http://localhost:8080/document/create/'
+  },
   production: true
 };

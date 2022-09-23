@@ -6,14 +6,19 @@ export class ControlSesion {
         sessionStorage.setItem('docdoc-data', JSON.stringify(data));
     }
 
-    getIdUser() {
+    getIdUser(): string {
         const data: ResponseVerify = this.convertSessionStorage();
-        return data.id_user;
+        return data._id;
     }
 
-    getRolUser() {
+    getTypeUser(): Number {
         const data: ResponseVerify = this.convertSessionStorage();
-        return data.rol;
+        return data.tipo;
+    }
+
+    cleanSesionStorage() {
+        sessionStorage.removeItem('docdoc-data');
+        sessionStorage.clear();
     }
 
     convertSessionStorage() {
