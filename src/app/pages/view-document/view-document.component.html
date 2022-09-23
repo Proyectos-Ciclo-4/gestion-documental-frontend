@@ -18,15 +18,22 @@
     </div>
 
     <p>
-      <label for="uploads">Elige las imágenes que deseas cargar:</label>
-      <input type="file" id="uploads" name="uploads" accept=".docx, .doc, .pdf, .xlsx, .pptx" multiple>
+      <label for="uploads">Elige el documento a cargar:</label>
+      <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads" accept=".docx, .doc, .pdf, .xlsx, .pptx">
     </p>
-    
   </div>
-
   <button type="submit" class="btn_ok">Guardar</button>
 </form>
-
+<div class="modal" *ngIf="showModalNoUser">
+  <div class="modal_body">
+      <span class="modal_body-title">Titulo</span>
+      <p class="modal_body-msj">
+          Informacion o funciones para el usuario
+      </p>
+      <button (click)="revealForm()" class="modal_body-btn btn_ok">Entendido</button>
+      
+    </div>
+</div>
 <div>
   <h2 class="titulo">CONSULTAR DOCUMENTOS</h2>
 </div>
@@ -162,3 +169,11 @@
   </div>
 
 </div>
+<!-- <div>
+  <label for="">Preview</label>
+  <div>
+    <embed [src]="imagePrevius" [type]="docType">
+       <iframe [src]="imagePrevius"></iframe>
+       <img width="100px" [src]="imagePrevius" alt="">
+  </div>
+</div> -->
