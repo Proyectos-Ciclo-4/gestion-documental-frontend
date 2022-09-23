@@ -15,6 +15,9 @@ import { CategoryComponent } from './pages/category/category.component';
 import { SubCategoryComponent } from './pages/sub-category/sub-category.component';
 import { ViewDocumentComponent } from './pages/view-document/view-document.component';
 import { CommonModule } from '@angular/common';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { ViewuniquedocumentComponent } from './pages/viewuniquedocument/viewuniquedocument.component';
+
 
 @NgModule({
   declarations: [
@@ -24,16 +27,18 @@ import { CommonModule } from '@angular/common';
     FooterComponent,
     CategoryComponent,
     SubCategoryComponent,
-    ViewDocumentComponent
+    ViewDocumentComponent,
+    ViewuniquedocumentComponent
   ],
   imports: [
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
+    NgxDocViewerModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     HttpClientModule,
-    CommonModule
+    CommonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

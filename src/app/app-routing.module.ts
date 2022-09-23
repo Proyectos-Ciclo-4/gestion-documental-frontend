@@ -8,6 +8,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { ReportsComponent } from './pages/reports/reports.component';
 import { SubCategoryComponent } from './pages/sub-category/sub-category.component';
 import { ViewDocumentComponent } from './pages/view-document/view-document.component';
+import { ViewuniquedocumentComponent } from './pages/viewuniquedocument/viewuniquedocument.component';
 
 const routes: Routes = [{
   path: '',
@@ -36,6 +37,10 @@ const routes: Routes = [{
 {
   path: 'reports',
   component: ReportsComponent
+},
+{
+  path: 'viewdocument',
+  component: ViewuniquedocumentComponent
 },
 {
   path: '**',
