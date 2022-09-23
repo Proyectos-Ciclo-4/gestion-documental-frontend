@@ -15,7 +15,9 @@ export const environment = {
     },
     host:{
       verifyUser: 'http://localhost:8080/usuario/',
-      createDocu: 'http://localhost:8080/document/create/'
+      createDocu: 'http://localhost:8080/document/create/',
+      createCategory: 'http://localhost:8080/category/create',
+      getCategories: 'http://localhost:8080/category/getall'
     },
   production: false
 };

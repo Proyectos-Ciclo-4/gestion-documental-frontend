@@ -14,9 +14,7 @@
 
 <div class="list_categories">
   <span class="list_categories-title">Listado de Categorias</span>
-  <ul>
-    <li>Categoria 1</li>
-    <li>Categoria 2</li>
-    <li>Categoria 3</li>
+  <ul *ngFor="let item of categories">
+    <li>{{item.categoryName}}</li>
   </ul>
 </div>

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ResponseVerify } from 'src/app/utils/models/responseVerify';
 import { environment } from 'src/environments/environment.prod';
+import { Category } from 'src/app/models/category.model';
 
 
 @Injectable({
@@ -18,6 +19,17 @@ export class EndpointsService {
 
   createDocument(document: object): Observable<object> {
     return this.http.post(environment.host.createDocument, { ...document });
+  }
+  /**
+   * CATEGORY ENDPOINTS
+   * @param category
+   * @returns
+   */
+  createCategory(category: object): Observable<object> {
+    return this.http.post(environment.host.createCategory, { ...category });
+  }
+  getAllCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${environment.host.getCategories}`);
   }
 
 }
