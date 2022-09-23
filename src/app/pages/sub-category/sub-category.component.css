@@ -1,11 +1,55 @@
-.formSubCategory{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+.formCategory {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-.listSubCategory{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+.btn_ok {
+  margin: 35px 0px;
+}
+
+.create_category_box {
+  margin-top: 10px;
+}
+
+.create_category_box-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.create_category_box-form label {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.create_category_box-form input {
+  display: block;
+  margin: 10px;
+}
+
+.list_categories {
+  width: 100%;
+  margin: 20px;
+  text-align: center;
+}
+
+.list_categories-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+ul {
+  margin-left: -13%;
+  padding: 0px;
+  list-style-type: none;
+}
+
+ul li {
+  margin: 5px;
+  padding: 8px;
 }

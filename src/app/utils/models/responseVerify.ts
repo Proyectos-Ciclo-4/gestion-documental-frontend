@@ -1,5 +1,6 @@
 export interface ResponseVerify {
-    response: string;
-    id_user: string;
-    rol: number;
+    _id: string;
+    email: string;
+    tipo: number;
+    nombre: string;
 }

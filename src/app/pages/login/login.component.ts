@@ -38,28 +38,22 @@ export class LoginComponent implements OnInit {
 
   loginWithGoogle() {
 
-    this.showModalNoUser = true;
+    this.login$.login().then((data) => {
 
-    //  this.login$.login().then((data) => {
+      this.endpoint$.verifyUser(data.user.email)
+        .subscribe(data => {
 
-    // this.endpoint$.verifyUser({ email: data.user.email })
-    //   .subscribe(data => {
+          if (data == null) this.showModalNoUser = true;
+          else {
+            this.controlSesion.writeSesionUser(data);
 
-    //     if (data.response === 'ok') {
-    //       this.controlSesion.writeSesionUser(data);
-    //       this.router.navigate(['/menu-admin']);
+            if (data.tipo == 700) this.router.navigate(['/menu-admin']);
+            else this.router.navigate(['/document']);
+          }
 
-    //     } else this.showModalNoUser = true;
-
-    //   });
-    //   this.router.navigate(['/menu-admin']);
-
-    //   });
+        });
+    });
     return false;
-  }
-
-  noUserGenerate() {
-
   }
 
   hiddenModarNoUser() {

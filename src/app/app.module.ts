@@ -13,10 +13,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
 import { CategoryComponent } from './pages/category/category.component';
 import { SubCategoryComponent } from './pages/sub-category/sub-category.component';
-import { ViewDocumentComponent } from './pages/view-document/view-document.component';
+import { AdminDocumentComponent } from './pages/admin-document/admin-document.component';
 import { CommonModule } from '@angular/common';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { ViewDocumentComponent } from './pages/view-document/view-document.component';
+import { ControlSesion } from './utils/controlSesion';
+
 
 @NgModule({
+
   declarations: [
     AppComponent,
     LoginComponent,
@@ -24,18 +29,23 @@ import { CommonModule } from '@angular/common';
     FooterComponent,
     CategoryComponent,
     SubCategoryComponent,
+    AdminDocumentComponent,
     ViewDocumentComponent
   ],
+
   imports: [
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
+    NgxDocViewerModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     HttpClientModule,
     CommonModule
   ],
+
   providers: [],
   bootstrap: [AppComponent]
+  
 })
 export class AppModule { }

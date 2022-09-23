@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { ControlSesion } from 'src/app/utils/controlSesion';
 @Component({
   selector: 'inicio',
   templateUrl: './menu-admin.component.html',
@@ -8,24 +8,34 @@ import { Router } from '@angular/router';
 })
 export class MenuAdminComponent implements OnInit {
 
-  constructor(private router:Router) { }
+  controlSesion = new ControlSesion();
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+    switch (this.controlSesion.getTypeUser()) {
+      case null:
+        this.router.navigate(['']);
+        break;
+      case 555:
+        this.router.navigate(['document']);
+        break;
+    };
   }
 
-  categorias(){
-      this.router.navigate(['category'])
+  categorias() {
+    this.router.navigate(['category'])
   }
 
-  subcategorias(){
+  subcategorias() {
     this.router.navigate(['sub-category'])
   }
 
-  documentos(){
+  documentos() {
     this.router.navigate(['document'])
   }
 
-  reportes(){
+  reportes() {
     this.router.navigate(['reports'])
   }
 
