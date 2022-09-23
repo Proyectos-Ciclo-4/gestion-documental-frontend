@@ -1,39 +1,44 @@
-<h2 class="titulo">CREAR NUEVO DOCUMENTO</h2>
+<div *ngIf="isAdmin">
 
-<form (ngSubmit)="getDocument()" class="formulario">
-  <div class="justify-left">
-    <div class="elemento">
-      <label>Nombre</label>
-      <input type="text">
+  <h2 class="titulo">CREAR NUEVO DOCUMENTO</h2>
+
+  <form (ngSubmit)="getDocument()" class="formulario">
+    <div class="justify-left">
+      <div class="elemento">
+        <label>Nombre</label>
+        <input type="text">
+      </div>
+
+      <div class="elemento">
+        <label>Categoria</label>
+        <input type="text">
+      </div>
+
+      <div class="elemento">
+        <label>SubCategoria</label>
+        <input type="text">
+      </div>
+
+      <p>
+        <label for="uploads">Elige el documento a cargar:</label>
+        <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
+          accept=".docx, .doc, .pdf, .xlsx, .pptx">
+      </p>
     </div>
-
-    <div class="elemento">
-      <label>Categoria</label>
-      <input type="text">
-    </div>
-
-    <div class="elemento">
-      <label>SubCategoria</label>
-      <input type="text">
-    </div>
-
-    <p>
-      <label for="uploads">Elige el documento a cargar:</label>
-      <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads" accept=".docx, .doc, .pdf, .xlsx, .pptx">
-    </p>
-  </div>
-  <button type="submit" class="btn_ok">Guardar</button>
-</form>
-<div class="modal" *ngIf="showModalNoUser">
-  <div class="modal_body">
+    <button type="submit" class="btn_ok">Guardar</button>
+  </form>
+  <div class="modal" *ngIf="showModalNoUser">
+    <div class="modal_body">
       <span class="modal_body-title">Titulo</span>
       <p class="modal_body-msj">
-          Informacion o funciones para el usuario
+        Informacion o funciones para el usuario
       </p>
       <button (click)="revealForm()" class="modal_body-btn btn_ok">Entendido</button>
 
     </div>
+  </div>
 </div>
+
 <div>
   <h2 class="titulo">CONSULTAR DOCUMENTOS</h2>
 </div>

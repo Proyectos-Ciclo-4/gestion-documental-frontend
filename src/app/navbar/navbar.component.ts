@@ -18,7 +18,6 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(location.pathname == "/") this.showBtnMenu = false;
   }
 
   controlMenu() {
@@ -28,10 +27,12 @@ export class NavbarComponent implements OnInit {
   goToHome() {
     this.router.navigate(['menu-admin'])
     this.controlMenu();
+    this.showBtnMenu = false;
   }
 
 
   closeSesionGG() {
+    this.showBtnMenu = false
     this.controlSesion.cleanSesionStorage();
     this.login$.loggout();
     this.router.navigate(['']);

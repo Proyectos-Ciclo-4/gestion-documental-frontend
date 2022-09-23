@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { ControlSesion } from 'src/app/utils/controlSesion';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'document',
@@ -8,41 +9,56 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
-  showModalNoUser:boolean=false;
+
+  controlSesion = new ControlSesion();
+  isAdmin = false;
+  showModalNoUser: boolean = false;
   imagePrevius: any;
   fileInAngular: any;
-  docType:any;
+  docType: any;
   docsAllowed: String[] = [
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   ];
-  constructor(private sanitizer: DomSanitizer) {}
 
-  ngOnInit(): void {}
 
-  getDocument() {}
+  constructor(private sanitizer: DomSanitizer, private router: Router) {
+  }
+
+  ngOnInit(): void {
+    switch (this.controlSesion.getTypeUser()) {
+      case null:
+        this.router.navigate(['']);
+        break;
+      case 700:
+        this.isAdmin = true;
+        break;
+    };
+  }
+
+  getDocument() { }
   async onFileSelected(event: any) {
     const docFile = event.target.files[0];
-    this.docType= docFile.type;
+    this.docType = docFile.type;
     console.log(event.target);
     if (this.docsAllowed.includes(docFile.type)) {
       this.fileInAngular = docFile;
       this.blobFile(docFile).then((res: any) => {
         this.imagePrevius = res.base;
         console.log(this.imagePrevius)
-        const db=this.imagePrevius.split(",")[1]
+        const db = this.imagePrevius.split(",")[1]
         console.log(db)
       })
       console.log('Es un archivo permitido');
     } else {
-      event.target.value="";
+      event.target.value = "";
       this.revealForm();
       console.log('archivo no permitido');
     }
 
-}
+  }
   blobFile = async ($event: any) =>
     new Promise((resolve, reject) => {
       try {
@@ -68,8 +84,8 @@ export class AdminDocumentComponent implements OnInit {
         return null;
       }
     });
-    revealForm(){
-      this.showModalNoUser = !this.showModalNoUser
-      console.log("ESTADO CAMBIADO")
-    }
+  revealForm() {
+    this.showModalNoUser = !this.showModalNoUser
+    console.log("ESTADO CAMBIADO")
+  }
 }
