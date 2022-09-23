@@ -21,6 +21,7 @@ import { ControlSesion } from './utils/controlSesion';
 
 
 @NgModule({
+
   declarations: [
     AppComponent,
     LoginComponent,
@@ -31,6 +32,7 @@ import { ControlSesion } from './utils/controlSesion';
     AdminDocumentComponent,
     ViewDocumentComponent
   ],
+
   imports: [
     ReactiveFormsModule,
     BrowserModule,
@@ -41,7 +43,9 @@ import { ControlSesion } from './utils/controlSesion';
     HttpClientModule,
     CommonModule
   ],
+
   providers: [],
   bootstrap: [AppComponent]
+  
 })
 export class AppModule { }
