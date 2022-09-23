@@ -4,6 +4,7 @@ nav {
     align-items: center;
     justify-content: space-between;
     padding: 0px 16px;
+    position: relative;
 }
 
 .nav_logo {
@@ -15,6 +16,7 @@ nav {
     margin: 0px 10px;
     width: 45px;
     height: 45px;
+    cursor: context-menu;
 }
 
 .nav_menu:hover {
@@ -34,7 +36,41 @@ nav {
     80% {
         transform: rotateZ(10deg);
     }
+
     90% {
         transform: rotateZ(-5deg);
     }
+}
+
+ul {
+    border-radius: var(--border-radius_gen);
+    z-index: 10;
+    position: absolute;
+    bottom: calc(-20px + (-100%));
+    right: 30px;
+    background: white;
+    list-style: none;
+    padding: 10px;
+    text-align: end;
+    box-shadow: 0px 0px 2px gray;
+    transform-origin: top;
+
+    animation: open_menu 0.2s linear;
+}
+
+@keyframes open_menu {
+    0% {
+        transform: scaleY(0);
+    }
+}
+
+ul li {
+    padding: 6px;
+    font-size: 1.1rem;
+    cursor: default;
+    border-radius: 4px;
+}
+
+ul li:hover {
+    background: var(--color-gray-2);
 }

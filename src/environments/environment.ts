@@ -12,7 +12,11 @@ export const environment = {
     authDomain: 'sofkadocdoc.firebaseapp.com',
     messagingSenderId: '954298867566',
     measurementId: 'G-TQ53SY842K',
-  },
+    },
+    host:{
+      verifyUser: 'http://localhost:8080/usuario/',
+      createDocu: 'http://localhost:8080/document/create/'
+    },
   production: false
 };
 

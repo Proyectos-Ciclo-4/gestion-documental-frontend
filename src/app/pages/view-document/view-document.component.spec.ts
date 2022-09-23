@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ViewDocumentComponent } from './view-document.component';
 
-describe('ViewDocumentComponent', () => {
+describe('ViewuniquedocumentComponent', () => {
   let component: ViewDocumentComponent;
   let fixture: ComponentFixture<ViewDocumentComponent>;
 
