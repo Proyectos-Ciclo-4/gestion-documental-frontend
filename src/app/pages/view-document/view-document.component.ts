@@ -32,7 +32,7 @@ export class ViewDocumentComponent implements OnInit {
         this.imagePrevius = res.base;
         console.log(this.imagePrevius)
         const db=this.imagePrevius.split(",")[1]
-        console.log(db)
+        //console.log(db)
       })
       console.log('Es un archivo permitido');
     } else {
