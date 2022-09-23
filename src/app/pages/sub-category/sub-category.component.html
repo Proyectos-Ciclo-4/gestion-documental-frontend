@@ -1,27 +1,22 @@
-<p>sub-category works!</p>
-<div class="formSubCategory">
-    <button (click)="revealForm()">CREAR SUBCATEGORÍA</button>
-    <div class="login-box" *ngIf="formState">
-      <h2>CREAR SUBCATEGORÍA</h2>
-      <form (ngSubmit)="createSubCategory(body)">
-        <div class="user-box">
-          <h5>Nombre</h5>
-          <input type="text" name="1" required="">
-          <button type="submit">
-            Guardar
-          </button>
-        </div>
-      </form>
-    </div>
+<div class="location_pag">
+  <span>Inicio/ Sub-Categorias</span>
+</div>
+<div class="formCategory">
+  <button class="btn_ok" (click)="revealForm()">CREAR NUEVA SUBCATEGORÍA</button>
+  <div class="create_category_box" *ngIf="formState">
+    <form class="create_category_box-form" (ngSubmit)="createSubCategory(body)">
+      <label for="text_new_category">Nombre</label>
+      <input type="text" name="text_new_category" required>
+      <button class="btn_cancel" type="submit">Guardar</button>
+    </form>
   </div>
-  
-  <div class="listSubCategory">
-    <table class="default">
-      <tr>
-        <th>Lista de subcategorías</th>
-      </tr>
-      <tr>
-        <td>subcategoria 1</td>
-      </tr>
-    </table>
-  </div>
+</div>
+
+<div class="list_categories">
+  <span class="list_categories-title">Listado de Sub-categorias</span>
+  <ul>
+    <li>Subcategoria 2</li>
+    <li>Subcategoria 1</li>
+    <li>Subcategoria 3</li>
+  </ul>
+</div>
