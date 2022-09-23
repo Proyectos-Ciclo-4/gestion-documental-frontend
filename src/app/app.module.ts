@@ -13,10 +13,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
 import { CategoryComponent } from './pages/category/category.component';
 import { SubCategoryComponent } from './pages/sub-category/sub-category.component';
-import { ViewDocumentComponent } from './pages/view-document/view-document.component';
+import { AdminDocumentComponent } from './pages/admin-document/admin-document.component';
 import { CommonModule } from '@angular/common';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
-import { ViewuniquedocumentComponent } from './pages/viewuniquedocument/viewuniquedocument.component';
+import { ViewDocumentComponent } from './pages/view-document/view-document.component';
+import { ControlSesion } from './utils/controlSesion';
 
 
 @NgModule({
@@ -27,8 +28,8 @@ import { ViewuniquedocumentComponent } from './pages/viewuniquedocument/viewuniq
     FooterComponent,
     CategoryComponent,
     SubCategoryComponent,
-    ViewDocumentComponent,
-    ViewuniquedocumentComponent
+    AdminDocumentComponent,
+    ViewDocumentComponent
   ],
   imports: [
     ReactiveFormsModule,
@@ -38,7 +39,7 @@ import { ViewuniquedocumentComponent } from './pages/viewuniquedocument/viewuniq
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     HttpClientModule,
-    CommonModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

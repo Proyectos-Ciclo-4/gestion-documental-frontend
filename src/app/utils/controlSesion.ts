@@ -8,12 +8,12 @@ export class ControlSesion {
 
     getIdUser(): string {
         const data: ResponseVerify = this.convertSessionStorage();
-        return data._id;
+        return data == null ? null : data._id;
     }
 
     getTypeUser(): Number {
         const data: ResponseVerify = this.convertSessionStorage();
-        return data.tipo;
+        return data == null ? null : data.tipo;
     }
 
     cleanSesionStorage() {

@@ -1,4 +1,9 @@
 <nav>
-    <img class="nav_logo" (click)="goToHome()" src="/assets/images/logo-sofka-blanco-1.png" alt="logo sofka"/>
-    <img class="nav_menu" (click)="openMenu()" src="/assets/images/menu.svg">
+    <img class="nav_logo" (click)="goToHome()" src="/assets/images/logo-sofka-blanco-1.png" alt="logo sofka" />
+    <img *ngIf="showBtnMenu" class="nav_menu" (click)="controlMenu()" src="/assets/images/menu.svg">
+
+    <ul *ngIf="menuVisible">
+        <li (click)="goToHome()">Inicio</li>
+        <li (click)="closeSesionGG()">Cerrar sesion</li>
+    </ul>
 </nav>

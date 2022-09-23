@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ControlSesion } from 'src/app/utils/controlSesion';
+import { LoginService } from '../services/login/login.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,19 +10,32 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private router:Router) { }
+  menuVisible = false;
+  controlSesion: ControlSesion = new ControlSesion();
+  showBtnMenu = true;
+
+  constructor(private router: Router, private login$: LoginService) {
+  }
 
   ngOnInit(): void {
+    if(location.pathname == "/") this.showBtnMenu = false;
   }
 
-  goToHome(){
-    console.log("Va al home");
-    this.router.navigate(['menu-admin'])
+  controlMenu() {
+    this.menuVisible = !this.menuVisible;
   }
 
-  openMenu(){
-    console.log("Abrio menu");
+  goToHome() {
     this.router.navigate(['menu-admin'])
+    this.controlMenu();
+  }
+
+
+  closeSesionGG() {
+    this.controlSesion.cleanSesionStorage();
+    this.login$.loggout();
+    this.router.navigate(['']);
+    this.controlMenu();
   }
 
 }
