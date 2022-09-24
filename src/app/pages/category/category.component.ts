@@ -24,7 +24,11 @@ export class CategoryComponent implements OnInit {
   }
 
   createCategory(body: NgForm){
-    console.log(body)
+    this.service.createCategory(this.category).subscribe({
+      next: (resp) => {
+        alert('SE HA CREADO ACTUALIZADO CORRECTAMENTE')
+      }
+    })
   }
   revealForm(){
     this.formState = !this.formState
