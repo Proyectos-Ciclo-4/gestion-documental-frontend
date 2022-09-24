@@ -52,17 +52,15 @@ export class AdminDocumentComponent implements OnInit {
   // Validacion comentada por sebastian santis por problemas con el backend ... (si no tienes problemas descomentar)
   ngOnInit(): void {
 
-    this.isAdmin = true;
-    this.getStorage();
-
-    // switch (this.controlSesion.getTypeUser()) {
-    //   case null:
-    //     this.router.navigate(['']);
-    //     break;
-    //   case 700:
-    //     this.isAdmin = true;
-    //     break;
-    // };
+    switch (this.controlSesion.getTypeUser()) {
+      case null:
+        this.router.navigate(['']);
+        break;
+      case 700:
+        this.isAdmin = true;
+        this.getStorage();
+        break;
+    };
 
   }
 
