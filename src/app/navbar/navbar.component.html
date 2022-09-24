@@ -3,7 +3,7 @@
     <img *ngIf="showBtnMenu" class="nav_menu" (click)="controlMenu()" src="/assets/images/menu.svg">
 
     <ul *ngIf="menuVisible">
-        <li (click)="goToHome()">Inicio</li>
-        <li (click)="closeSesionGG()">Cerrar sesion</li>
+        <li (click)="goToHome()" (click)="menuVisible = false">Inicio</li>
+        <li (click)="closeSesionGG()" (click)="menuVisible = false">Cerrar sesion</li>
     </ul>
 </nav>

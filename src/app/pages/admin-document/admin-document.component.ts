@@ -6,13 +6,13 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { DocumentModel } from 'src/app/models/document.model';
 import { Storage, ref, uploadBytes, listAll, getDownloadURL } from '@angular/fire/storage';
-
 @Component({
   selector: 'document',
   templateUrl: './admin-document.component.html',
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
+
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
   documentModel: DocumentModel;
@@ -53,12 +53,13 @@ export class AdminDocumentComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private router: Router,
     private endPointService: EndpointsService,
-    private storage: Storage) { }
+    private storage: Storage) {
+
+  }
 
 
   // Validacion comentada por sebastian santis por problemas con el backend ... (si no tienes problemas descomentar)
   ngOnInit(): void {
-
     this.isAdmin = true;
     this.getStorage();
 
