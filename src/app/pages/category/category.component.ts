@@ -8,6 +8,8 @@ import { EndpointsService } from '../../services/endpoints/endpoints.service'
   styleUrls: ['./category.component.css']
 })
 export class CategoryComponent implements OnInit {
+
+  showModalCatgoryCreated = false;
   nombre: string = '';
   body: NgForm;
   formState: Boolean = false;
@@ -23,24 +25,21 @@ export class CategoryComponent implements OnInit {
     this.getCategoryList()
   }
 
-  createCategory(body: NgForm){
+  createCategory(body: NgForm) {
     this.service.createCategory(this.category).subscribe({
       next: (resp) => {
-        alert('SE HA CREADO ACTUALIZADO CORRECTAMENTE')
+        this.showModalCatgoryCreated = true;
       }
     })
   }
-  revealForm(){
+  revealForm() {
     this.formState = !this.formState
-    console.log("ESTADO CAMBIADO")
   }
 
-  getCategoryList(){
+  getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
-        console.log("res: ",res)
         this.categories = res;
-        console.log("categorias: ",this.categories)
       }
     })
   }

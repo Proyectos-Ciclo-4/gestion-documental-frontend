@@ -54,11 +54,5 @@ export class LoginComponent implements OnInit {
     });
     
     return false;
-
   }
-
-  hiddenModarNoUser() {
-    this.showModalNoUser = false;
-  }
-
 }

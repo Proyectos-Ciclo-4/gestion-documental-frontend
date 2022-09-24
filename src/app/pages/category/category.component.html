@@ -14,7 +14,17 @@
 
 <div class="list_categories">
   <span class="list_categories-title">Listado de Categorias</span>
-  <ul *ngFor="let item of categories">
-    <li>{{item.categoryName}}</li>
+  <ul>
+    <li *ngFor="let item of categories">{{item.categoryName}}</li>
   </ul>
+</div>
+
+<div class="modal" *ngIf="showModalCatgoryCreated">
+  <div class="modal_body">
+    <span class="modal_body-title">Categorias</span>
+    <p class="modal_body-msj">
+      Se creo correctamente la categoria
+    </p>
+    <button class="btn_ok" (click)="showModalCatgoryCreated = false">Entendido</button>
+  </div>
 </div>
