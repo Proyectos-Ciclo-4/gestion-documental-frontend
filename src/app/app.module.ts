@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -18,7 +17,8 @@ import { CommonModule } from '@angular/common';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { ViewDocumentComponent } from './pages/view-document/view-document.component';
 import { ControlSesion } from './utils/controlSesion';
-
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 
 @NgModule({
 
@@ -34,19 +34,21 @@ import { ControlSesion } from './utils/controlSesion';
   ],
 
   imports: [
-    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
-    NgxDocViewerModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     HttpClientModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
+    ReactiveFormsModule,
+    NgxDocViewerModule,
   ],
 
   providers: [],
   bootstrap: [AppComponent]
-  
+
 })
 export class AppModule { }

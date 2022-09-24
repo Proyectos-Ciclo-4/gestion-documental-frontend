@@ -34,7 +34,7 @@ const routes: Routes = [{
   component: ReportsComponent
 },
 {
-  path: 'view-document/:docId',
+  path: 'view-document',
   component: ViewDocumentComponent
 },
 {

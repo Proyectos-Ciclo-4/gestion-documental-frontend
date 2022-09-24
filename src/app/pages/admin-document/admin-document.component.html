@@ -1,5 +1,7 @@
 <div *ngIf="isAdmin">
 
+  <!-- Creacion de documentos -->
+
   <h2 class="titulo">CREAR NUEVO DOCUMENTO</h2>
 
   <form [formGroup]="documentForm" class="formulario">
@@ -30,11 +32,16 @@
         <label for="uploads">Elige el documento a cargar:</label>
         <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
           accept=".docx, .doc, .pdf, .xlsx, .pptx" formControlName="upload">
+
       </p>
+
     </div>
-    <button type="submit" (click)="submit()" class="btn_ok" [disabled]="documentForm.invalid">Guardar</button>
+    <button type="submit" (click)="submit()" (click)="sendToStorage()" class="btn_ok"
+      [disabled]="documentForm.invalid">Guardar</button>
   </form>
-<!-- Modal de aviso -->
+
+  <!-- Modal de aviso -->
+
   <div class="modal" *ngIf="showModalNoUser">
     <div class="modal_body">
       <span class="modal_body-title">Información</span>
@@ -56,67 +63,59 @@
   </div>
 </div>
 
+<!-- Consulta de documentos -->
+
 <div>
   <h2 class="titulo">CONSULTAR DOCUMENTOS</h2>
 </div>
+
+<!-- Filtros -->
 
 <div class="lista">
   <div class="elemento-lista">
     <h4>Categoria</h4>
     <select name="color" id="color">
-      <option value="r">Rojo</option>
-      <option value="a">Azul</option>
-      <option value="v">Verde</option>
+      <option *ngFor="let item of listaCategorias" id="{{item}}">{{item}}</option>
     </select>
   </div>
 
   <div class="elemento-lista">
     <h4>Subcategoria</h4>
     <select name="color" id="color">
-      <option value="r">Rojo</option>
-      <option value="a">Azul</option>
-      <option value="v">Verde</option>
+      <option *ngFor="let item of listaCategorias" id="{{item}}">{{item}}</option>
     </select>
   </div>
 </div>
+
+<!-- Tabla que contiene los documentos creados -->
+
 <div>
+
   <table class="default">
 
     <tr>
-
       <th>Nombre</th>
-
       <th>Cat/subCat</th>
-
       <th>Version</th>
-
       <th>Hora creación</th>
-
       <th>Fecha de creación</th>
-
       <th>Fecha de actualizacion</th>
-
       <th>Propiedades</th>
-
     </tr>
 
-    <tr>
+    <tr *ngFor="let item of listaDocumentos">
 
       <td>Doc1</td>
-
       <td>categoria17subcategoria2</td>
-
       <td>3</td>
-
       <td>03/03/2022</td>
-
       <td>13:00</td>
-
       <td>03/03/2022</td>
 
       <td>
         <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> XD <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
+        <!-- <button class="boton-menu"> View <img src="/assets/images/report-icon.svg" alt="" class="icono"></button> -->
+        <button class="boton-menu" (click)="goToViewSelectedDocument(item)"> View </button>
         <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
         <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
         <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
@@ -124,64 +123,12 @@
       </td>
 
     </tr>
-
-    <tr>
-
-      <td>Doc1</td>
-
-      <td>categoria17subcategoria2</td>
-
-      <td>3</td>
-
-      <td>03/03/2022</td>
-
-      <td>13:00</td>
-
-      <td>03/03/2022</td>
-
-      <td>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-      </td>
-
-    </tr>
-
-    <tr>
-
-      <td>Doc1</td>
-
-      <td>categoria17subcategoria2</td>
-
-      <td>3</td>
-
-      <td>03/03/2022</td>
-
-      <td>13:00</td>
-
-      <td>03/03/2022</td>
-
-      <td>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-      </td>
-
-    </tr>
-
-
 
   </table>
 
-
-
 </div>
+
+<!-- Botones de paginacion de la tabla -->
 
 <div>
   <div class="paginacion">
@@ -189,8 +136,10 @@
     <h3>Paginacón</h3>
     <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
   </div>
-
 </div>
+
+<!-- ¿¿¿??? -->
+
 <!-- <div>
   <label for="">Preview</label>
   <div>

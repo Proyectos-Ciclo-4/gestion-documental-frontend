@@ -46,14 +46,15 @@ export class LoginComponent implements OnInit {
           if (data == null) this.showModalNoUser = true;
           else {
             this.controlSesion.writeSesionUser(data);
-
             if (data.tipo == 700) this.router.navigate(['/menu-admin']);
             else this.router.navigate(['/document']);
           }
 
         });
     });
+    
     return false;
+
   }
 
   hiddenModarNoUser() {

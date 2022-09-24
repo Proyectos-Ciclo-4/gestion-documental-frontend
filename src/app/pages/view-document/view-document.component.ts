@@ -18,10 +18,7 @@ export class ViewDocumentComponent implements OnInit {
 
   ngOnInit(): void {
 
-    /* this.route.params.subscribe((params) => {
-      this.docId = params['docId'];
-      console.log(this.docId)
-    }) */
+    this.doc = sessionStorage.getItem('docurl')
 
   }
 
