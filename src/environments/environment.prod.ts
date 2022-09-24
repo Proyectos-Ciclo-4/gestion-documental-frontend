@@ -8,10 +8,12 @@ export const environment = {
     messagingSenderId: '102176668601',
   },
   host: {
-    verifyUser: 'http://localhost:8080/usuario/',
+    verifyUser: 'http://localhost:8080/user/',
     createDocument: 'http://localhost:8080/document/create/',
     createCategory: 'http://localhost:8080/category/create',
     getCategories: 'http://localhost:8080/category/getall',
+    getSubcategories: 'http://localhost:8080/subcategory/',
+    createSubcategory: 'http://localhost:8080/subcategory/create',
   },
   production: true,
 };

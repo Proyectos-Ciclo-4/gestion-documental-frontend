@@ -5,6 +5,7 @@ import { ResponseVerify } from 'src/app/models/responseVerify';
 import { environment } from 'src/environments/environment.prod';
 import { DocumentModel } from 'src/app/models/document.model';
 import { Category } from 'src/app/models/category.model';
+import { SubCategory } from 'src/app/models/subcategory.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,16 @@ export class EndpointsService {
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${environment.host.getCategories}`);
   }
+    /**
+   * SUBCATEGORY ENDPOINTS
+   * @param subcategory
+   * @returns
+   */
+     createSubCategory(subcategory: object): Observable<object> {
+      return this.http.post(environment.host.createSubcategory, { ...subcategory });
+    }
+    getSubCategories(categoryId: string): Observable<SubCategory[]> {
+      return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}`);
+    }
 
 }
