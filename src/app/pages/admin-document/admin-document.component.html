@@ -2,39 +2,46 @@
 
   <h2 class="titulo">CREAR NUEVO DOCUMENTO</h2>
 
-  <form (ngSubmit)="getDocument()" class="formulario">
+  <form [formGroup]="documentForm" class="formulario">
     <div class="justify-left">
       <div class="elemento">
-        <label>Nombre</label>
-        <input type="text">
+        <label for="name">Nombre*</label>
+        <input id="name" type="text" formControlName="name">
+      </div>
+
+      <div class="justify-left">
+        <div class="elemento">
+          <label for="description">Descripción*</label>
+          <input id="description" type="text" formControlName="description">
+        </div>
       </div>
 
       <div class="elemento">
-        <label>Categoria</label>
-        <input type="text">
+        <label for="category">Categoria*</label>
+        <input id="category" type="text" formControlName="category">
       </div>
 
       <div class="elemento">
-        <label>SubCategoria</label>
-        <input type="text">
+        <label for="subcategory">SubCategoria</label>
+        <input id="subcategory" type="text">
       </div>
 
       <p>
         <label for="uploads">Elige el documento a cargar:</label>
         <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
-          accept=".docx, .doc, .pdf, .xlsx, .pptx">
+          accept=".docx, .doc, .pdf, .xlsx, .pptx" required>
       </p>
     </div>
-    <button type="submit" class="btn_ok">Guardar</button>
+    <button type="submit" class="btn_ok" [disabled]="documentForm.invalid">Guardar</button>
   </form>
+<!-- Modal de aviso -->
   <div class="modal" *ngIf="showModalNoUser">
     <div class="modal_body">
-      <span class="modal_body-title">Titulo</span>
+      <span class="modal_body-title">Información</span>
       <p class="modal_body-msj">
-        Informacion o funciones para el usuario
+        Solo se pueden subir documentos de tipo PDF, Word, PowerPoint y Excel. Su tamaño no puede ser mayor a 1 MB.
       </p>
       <button (click)="revealForm()" class="modal_body-btn btn_ok">Entendido</button>
-
     </div>
   </div>
 </div>

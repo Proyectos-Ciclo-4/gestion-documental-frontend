@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'document',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
-
+  MAX_DOC_SIZE:number=1000000;
   controlSesion = new ControlSesion();
   isAdmin = false;
   showModalNoUser: boolean = false;
@@ -22,7 +23,11 @@ export class AdminDocumentComponent implements OnInit {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   ];
-
+  documentForm=new FormGroup({
+    name:new FormControl('',{validators:[ Validators.required]}),
+    description:new FormControl('',{validators:[ Validators.required]}),
+    category:new FormControl('',{validators:[ Validators.required]})
+  })
 
   constructor(private sanitizer: DomSanitizer, private router: Router) {
   }
@@ -42,14 +47,14 @@ export class AdminDocumentComponent implements OnInit {
   async onFileSelected(event: any) {
     const docFile = event.target.files[0];
     this.docType = docFile.type;
-    console.log(event.target);
-    if (this.docsAllowed.includes(docFile.type)) {
+    console.log( event.target.files[0]);
+    if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size<=this.MAX_DOC_SIZE) {
       this.fileInAngular = docFile;
       this.blobFile(docFile).then((res: any) => {
         this.imagePrevius = res.base;
         console.log(this.imagePrevius)
         const db = this.imagePrevius.split(",")[1]
-        console.log(db)
+        //console.log(db)
       })
       console.log('Es un archivo permitido');
     } else {
