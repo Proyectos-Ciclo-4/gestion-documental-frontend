@@ -1,4 +1,4 @@
-import { ResponseVerify } from "./models/responseVerify";
+import { ResponseVerify } from "../models/responseVerify";
 
 export class ControlSesion {
 

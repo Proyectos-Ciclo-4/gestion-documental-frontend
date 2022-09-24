@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideAuth, getAuth } from '@angular/fire/auth';
@@ -18,10 +17,8 @@ import { CommonModule } from '@angular/common';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { ViewDocumentComponent } from './pages/view-document/view-document.component';
 import { ControlSesion } from './utils/controlSesion';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { provideStorage,getStorage } from '@angular/fire/storage';
-
-
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 
 @NgModule({
 
@@ -43,6 +40,7 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
     provideAuth(() => getAuth()),
     HttpClientModule,
     CommonModule,
+    FormsModule,
     provideFirestore(() => getFirestore()),
     provideStorage(() => getStorage()),
     ReactiveFormsModule,

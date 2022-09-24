@@ -9,7 +9,9 @@ export const environment = {
   },
   host: {
     verifyUser: 'http://localhost:8080/usuario/',
-    createDocument: 'http://localhost:8080/document/create/'
+    createDocument: 'http://localhost:8080/document/create/',
+    createCategory: 'http://localhost:8080/category/create',
+    getCategories: 'http://localhost:8080/category/getall',
   },
-  production: true
+  production: true,
 };
