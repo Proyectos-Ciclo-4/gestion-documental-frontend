@@ -2,21 +2,44 @@
   <span>Inicio/ Sub-Categorias</span>
 </div>
 <div class="formCategory">
-  <button class="btn_ok" (click)="revealForm()">CREAR NUEVA SUBCATEGORÍA</button>
+  <button class="btn_ok" (click)="revealForm()">
+    CREAR NUEVA SUBCATEGORÍA
+  </button>
   <div class="create_category_box" *ngIf="formState">
     <form class="create_category_box-form" (ngSubmit)="createSubCategory(body)">
       <label for="text_new_category">Nombre</label>
-      <input type="text" name="text_new_category" required>
+      <input type="text" name="text_new_category" required />
+      <div class="elemento">
+        <label for="category">Categoria*</label>
+        <select id="category" type="text" formControlName="category">
+          <option *ngFor="let item of categories">
+            {{ item.categoryName }}
+          </option>
+        </select>
+      </div>
       <button class="btn_cancel" type="submit">Guardar</button>
     </form>
   </div>
 </div>
 
 <div class="list_categories">
-  <span class="list_categories-title">Listado de Sub-categorias</span>
+  <span class="list_categories-title">Listado de Sub-Categorias</span>
+  <div class="elemento">
+    <label for="category">Categoria*</label>
+    <select id="category" type="text" formControlName="category">
+      <option *ngFor="let item of categories">{{ item.categoryName }}</option>
+    </select>
+  </div>
   <ul>
-    <li>Subcategoria 2</li>
-    <li>Subcategoria 1</li>
-    <li>Subcategoria 3</li>
+    <li *ngFor="let item of subcategories">{{ item.subCategoryName }}</li>
   </ul>
+</div>
+<div class="modal" *ngIf="showModalCatgoryCreated">
+  <div class="modal_body">
+    <span class="modal_body-title">Sub-Categorias</span>
+    <p class="modal_body-msj">Se creo correctamente la subcategoria</p>
+    <button class="btn_ok" (click)="showModalCatgoryCreated = false">
+      Entendido
+    </button>
+  </div>
 </div>

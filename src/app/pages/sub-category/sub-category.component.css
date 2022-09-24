@@ -10,11 +10,17 @@
 
 .create_category_box {
   margin-top: 10px;
-}
 
+}
+.elemento {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  padding: 2%;
+}
 .create_category_box-form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   flex-wrap: wrap;
   padding: 10px;

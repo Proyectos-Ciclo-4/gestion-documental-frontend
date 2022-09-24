@@ -26,6 +26,7 @@ export class SubCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategoryList()
+    this.getSubCategoryList()
 
   }
 
