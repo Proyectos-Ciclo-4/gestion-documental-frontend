@@ -6,7 +6,7 @@
   <div class="create_category_box" *ngIf="formState">
     <form class="create_category_box-form" (ngSubmit)="createCategory(body)">
       <label for="text_new_category">Nombre</label>
-      <input type="text" name="text_new_category" required>
+      <input type="text" name="text_new_category" [(ngModel)]="category.categoryName" required="">
       <button class="btn_cancel" type="submit">Guardar</button>
     </form>
   </div>
@@ -14,9 +14,7 @@
 
 <div class="list_categories">
   <span class="list_categories-title">Listado de Categorias</span>
-  <ul>
-    <li>Categoria 1</li>
-    <li>Categoria 2</li>
-    <li>Categoria 3</li>
+  <ul *ngFor="let item of categories">
+    <li>{{item.categoryName}}</li>
   </ul>
 </div>
