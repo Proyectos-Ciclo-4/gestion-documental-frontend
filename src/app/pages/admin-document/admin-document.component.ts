@@ -73,13 +73,11 @@ export class AdminDocumentComponent implements OnInit {
 
   getDocument() { }
 
-  async onFileSelected(event: any) {
+  protected async onFileSelected(event: any) {
 
     const docFile = event.target.files[0];
     this.currentDocFile = event.target.files[0];
     this.docType = docFile.type;
-
-    // console.log(event.target.files[0]); // Comentadas por sebastian santis
 
     if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) {
 
@@ -87,25 +85,19 @@ export class AdminDocumentComponent implements OnInit {
 
       this.blobFile(docFile).then((res: any) => {
         this.imagePrevius = res.base;
-
-        // console.log(this.imagePrevius); // Comentadas por sebastian santis
         const db = this.imagePrevius.split(',')[1];
-        // console.log(db) // Comentadas por sebastian santis
       });
-
-      console.log('Es un archivo permitido');
 
     } else {
 
       event.target.value = '';
       this.revealForm();
-      console.log('archivo no permitido');
 
     }
 
   }
 
-  blobFile = async ($event: any) => new Promise((resolve, reject) => {
+  private blobFile = async ($event: any) => new Promise((resolve, reject) => {
 
     try {
 
@@ -134,30 +126,31 @@ export class AdminDocumentComponent implements OnInit {
 
   });
 
-  revealForm() {
+  protected revealForm() {
     this.showModalNoUser = !this.showModalNoUser;
-    console.log('ESTADO CAMBIADO');
   }
-  revealForm2() {
+  protected revealForm2() {
     this.showModalNoUser2 = !this.showModalNoUser2
-    console.log("ESTADO CAMBIADO")
   }
-  submit() {
+
+  protected async submit() {
+
     const docName = this.documentForm.get('name');
     const docDescription = this.documentForm.get('description');
     const docCategory = this.documentForm.get('category');
     const docSubCategory = this.documentForm.get('subcategory');
     const docUpload = this.documentForm.get('upload');
+    const pathDocument  = await this.sendToStorage()
+
     this.endPointService.createDocument({
       name: docName.value,
       categoryId: docCategory.value,
       subCategoryName: docSubCategory.value,
       version: 1,
-      pathDocument: this.imagePrevius,
+      pathDocument: pathDocument,
       blockChainId: 'blockChainId1',
       description: docDescription.value
     }).subscribe(n => {
-      console.log("Documento GuardadoExitosamente")
       docName.setValue("");
       docCategory.setValue("");
       docSubCategory.setValue("");
@@ -171,18 +164,13 @@ export class AdminDocumentComponent implements OnInit {
 
   /**
    * @Description sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
-   * @param event este es el evento mediante el cual accederemos al documento que seleccionara el usuario administrador para los metodos post
    */
 
-  sendToStorage() {
-
-    console.log(this.currentDocFile)
+  protected async sendToStorage():Promise<string> {
 
     const docRef = ref(this.storage, `documents/${this.currentDocFile.name}`);
-
     uploadBytes(docRef, this.currentDocFile)
-      .then(res => { console.log(res) })
-      .catch(err => { console.error(err) });
+    return (await getDownloadURL(docRef))
 
   }
 
@@ -190,7 +178,7 @@ export class AdminDocumentComponent implements OnInit {
  * @Description getStorage es una funcion que nos sirve para obtener cada uno de los datos que se encuentran dentro de nuestro storage en firebase
  */
 
-  async getStorage() {
+  private async getStorage():Promise<void> {
 
     const docRef = ref(this.storage, 'documents')
     listAll(docRef)
@@ -213,7 +201,7 @@ export class AdminDocumentComponent implements OnInit {
    * @param url hace referencia a la url que genera firebase para obtener un archivo almacenado en storage
    */
 
-  goToViewSelectedDocument(url: string) {
+  protected goToViewSelectedDocument(url: string):void {
     sessionStorage.setItem('docurl', url)
     this.router.navigate([`view-document`])
   }
