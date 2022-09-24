@@ -19,15 +19,13 @@ export class SubCategoryComponent implements OnInit {
   showModalCatgoryCreated = false;
   categories: Category[] = [];
   categoryName: string = '';
-
+  selectedOption: string;
 
 
   constructor(private service: EndpointsService) { }
 
   ngOnInit(): void {
     this.getCategoryList()
-    this.getSubCategoryList()
-
   }
 
   createSubCategory(body: NgForm){
@@ -39,15 +37,16 @@ export class SubCategoryComponent implements OnInit {
   }
   revealForm(){
     this.formState = !this.formState
-    console.log("ESTADO CAMBIADO")
   }
   getSubCategoryList() {
-    this.service.getSubCategories(this.categoryName).subscribe({
+    this.service.getSubCategories(this.subcategory.categoryId).subscribe({
       next: (res) => {
         this.subcategories = res;
-
       }
     })
+  }
+  selectCategory(){
+    this.getSubCategoryList()
   }
   getCategoryList() {
     this.service.getAllCategories().subscribe({

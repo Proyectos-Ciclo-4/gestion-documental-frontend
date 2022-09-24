@@ -8,11 +8,12 @@
   <div class="create_category_box" *ngIf="formState">
     <form class="create_category_box-form" (ngSubmit)="createSubCategory(body)">
       <label for="text_new_category">Nombre</label>
-      <input type="text" name="text_new_category" required />
+      <input type="text" name="text_new_category" [(ngModel)]="subcategory.subCategoryName" required />
       <div class="elemento">
         <label for="category">Categoria*</label>
-        <select id="category" type="text" formControlName="category">
-          <option *ngFor="let item of categories">
+        <select id="category"   [(ngModel)]="subcategory.categoryId">
+          <option value="0">Selecciona una categoria</option>
+          <option [ngValue] = "item.categoryName"  *ngFor="let item of categories "  >
             {{ item.categoryName }}
           </option>
         </select>
@@ -21,17 +22,17 @@
     </form>
   </div>
 </div>
-
 <div class="list_categories">
   <span class="list_categories-title">Listado de Sub-Categorias</span>
   <div class="elemento">
     <label for="category">Categoria*</label>
-    <select id="category" type="text" formControlName="category">
-      <option *ngFor="let item of categories">{{ item.categoryName }}</option>
+    <select id="category"  name="xd" [(ngModel)]="subcategory.categoryId" (change)="selectCategory()">
+      <option value="0">Selecciona una categoria</option>
+      <option  [ngValue] ="item.categoryName" *ngFor="let item of categories">{{ item.categoryName }}</option>
     </select>
   </div>
   <ul>
-    <li *ngFor="let item of subcategories">{{ item.subCategoryName }}</li>
+    <li *ngFor="let res of subcategories">{{ res.subCategoryName }}</li>
   </ul>
 </div>
 <div class="modal" *ngIf="showModalCatgoryCreated">
