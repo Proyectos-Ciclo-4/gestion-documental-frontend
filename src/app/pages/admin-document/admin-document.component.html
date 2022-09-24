@@ -20,12 +20,16 @@
 
       <div class="elemento">
         <label for="category">Categoria*</label>
-        <input id="category" type="text" formControlName="category">
+        <select id="category" type="text" formControlName="category">
+          <option *ngFor="let item of listaCategorias">{{item}}</option>
+        </select>
       </div>
 
       <div class="elemento">
         <label for="subcategory">SubCategoria</label>
-        <input id="subcategory" type="text" formControlName="subcategory">
+        <select id="subcategory" type="text" formControlName="subcategory">
+          <option *ngFor="let item of listaSubCategorias">{{item}}</option>
+        </select>
       </div>
 
       <p>
@@ -82,7 +86,7 @@
   <div class="elemento-lista">
     <h4>Subcategoria</h4>
     <select name="color" id="color">
-      <option *ngFor="let item of listaCategorias" id="{{item}}">{{item}}</option>
+      <option *ngFor="let item of listaSubCategorias" id="{{item}}">{{item}}</option>
     </select>
   </div>
 </div>
