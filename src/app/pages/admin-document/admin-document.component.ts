@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
+import { DocumentModel } from 'src/app/models/document.model';
+import { group } from '@angular/animations';
 
 @Component({
   selector: 'document',
@@ -10,10 +13,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
+  group:AbstractControl;
   MAX_DOC_SIZE:number=1000000;
+  documentModel:DocumentModel;
   controlSesion = new ControlSesion();
   isAdmin = false;
   showModalNoUser: boolean = false;
+  showModalNoUser2: boolean = false;
   imagePrevius: any;
   fileInAngular: any;
   docType: any;
@@ -26,11 +32,15 @@ export class AdminDocumentComponent implements OnInit {
   documentForm=new FormGroup({
     name:new FormControl('',{validators:[ Validators.required]}),
     description:new FormControl('',{validators:[ Validators.required]}),
-    category:new FormControl('',{validators:[ Validators.required]})
+    category:new FormControl('',{validators:[ Validators.required]}),
+    subcategory:new FormControl(''),
+    upload:new FormControl('',{validators:[ Validators.required]})
   })
 
-  constructor(private sanitizer: DomSanitizer, private router: Router) {
-  }
+  constructor(
+    private sanitizer: DomSanitizer,
+    private router: Router,
+    private endPointService: EndpointsService) {}
 
   ngOnInit(): void {
     switch (this.controlSesion.getTypeUser()) {
@@ -47,12 +57,12 @@ export class AdminDocumentComponent implements OnInit {
   async onFileSelected(event: any) {
     const docFile = event.target.files[0];
     this.docType = docFile.type;
-    console.log( event.target.files[0]);
+    //console.log( event.target.files[0]);
     if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size<=this.MAX_DOC_SIZE) {
       this.fileInAngular = docFile;
       this.blobFile(docFile).then((res: any) => {
         this.imagePrevius = res.base;
-        console.log(this.imagePrevius)
+        //console.log(this.imagePrevius)
         const db = this.imagePrevius.split(",")[1]
         //console.log(db)
       })
@@ -92,5 +102,34 @@ export class AdminDocumentComponent implements OnInit {
   revealForm() {
     this.showModalNoUser = !this.showModalNoUser
     console.log("ESTADO CAMBIADO")
+  }
+  revealForm2() {
+    this.showModalNoUser2 = !this.showModalNoUser2
+    console.log("ESTADO CAMBIADO")
+  }
+  submit(){
+    const docName= this.documentForm.get('name');
+    const docDescription= this.documentForm.get('description');
+    const docCategory=this.documentForm.get('category');
+    const docSubCategory=this.documentForm.get('subcategory');
+    const docUpload=this.documentForm.get('upload');
+    this.endPointService.createDocument({
+      name: docName.value,
+      categoryId:docCategory.value,
+      subCategoryName: docSubCategory.value,
+      version:1,
+      pathDocument:this.imagePrevius,
+      blockChainId:'blockChainId1',
+      description:docDescription.value
+    }).subscribe(n=>{
+      console.log("Documento GuardadoExitosamente")
+      docName.setValue("");
+      docCategory.setValue("");
+      docSubCategory.setValue("");
+      docDescription.setValue("");
+      docUpload.setValue("");
+      this.revealForm2();
+
+    });
   }
 }

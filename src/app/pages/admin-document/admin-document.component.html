@@ -23,16 +23,16 @@
 
       <div class="elemento">
         <label for="subcategory">SubCategoria</label>
-        <input id="subcategory" type="text">
+        <input id="subcategory" type="text" formControlName="subcategory">
       </div>
 
       <p>
         <label for="uploads">Elige el documento a cargar:</label>
         <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
-          accept=".docx, .doc, .pdf, .xlsx, .pptx" required>
+          accept=".docx, .doc, .pdf, .xlsx, .pptx" formControlName="upload">
       </p>
     </div>
-    <button type="submit" class="btn_ok" [disabled]="documentForm.invalid">Guardar</button>
+    <button type="submit" (click)="submit()" class="btn_ok" [disabled]="documentForm.invalid">Guardar</button>
   </form>
 <!-- Modal de aviso -->
   <div class="modal" *ngIf="showModalNoUser">
@@ -43,6 +43,16 @@
       </p>
       <button (click)="revealForm()" class="modal_body-btn btn_ok">Entendido</button>
     </div>
+  </div>
+</div>
+<!-- Modal de aviso2 -->
+<div class="modal" *ngIf="showModalNoUser2">
+  <div class="modal_body">
+    <span class="modal_body-title">Información</span>
+    <p class="modal_body-msj">
+      Documento guardado Exitosamente!
+    </p>
+    <button (click)="revealForm2()" class="modal_body-btn btn_ok">Entendido</button>
   </div>
 </div>
 
