@@ -1,12 +1,21 @@
 <div class="location_pag">
-  <span>Inicio/ Sub-Categorias</span>
+  <span>Inicio/ SubCategorias</span>
 </div>
 <div class="formCategory">
   <button class="btn_ok" (click)="revealForm()">CREAR NUEVA SUBCATEGORÍA</button>
   <div class="create_category_box" *ngIf="formState">
     <form class="create_category_box-form" (ngSubmit)="createSubCategory(body)">
-      <label for="text_new_category">Nombre</label>
-      <input type="text" name="text_new_category" required>
+      <div>
+        <label for="text_new_category">Nombre*</label>
+        <input type="text" name="text_new_category" required>
+      </div>
+      <div>
+        <label for="text_new_category">Categoria*</label>
+        <select name="categories" id="categories" formControlName="selectCategories">
+          <option value="0">Selecciona una categoria</option>
+          <option *ngFor="let category of categories" value="category.categoryName" >{{category.categoryName}}</option>
+        </select>
+      </div>
       <button class="btn_cancel" type="submit">Guardar</button>
     </form>
   </div>

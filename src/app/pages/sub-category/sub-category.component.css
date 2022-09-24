@@ -14,21 +14,24 @@
 
 .create_category_box-form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   flex-wrap: wrap;
   padding: 10px;
 }
 
-.create_category_box-form label {
-  display: block;
-  font-size: 1.3rem;
-  font-weight: bold;
+.create_category_box-form div {
+  margin: 5px 0px
 }
 
-.create_category_box-form input {
-  display: block;
-  margin: 10px;
+.create_category_box-form label {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: 0px 10px;
+}
+
+.create_category_box-form button {
+  margin: 20px;
 }
 
 .list_categories {

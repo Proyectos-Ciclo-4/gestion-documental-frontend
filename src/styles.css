@@ -37,6 +37,11 @@ input[type="number"] {
     border-radius: var(--border-radius_gen);
 }
 
+select {
+    font-size: 1.05rem;
+    padding: 6px;
+}
+
 .btn_ok,
 .btn_cancel {
     padding: 10px 15px;

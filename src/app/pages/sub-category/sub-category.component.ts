@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm } from '@angular/forms';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
+import { CtrCategoriesService } from 'src/app/services/control-categories/ctr-categories.service';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 
 @Component({
@@ -13,46 +14,45 @@ export class SubCategoryComponent implements OnInit {
 
   nombre: string = '';
   body: NgForm;
-  formState: Boolean = false;
+  formState: Boolean = true;
   subcategories: SubCategory[] = [];
   subcategory: SubCategory = new SubCategory();
   showModalCatgoryCreated = false;
   categories: Category[] = [];
   categoryName: string = '';
 
+  selectOfForm : FormGroup;
 
-
-  constructor(private service: EndpointsService) { }
+  constructor(
+    private endPoints$: EndpointsService,
+    private controlCategories: CtrCategoriesService,
+    private formBuilder : FormBuilder) { }
 
   ngOnInit(): void {
-    this.getCategoryList()
+    this.controlCategories.getCategoryList().then((list) => {
+      this.categories = list;
+      console.log(this.categories);
+    });
+
+    this.selectOfForm = this.formBuilder.group({
+      selectCategories:[null]
+    });
+
+    this.selectOfForm.get("selectCategories").valueChanges.subscribe((value) => {
+      console.log(value);
+    });
 
   }
 
-  createSubCategory(body: NgForm){
-    this.service.createSubCategory(this.subcategory).subscribe({
+  createSubCategory(body: NgForm) {
+    this.endPoints$.createSubCategory(this.subcategory).subscribe({
       next: (res) => {
         this.showModalCatgoryCreated = true;
       }
     })
   }
-  revealForm(){
+  revealForm() {
     this.formState = !this.formState
-    console.log("ESTADO CAMBIADO")
   }
-  getSubCategoryList() {
-    this.service.getSubCategories(this.categoryName).subscribe({
-      next: (res) => {
-        this.subcategories = res;
 
-      }
-    })
-  }
-  getCategoryList() {
-    this.service.getAllCategories().subscribe({
-      next: (res) => {
-        this.categories = res;
-      }
-    })
-  }
 }
