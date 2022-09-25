@@ -73,7 +73,8 @@ export class AdminDocumentComponent implements OnInit {
     this.getCategoryList()
     switch (this.controlSesion.getTypeUser()) {
       case null:
-        this.router.navigate(['']);
+        this.isAdmin = false;
+        this.getStorage();
         break;
       case 700:
         this.isAdmin = true;
