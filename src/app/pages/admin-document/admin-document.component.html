@@ -132,7 +132,7 @@
         <!-- <button class="boton-menu"> View <img src="/assets/images/report-icon.svg" alt="" class="icono"></button> -->
         <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument)"><img src="/assets/images/vericon.png" alt="" class="icono"></button>
         <button class="boton-menu"> <img src="/assets/images/actualizaricon.png" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/descargarIcon.png" alt="" class="icono"></button>
+        <a download= "{{item.name}}" href="{{item.pathDocument}}" class="boton-menu"> <img src="/assets/images/descargarIcon.png" alt="" class="icono"></a>
         <button class="boton-menu" (click)="deleteDocument(item.uuid)"> <img src="/assets/images/eliminarIcon.png" alt="" class="icono"></button>
         <!-- <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button> -->
       </td>
