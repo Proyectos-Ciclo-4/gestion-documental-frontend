@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ControlSesion } from 'src/app/utils/controlSesion';
 import { LoginService } from '../services/login/login.service';
@@ -8,6 +8,7 @@ import { LoginService } from '../services/login/login.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
+
 export class NavbarComponent implements OnInit {
 
   menuVisible = false;
@@ -18,25 +19,27 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.router.events.subscribe((r) => {
+      location.pathname == "/" ? this.showBtnMenu = false : this.showBtnMenu = true;
+    })
   }
 
   controlMenu() {
-    this.menuVisible = !this.menuVisible;
+    this.menuVisible = true;
+    setTimeout(() => {
+      this.menuVisible = false;
+    }, 5000);
   }
 
   goToHome() {
     this.router.navigate(['menu-admin'])
-    this.controlMenu();
-    this.showBtnMenu = false;
   }
-
 
   closeSesionGG() {
     this.showBtnMenu = false
     this.controlSesion.cleanSesionStorage();
     this.login$.loggout();
     this.router.navigate(['']);
-    this.controlMenu();
   }
 
 }

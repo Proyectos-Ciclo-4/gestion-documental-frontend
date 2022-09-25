@@ -4,19 +4,24 @@ import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
-import { DocumentModel } from 'src/app/models/document.model';
+import { DocumentModel, DocumentModelQuery } from 'src/app/models/document.model';
 import { Storage, ref, uploadBytes, listAll, getDownloadURL } from '@angular/fire/storage';
-
+import { Category } from 'src/app/models/category.model';
+import { SubCategory } from 'src/app/models/subcategory.model';
 @Component({
   selector: 'document',
   templateUrl: './admin-document.component.html',
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
+
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
   documentModel: DocumentModel;
-
+  categories: Category[] = [];
+  subcategories: SubCategory[] = [];
+  subcategoriesFilter: SubCategory[] = [];
+  documentsList:DocumentModelQuery[]= [];
   // Variables de filtro
   listaCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
   listaSubCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
@@ -49,39 +54,41 @@ export class AdminDocumentComponent implements OnInit {
     upload: new FormControl('', { validators: [Validators.required] })
   })
 
+  finDocumentForm = new FormGroup({
+    categoryFilter: new FormControl('', { validators: [Validators.required] }),
+    subcategoryFilter: new FormControl(''),
+  })
+
   constructor(
     private sanitizer: DomSanitizer,
     private router: Router,
     private endPointService: EndpointsService,
-    private storage: Storage) { }
+    private storage: Storage) {
+
+  }
 
 
   // Validacion comentada por sebastian santis por problemas con el backend ... (si no tienes problemas descomentar)
   ngOnInit(): void {
-
-    this.isAdmin = true;
-    this.getStorage();
-
-    // switch (this.controlSesion.getTypeUser()) {
-    //   case null:
-    //     this.router.navigate(['']);
-    //     break;
-    //   case 700:
-    //     this.isAdmin = true;
-    //     break;
-    // };
-
+    this.getCategoryList()
+    switch (this.controlSesion.getTypeUser()) {
+      case null:
+        this.router.navigate(['']);
+        break;
+      case 700:
+        this.isAdmin = true;
+        this.getStorage();
+        break;
+    };
   }
 
   getDocument() { }
 
-  async onFileSelected(event: any) {
+  protected async onFileSelected(event: any) {
 
     const docFile = event.target.files[0];
     this.currentDocFile = event.target.files[0];
     this.docType = docFile.type;
-
-    // console.log(event.target.files[0]); // Comentadas por sebastian santis
 
     if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) {
 
@@ -89,25 +96,19 @@ export class AdminDocumentComponent implements OnInit {
 
       this.blobFile(docFile).then((res: any) => {
         this.imagePrevius = res.base;
-
-        // console.log(this.imagePrevius); // Comentadas por sebastian santis
         const db = this.imagePrevius.split(',')[1];
-        // console.log(db) // Comentadas por sebastian santis
       });
-
-      console.log('Es un archivo permitido');
 
     } else {
 
       event.target.value = '';
       this.revealForm();
-      console.log('archivo no permitido');
 
     }
 
   }
 
-  blobFile = async ($event: any) => new Promise((resolve, reject) => {
+  private blobFile = async ($event: any) => new Promise((resolve, reject) => {
 
     try {
 
@@ -136,30 +137,32 @@ export class AdminDocumentComponent implements OnInit {
 
   });
 
-  revealForm() {
+  protected revealForm() {
     this.showModalNoUser = !this.showModalNoUser;
-    console.log('ESTADO CAMBIADO');
   }
-  revealForm2() {
+  protected revealForm2() {
     this.showModalNoUser2 = !this.showModalNoUser2
-    console.log("ESTADO CAMBIADO")
   }
-  submit() {
+
+  protected async submit() {
+
     const docName = this.documentForm.get('name');
     const docDescription = this.documentForm.get('description');
     const docCategory = this.documentForm.get('category');
     const docSubCategory = this.documentForm.get('subcategory');
     const docUpload = this.documentForm.get('upload');
+    const pathDocument = await this.sendToStorage()
+
     this.endPointService.createDocument({
       name: docName.value,
       categoryId: docCategory.value,
       subCategoryName: docSubCategory.value,
       version: 1,
-      pathDocument: this.imagePrevius,
+      pathDocument: pathDocument,
       blockChainId: 'blockChainId1',
-      description: docDescription.value
+      description: docDescription.value,
+      dateCreated:new Date()
     }).subscribe(n => {
-      console.log("Documento GuardadoExitosamente")
       docName.setValue("");
       docCategory.setValue("");
       docSubCategory.setValue("");
@@ -173,18 +176,13 @@ export class AdminDocumentComponent implements OnInit {
 
   /**
    * @Description sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
-   * @param event este es el evento mediante el cual accederemos al documento que seleccionara el usuario administrador para los metodos post
    */
 
-  sendToStorage() {
-
-    console.log(this.currentDocFile)
+  protected async sendToStorage(): Promise<string> {
 
     const docRef = ref(this.storage, `documents/${this.currentDocFile.name}`);
-
     uploadBytes(docRef, this.currentDocFile)
-      .then(res => { console.log(res) })
-      .catch(err => { console.error(err) });
+    return (await getDownloadURL(docRef))
 
   }
 
@@ -192,7 +190,7 @@ export class AdminDocumentComponent implements OnInit {
  * @Description getStorage es una funcion que nos sirve para obtener cada uno de los datos que se encuentran dentro de nuestro storage en firebase
  */
 
-  async getStorage() {
+  private async getStorage(): Promise<void> {
 
     const docRef = ref(this.storage, 'documents')
     listAll(docRef)
@@ -215,9 +213,47 @@ export class AdminDocumentComponent implements OnInit {
    * @param url hace referencia a la url que genera firebase para obtener un archivo almacenado en storage
    */
 
-  goToViewSelectedDocument(url: string) {
+  protected goToViewSelectedDocument(url: string): void {
     sessionStorage.setItem('docurl', url)
     this.router.navigate([`view-document`])
   }
-
+  getCategoryList() {
+    this.endPointService.getAllCategories().subscribe({
+      next: (res) => {
+        this.categories = res;
+      }
+    })
+  }
+  getSubcategoriesByCategory(){
+    const docCategory = this.documentForm.get('category');
+    this.endPointService.getSubCategories(docCategory.value).subscribe({
+      next: (res) => {
+        this.subcategories = res;
+      }
+    })
+  }
+  getSubcategoriesByCategoryFilter(){
+    const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
+    this.endPointService.getSubCategories(docCategoryFilter.value).subscribe({
+      next: (res) => {
+        this.subcategoriesFilter = res;
+      }
+    })
+  }
+  filterDocumentBy(){
+    const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
+    const docSubCategoryFilter = this.finDocumentForm.get('subcategoryFilter');
+    this.endPointService.findDocumentBy(docCategoryFilter.value,docSubCategoryFilter.value).subscribe({
+      next: (res) => {
+        this.documentsList = res;
+      }
+    });
+  }
+  deleteDocument(uuid:string){
+    this.endPointService.deleteDocumentBy(uuid).subscribe({
+      next: (res) => {
+        console.log("Documento Eliminado Correctamente!")
+    }
+  })
+  }
 }

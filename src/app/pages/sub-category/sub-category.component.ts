@@ -26,9 +26,13 @@ export class SubCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategoryList()
+
   }
 
   createSubCategory(body: NgForm){
+    console.log("ds",body)
+    console.log("dentro de id:",this.subcategory.categoryId)
+    console.log("dentro de crear subcategoria:",this.subcategory.subCategoryName)
     this.service.createSubCategory(this.subcategory).subscribe({
       next: (res) => {
         this.showModalCatgoryCreated = true;

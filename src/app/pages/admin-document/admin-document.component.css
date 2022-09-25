@@ -43,7 +43,10 @@
     align-items: center;
 }
 
-
+img{
+  width: 18px;
+  height: 18px;
+}
 .lista {
     margin-top: 10px;
     display: flex;

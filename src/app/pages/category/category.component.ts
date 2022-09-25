@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Category } from 'src/app/models/category.model';
+import { CtrCategoriesService } from 'src/app/services/control-categories/ctr-categories.service';
 import { EndpointsService } from '../../services/endpoints/endpoints.service'
 @Component({
   selector: 'category',
@@ -18,11 +19,14 @@ export class CategoryComponent implements OnInit {
 
 
   constructor(
-    private service: EndpointsService
+    private service: EndpointsService,
+    private controlCategories: CtrCategoriesService
   ) { }
 
   ngOnInit(): void {
-    this.getCategoryList()
+    this.controlCategories.getCategoryList().then((list) => {
+      this.categories = list;
+    });
   }
 
   createCategory(body: NgForm) {
@@ -35,13 +39,4 @@ export class CategoryComponent implements OnInit {
   revealForm() {
     this.formState = !this.formState
   }
-
-  getCategoryList() {
-    this.service.getAllCategories().subscribe({
-      next: (res) => {
-        this.categories = res;
-      }
-    })
-  }
-
 }

@@ -5,5 +5,17 @@ export interface DocumentModel{
     version:number,
     pathDocument:string,
     blockChainId:string,
-    description:string
+    description:string,
+    dateCreated:Date
+}
+export interface DocumentModelQuery{
+  name: string,
+  categoryId:string,
+  subCategoryName: string,
+  version:number,
+  pathDocument:string,
+  blockChainId:string,
+  description:string,
+  uuid: string,
+  dateCreated:Date
 }

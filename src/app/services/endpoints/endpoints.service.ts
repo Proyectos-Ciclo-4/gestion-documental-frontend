@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ResponseVerify } from 'src/app/models/responseVerify';
 import { environment } from 'src/environments/environment.prod';
-import { DocumentModel } from 'src/app/models/document.model';
+import { DocumentModel, DocumentModelQuery } from 'src/app/models/document.model';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 
@@ -17,10 +17,21 @@ export class EndpointsService {
   verifyUser(email: string): Observable<ResponseVerify> {
     return this.http.get<ResponseVerify>(`${environment.host.verifyUser}${email}`);
   }
-
+  /**
+   *DOCUMENT ENDPOINTS
+   * @param document
+   * @returns
+   */
   createDocument(document: DocumentModel) {
     return this.http.post(environment.host.createDocument, { ...document });
   }
+  findDocumentBy(categoryId: string,subCategoryName:string){
+    return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsBy}/${categoryId}/${subCategoryName}`)
+  }
+  deleteDocumentBy(uuid:string){
+    return this.http.delete(`${environment.host.deleteDocument}/${uuid}`);
+  }
+
   /**
    * CATEGORY ENDPOINTS
    * @param category
