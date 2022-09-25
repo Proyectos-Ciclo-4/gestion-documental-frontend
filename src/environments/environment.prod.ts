@@ -14,6 +14,8 @@ export const environment = {
     getCategories: 'http://localhost:8080/category/getall',
     getSubcategories: 'http://localhost:8080/subcategory/',
     createSubcategory: 'http://localhost:8080/subcategory/create',
+    getDocumentsBy:'http://localhost:8080/documents',
+    deleteDocument:'http://localhost:8080/document/delete'
   },
   production: true,
 };

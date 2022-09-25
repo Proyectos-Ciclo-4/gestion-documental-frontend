@@ -4,8 +4,10 @@ import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
-import { DocumentModel } from 'src/app/models/document.model';
+import { DocumentModel, DocumentModelQuery } from 'src/app/models/document.model';
 import { Storage, ref, uploadBytes, listAll, getDownloadURL } from '@angular/fire/storage';
+import { Category } from 'src/app/models/category.model';
+import { SubCategory } from 'src/app/models/subcategory.model';
 @Component({
   selector: 'document',
   templateUrl: './admin-document.component.html',
@@ -16,7 +18,10 @@ export class AdminDocumentComponent implements OnInit {
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
   documentModel: DocumentModel;
-
+  categories: Category[] = [];
+  subcategories: SubCategory[] = [];
+  subcategoriesFilter: SubCategory[] = [];
+  documentsList:DocumentModelQuery[]= [];
   // Variables de filtro
   listaCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
   listaSubCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
@@ -49,6 +54,11 @@ export class AdminDocumentComponent implements OnInit {
     upload: new FormControl('', { validators: [Validators.required] })
   })
 
+  finDocumentForm = new FormGroup({
+    categoryFilter: new FormControl('', { validators: [Validators.required] }),
+    subcategoryFilter: new FormControl(''),
+  })
+
   constructor(
     private sanitizer: DomSanitizer,
     private router: Router,
@@ -60,6 +70,7 @@ export class AdminDocumentComponent implements OnInit {
 
   // Validacion comentada por sebastian santis por problemas con el backend ... (si no tienes problemas descomentar)
   ngOnInit(): void {
+    this.getCategoryList()
     switch (this.controlSesion.getTypeUser()) {
       case null:
         this.router.navigate(['']);
@@ -205,5 +216,43 @@ export class AdminDocumentComponent implements OnInit {
     sessionStorage.setItem('docurl', url)
     this.router.navigate([`view-document`])
   }
-
+  getCategoryList() {
+    this.endPointService.getAllCategories().subscribe({
+      next: (res) => {
+        this.categories = res;
+      }
+    })
+  }
+  getSubcategoriesByCategory(){
+    const docCategory = this.documentForm.get('category');
+    this.endPointService.getSubCategories(docCategory.value).subscribe({
+      next: (res) => {
+        this.subcategories = res;
+      }
+    })
+  }
+  getSubcategoriesByCategoryFilter(){
+    const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
+    this.endPointService.getSubCategories(docCategoryFilter.value).subscribe({
+      next: (res) => {
+        this.subcategoriesFilter = res;
+      }
+    })
+  }
+  filterDocumentBy(){
+    const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
+    const docSubCategoryFilter = this.finDocumentForm.get('subcategoryFilter');
+    this.endPointService.findDocumentBy(docCategoryFilter.value,docSubCategoryFilter.value).subscribe({
+      next: (res) => {
+        this.documentsList = res;
+      }
+    });
+  }
+  deleteDocument(uuid:string){
+    this.endPointService.deleteDocumentBy(uuid).subscribe({
+      next: (res) => {
+        console.log("Documento Eliminado Correctamente!")
+    }
+  })
+  }
 }

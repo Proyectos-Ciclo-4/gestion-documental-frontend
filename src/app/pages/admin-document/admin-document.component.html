@@ -1,3 +1,7 @@
+<div class="location_pag">
+  <span>Inicio/ Documentos</span>
+</div>
+
 <div *ngIf="isAdmin">
 
   <!-- Creacion de documentos -->
@@ -20,15 +24,17 @@
 
       <div class="elemento">
         <label for="category">Categoria*</label>
-        <select id="category" type="text" formControlName="category">
-          <option *ngFor="let item of listaCategorias">{{item}}</option>
+        <select id="category" type="text" formControlName="category" (change)="getSubcategoriesByCategory()">
+          <option value="0">Selecciona una categoria</option>
+          <option *ngFor="let item of categories">{{item.categoryName}}</option>
         </select>
       </div>
 
       <div class="elemento">
         <label for="subcategory">SubCategoria</label>
         <select id="subcategory" type="text" formControlName="subcategory">
-          <option *ngFor="let item of listaSubCategorias">{{item}}</option>
+          <option value="0">Selecciona una subcategoria</option>
+          <option *ngFor="let item of subcategories">{{item.subCategoryName}}</option>
         </select>
       </div>
 
@@ -74,22 +80,28 @@
 </div>
 
 <!-- Filtros -->
-
-<div class="lista">
-  <div class="elemento-lista">
-    <h4>Categoria</h4>
-    <select name="color" id="color">
-      <option *ngFor="let item of listaCategorias" id="{{item}}">{{item}}</option>
-    </select>
+<form [formGroup]="finDocumentForm" class="formulario">
+  <div class="lista">
+    <div class="elemento-lista">
+      <label for="categoryFilter">Categoria*</label>
+      <select id="categoryFilter" type="text" formControlName="categoryFilter" (change)="getSubcategoriesByCategoryFilter()">
+        <option value="0">Selecciona una categoria</option>
+        <option *ngFor="let item of categories">{{item.categoryName}}</option>
+      </select>
+    </div>
   </div>
-
   <div class="elemento-lista">
-    <h4>Subcategoria</h4>
-    <select name="color" id="color">
-      <option *ngFor="let item of listaSubCategorias" id="{{item}}">{{item}}</option>
-    </select>
+    <label for="subcategoryFilter">SubCategoria</label>
+        <select id="subcategoryFilter" type="text" formControlName="subcategoryFilter">
+          <option value="0">Selecciona una subcategoria</option>
+          <option *ngFor="let item of subcategoriesFilter">{{item.subCategoryName}}</option>
+        </select>
   </div>
-</div>
+  <button type="submit" (click)="filterDocumentBy()">Buscar</button>
+</form>
+
+
+
 
 <!-- Tabla que contiene los documentos creados -->
 
@@ -99,31 +111,28 @@
 
     <tr>
       <th>Nombre</th>
-      <th>Cat/subCat</th>
+      <th>Categoria/subCategoria</th>
       <th>Version</th>
-      <th>Hora creación</th>
-      <th>Fecha de creación</th>
-      <th>Fecha de actualizacion</th>
+      <!-- <th>Hora creación</th> -->
+      <!-- <th>Fecha de creación</th>
+      <th>Fecha de actualizacion</th> -->
       <th>Propiedades</th>
     </tr>
 
-    <tr *ngFor="let item of listaDocumentos">
+    <tr *ngFor="let item of documentsList">
 
-      <td>Doc1</td>
-      <td>categoria17subcategoria2</td>
-      <td>3</td>
-      <td>03/03/2022</td>
-      <td>13:00</td>
-      <td>03/03/2022</td>
+      <td>{{item.name}}</td>
+      <td>{{item.categoryId}}/{{item.subCategoryName}}</td>
+      <td>{{item.version}}</td>
 
       <td>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
+        <button class="boton-menu"> <img src="/assets/images/masicon.png" alt="" class="icono"></button>
         <!-- <button class="boton-menu"> View <img src="/assets/images/report-icon.svg" alt="" class="icono"></button> -->
-        <button class="boton-menu" (click)="goToViewSelectedDocument(item)"> View </button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
-        <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button>
+        <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument)"><img src="/assets/images/vericon.png" alt="" class="icono"></button>
+        <button class="boton-menu"> <img src="/assets/images/actualizaricon.png" alt="" class="icono"></button>
+        <button class="boton-menu"> <img src="/assets/images/descargarIcon.png" alt="" class="icono"></button>
+        <button class="boton-menu" (click)="deleteDocument(item.uuid)"> <img src="/assets/images/eliminarIcon.png" alt="" class="icono"></button>
+        <!-- <button class="boton-menu"> <img src="/assets/images/report-icon.svg" alt="" class="icono"></button> -->
       </td>
 
     </tr>
