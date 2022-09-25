@@ -16,7 +16,7 @@ export class CategoryComponent implements OnInit {
   formState: Boolean = false;
   categories: Category[] = [];
   category: Category = new Category();
-
+  page: number = 1;
 
   constructor(
     private service: EndpointsService,

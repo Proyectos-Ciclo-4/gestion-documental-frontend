@@ -19,7 +19,7 @@ import { ViewDocumentComponent } from './pages/view-document/view-document.compo
 import { ControlSesion } from './utils/controlSesion';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
-
+import {NgxPaginationModule} from 'ngx-pagination';
 @NgModule({
 
   declarations: [
@@ -45,11 +45,12 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
     provideStorage(() => getStorage()),
     ReactiveFormsModule,
     NgxDocViewerModule,
+    NgxPaginationModule,
   ],
 
   providers: [],
   bootstrap: [AppComponent]
 
 })
-export class AppModule { 
+export class AppModule {
 }

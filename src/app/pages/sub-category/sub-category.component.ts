@@ -19,6 +19,7 @@ export class SubCategoryComponent implements OnInit {
   categories: Category[] = [];
   categoryName: string = '';
   selectedOption: string;
+  page: number = 1;
 
   documentForm = new FormGroup({
     name: new FormControl('', { validators: [Validators.required] }),

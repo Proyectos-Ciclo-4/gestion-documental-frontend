@@ -35,8 +35,10 @@
     </select>
   </div>
   <ul>
-    <li *ngFor="let res of subcategories">{{ res.subCategoryName }}</li>
+    <li *ngFor="let res of subcategories | paginate: { itemsPerPage: 2, currentPage: page }" >{{ res.subCategoryName }}</li>
   </ul>
+  <pagination-controls (pageChange)="page = $event" previousLabel="Atrás"
+  nextLabel="Siguiente"></pagination-controls>
 </div>
 <div class="modal" *ngIf="showModalCatgoryCreated">
   <div class="modal_body">

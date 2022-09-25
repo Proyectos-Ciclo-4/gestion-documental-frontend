@@ -15,10 +15,11 @@
 <div class="list_categories">
   <span class="list_categories-title">Listado de Categorias</span>
   <ul>
-    <li *ngFor="let item of categories">{{item.categoryName}}</li>
+    <li *ngFor="let item of categories | paginate: { itemsPerPage: 2, currentPage: page }">{{item.categoryName}}</li>
   </ul>
+  <pagination-controls (pageChange)="page = $event" previousLabel="Atrás"
+  nextLabel="Siguiente" ></pagination-controls>
 </div>
-
 <div class="modal" *ngIf="showModalCatgoryCreated">
   <div class="modal_body">
     <span class="modal_body-title">Categorias</span>
