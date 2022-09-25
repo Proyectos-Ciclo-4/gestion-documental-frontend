@@ -23,12 +23,16 @@ export class SubCategoryComponent implements OnInit {
 
   selectOfForm : FormGroup;
 
+  selectedOption: string;
+
+
   constructor(
     private endPoints$: EndpointsService,
     private controlCategories: CtrCategoriesService,
     private formBuilder : FormBuilder) { }
 
   ngOnInit(): void {
+
     this.controlCategories.getCategoryList().then((list) => {
       this.categories = list;
       console.log(this.categories);
@@ -42,6 +46,9 @@ export class SubCategoryComponent implements OnInit {
       console.log(value);
     });
 
+
+    //this.getCategoryList()
+
   }
 
   createSubCategory(body: NgForm) {
@@ -54,5 +61,23 @@ export class SubCategoryComponent implements OnInit {
   revealForm() {
     this.formState = !this.formState
   }
+
+  /* getSubCategoryList() {
+    this.service.getSubCategories(this.subcategory.categoryId).subscribe({
+      next: (res) => {
+        this.subcategories = res;
+      }
+    })
+  } */
+  selectCategory(){
+    // this.getSubCategoryList()
+  }
+  /* getCategoryList() {
+    this.service.getAllCategories().subscribe({
+      next: (res) => {
+        this.categories = res;
+      }
+    })
+  } */
 
 }
