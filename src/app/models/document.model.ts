@@ -5,7 +5,8 @@ export interface DocumentModel{
     version:number,
     pathDocument:string,
     blockChainId:string,
-    description:string
+    description:string,
+    dateCreated:Date
 }
 export interface DocumentModelQuery{
   name: string,
@@ -15,5 +16,6 @@ export interface DocumentModelQuery{
   pathDocument:string,
   blockChainId:string,
   description:string,
-  uuid: string
+  uuid: string,
+  dateCreated:Date
 }

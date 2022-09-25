@@ -114,8 +114,8 @@
       <th>Categoria/subCategoria</th>
       <th>Version</th>
       <!-- <th>Hora creación</th> -->
-      <!-- <th>Fecha de creación</th>
-      <th>Fecha de actualizacion</th> -->
+      <th>Fecha de creación</th>
+      <!--<th>Fecha de actualizacion</th> -->
       <th>Propiedades</th>
     </tr>
 
@@ -124,6 +124,8 @@
       <td>{{item.name}}</td>
       <td>{{item.categoryId}}/{{item.subCategoryName}}</td>
       <td>{{item.version}}</td>
+      <td>{{item.dateCreated | date}}</td>
+
 
       <td>
         <button class="boton-menu"> <img src="/assets/images/masicon.png" alt="" class="icono"></button>

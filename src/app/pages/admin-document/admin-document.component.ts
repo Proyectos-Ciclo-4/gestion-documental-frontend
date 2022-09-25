@@ -160,7 +160,8 @@ export class AdminDocumentComponent implements OnInit {
       version: 1,
       pathDocument: pathDocument,
       blockChainId: 'blockChainId1',
-      description: docDescription.value
+      description: docDescription.value,
+      dateCreated:new Date()
     }).subscribe(n => {
       docName.setValue("");
       docCategory.setValue("");
