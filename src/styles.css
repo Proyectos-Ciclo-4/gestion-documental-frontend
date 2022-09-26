@@ -42,6 +42,13 @@ select {
     padding: 6px;
 }
 
+/* LABEL FORM */
+form label {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0px 10px;
+  }
+
 .btn_ok,
 .btn_cancel {
     padding: 10px 15px;

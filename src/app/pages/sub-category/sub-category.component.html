@@ -1,45 +1,48 @@
 <div class="location_pag">
   <span>Inicio/ Sub-Categorias</span>
 </div>
+
 <div class="formCategory">
-  <button class="btn_ok" (click)="revealForm()">
-    CREAR NUEVA SUBCATEGORÍA
-  </button>
+  <button class="btn_ok" (click)="revealForm()">Crear nueva subcategoría</button>
   <div class="create_category_box" *ngIf="formState">
-    <form [formGroup]="documentForm" class="formulario">
-      <div class="justify-left">
+    <form [formGroup]="documentForm" class="create_category_box-form">
+      <div>
         <div class="elemento">
           <label for="name">Nombre*</label>
           <input id="name" type="text" formControlName="name">
         </div>
         <div class="elemento">
-          <label for="category">Categoria*</label>
-          <select id="category" type="text" formControlName="category" (change)="getSubcategoriesByCategory()">
+          <label for="category">Categoria* </label>
+          <select id="category" type="text" formControlName="category">
             <option value="0">Selecciona una categoria</option>
             <option *ngFor="let item of categories">{{item.categoryName}}</option>
           </select>
         </div>
       </div>
-      <button type="submit" (click)="submit()" class="btn_ok"
-        [disabled]="documentForm.invalid">Guardar</button>
+      <button type="submit" (click)="submit()" class="btn_cancel" [disabled]="documentForm.invalid">Guardar</button>
     </form>
   </div>
 </div>
+
 <div class="list_categories">
   <span class="list_categories-title">Listado de Sub-Categorias</span>
+
   <div class="elemento">
-    <label for="category2">Categoria*</label>
-    <select id="category2"  name="xd" [(ngModel)]="subcategory.categoryId" (change)="selectCategory()">
-      <option value="0">Selecciona una categoria</option>
-      <option  [ngValue] ="item.categoryName" *ngFor="let item of categories">{{ item.categoryName }}</option>
+    <select id="select_list_category" name="select_list_category" [(ngModel)]="selectedOption"
+      (change)="getSubCategoryForList()">
+      <option value="0" [selected]="">Selecciona una categoria</option>
+      <option *ngFor="let item of categories" value="{{ item.categoryName }}">{{ item.categoryName }}</option>
     </select>
   </div>
+
   <ul>
-    <li *ngFor="let res of subcategories | paginate: { itemsPerPage: 1, currentPage: page }" >{{ res.subCategoryName }}</li>
+    <li *ngFor="let res of subCategoriesForList | paginate: { itemsPerPage: 2, currentPage: page }">
+      {{ res.subCategoryName }}
+    </li>
   </ul>
-  <pagination-controls (pageChange)="page = $event" previousLabel="Atrás"
-  nextLabel="Siguiente"></pagination-controls>
+  <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
 </div>
+
 <div class="modal" *ngIf="showModalCatgoryCreated">
   <div class="modal_body">
     <span class="modal_body-title">Sub-Categorias</span>

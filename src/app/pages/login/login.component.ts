@@ -52,7 +52,14 @@ export class LoginComponent implements OnInit {
 
         });
     });
-    
+
     return false;
   }
+
+  unLogged(){
+
+    this.router.navigate(['/document'])
+
+  }
+
 }
