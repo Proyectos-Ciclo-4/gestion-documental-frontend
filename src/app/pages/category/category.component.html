@@ -6,7 +6,7 @@
   <div class="create_category_box" *ngIf="formState">
     <form class="create_category_box-form" (ngSubmit)="createCategory(body)">
       <label for="text_new_category">Nombre</label>
-      <input type="text" name="text_new_category" [(ngModel)]="category.categoryName" required="">
+      <input type="text" id="text_new_category" name="text_new_category" [(ngModel)]="category.categoryName" required="">
       <button class="btn_cancel" type="submit">Guardar</button>
     </form>
   </div>

@@ -5,16 +5,18 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { DocumentModel, DocumentModelQuery } from 'src/app/models/document.model';
-import { Storage, ref, uploadBytes, listAll, getDownloadURL } from '@angular/fire/storage';
+import { Storage, ref, uploadBytes, listAll, getDownloadURL,deleteObject,getMetadata } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
+
+
 @Component({
   selector: 'document',
   templateUrl: './admin-document.component.html',
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
-
+  uuidDoc:string;
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
   documentModel: DocumentModel;
@@ -26,18 +28,37 @@ export class AdminDocumentComponent implements OnInit {
   listaCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
   listaSubCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
   listaDocumentos: Array<any> = []; // Lista quemada hasta tener el backend
+  listaNombresStorage:Array<string> = []; // Lista dinamica creada con los datos del storage
 
   // Helpers
   currentDocFile: any;
+  returnToView = false;
+  returnToViewObject: Object;
+  private deleteDoc!:string;
+  referenceDelte:any;
 
   // ???
   controlSesion = new ControlSesion();
   isAdmin = false;
+  isUser = false;
   showModalNoUser: boolean = false;
   showModalNoUser2: boolean = false;
+  showModalNoUser3: boolean = false;
+  showModalNoUser4: boolean = false;
+  showModalNoUser5: boolean = false;
+  showModalNoUser6: boolean = false;
   imagePrevius: any;
   fileInAngular: any;
   docType: any;
+
+  //ModalInfoVariables
+  modalInfoNombre:string;
+  modalInfoCategoria:string;
+  modalInfoSubcategoria:string;
+  modalInfoVersion:string;
+  modalInfoFecha:string;
+  modalInfoBlockChain:string;
+  modalInfoDesription:string;
 
   docsAllowed: String[] = [
     'application/pdf',
@@ -58,7 +79,11 @@ export class AdminDocumentComponent implements OnInit {
     categoryFilter: new FormControl('', { validators: [Validators.required] }),
     subcategoryFilter: new FormControl(''),
   })
-
+  updateDocumentForm = new FormGroup({
+    nameUpdate: new FormControl(''),
+    descriptionUpdate: new FormControl(''),
+    uploadUpdate: new FormControl('')
+  })
   constructor(
     private sanitizer: DomSanitizer,
     private router: Router,
@@ -73,11 +98,18 @@ export class AdminDocumentComponent implements OnInit {
     this.getCategoryList()
     switch (this.controlSesion.getTypeUser()) {
       case null:
+        this.isUser = false;
         this.isAdmin = false;
         this.getStorage();
         break;
       case 700:
         this.isAdmin = true;
+        this.isUser = true;
+        this.getStorage();
+        break;
+      case 555:
+        this.isUser = true;
+        this.isAdmin = false;
         this.getStorage();
         break;
     };
@@ -138,13 +170,6 @@ export class AdminDocumentComponent implements OnInit {
 
   });
 
-  protected revealForm() {
-    this.showModalNoUser = !this.showModalNoUser;
-  }
-  protected revealForm2() {
-    this.showModalNoUser2 = !this.showModalNoUser2
-  }
-
   protected async submit() {
 
     const docName = this.documentForm.get('name');
@@ -181,7 +206,7 @@ export class AdminDocumentComponent implements OnInit {
 
   protected async sendToStorage(): Promise<string> {
 
-    const docRef = ref(this.storage, `documents/${this.currentDocFile.name}`);
+    const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile)
     return (await getDownloadURL(docRef))
 
@@ -205,7 +230,16 @@ export class AdminDocumentComponent implements OnInit {
       })
       .catch(err => { console.error(err) });
 
+      let data:any;
+      listAll(docRef).then( data => data.items.forEach(e=>{
+
+        let data = e.fullPath.split('/');
+        this.listaNombresStorage.push(data[1])
+
+      }));
+
     console.log(this.listaDocumentos)
+    console.log(this.listaNombresStorage)
 
   }
 
@@ -215,8 +249,14 @@ export class AdminDocumentComponent implements OnInit {
    */
 
   protected goToViewSelectedDocument(url: string): void {
-    sessionStorage.setItem('docurl', url)
-    this.router.navigate([`view-document`])
+
+    if(this.isUser){
+      sessionStorage.setItem('docurl', url)
+      this.router.navigate([`view-document`])
+    }else{
+      this.showModalNoUser4 = true;
+    }
+
   }
   getCategoryList() {
     this.endPointService.getAllCategories().subscribe({
@@ -250,11 +290,104 @@ export class AdminDocumentComponent implements OnInit {
       }
     });
   }
-  deleteDocument(uuid:string){
-    this.endPointService.deleteDocumentBy(uuid).subscribe({
+  upDate(uuid:string){
+    this.uuidDoc=uuid;
+    this.revealForm5();
+  }
+  upDateDocument(){
+    const docNameUpdate = this.documentForm.get('nameUpdate');
+    const docDescriptionUpdate = this.documentForm.get('descriptionUpdate');
+    const docUpload = this.documentForm.get('uploadUpdate');
+    this.endPointService.updateDocument(this.uuidDoc,{
+      name:docNameUpdate,
+      description:docDescriptionUpdate,
+      pathtDocument:docUpload
+    }).subscribe();
+    this.revealForm5();
+
+  }
+  //Controladores de los modales
+  protected revealForm() {
+    this.showModalNoUser = !this.showModalNoUser;
+  }
+  protected revealForm2() {
+    this.showModalNoUser2 = !this.showModalNoUser2;
+  }
+  protected revealForm3() {
+    this.showModalNoUser3 = false;
+  }
+  protected revealForm5() {
+    this.showModalNoUser5 = !this.showModalNoUser5;
+  }
+
+  // Manda a el usuarioa la pagina de login, guardando en el sessionStorage los datos del filtro que realizo
+  protected revealForm4_1(){
+    this.router.navigate(['/'])
+  }
+
+  // Quita el modal de la vista
+  protected revealForm4_2(){
+    this.showModalNoUser4 = false;
+  }
+
+  deleteDocument(uuid:string,name:string){
+
+
+    this.referenceDelte = ref(this.storage,`documents/${name}`)
+
+    this.deleteDoc =uuid;
+    this.showModalNoUser6=true;
+
+  }
+
+  // Confirma que el usuario quiere realizar la respectiva eliminacion de ese documento
+  protected revealForm6_1(){
+
+    deleteObject(this.referenceDelte)
+    .then(res=>console.log(res))
+    .catch(e=>console.log(e));
+
+    this.endPointService.deleteDocumentBy(this.deleteDoc).subscribe({
       next: (res) => {
         console.log("Documento Eliminado Correctamente!")
-    }
-  })
+      }
+    })
+
+    this.showModalNoUser6 = false;
+
   }
+
+  // Quita el modal de la vista
+  protected revealForm6_2(){
+    this.showModalNoUser6 = false;
+  }
+
+  showDetails(){
+    this.showModalNoUser3 =true;
+  }
+
+  visualizarModal(
+    modalInfoNombre,
+    modalInfoCategoria,
+    modalInfoSubcategoria,
+    modalInfoVersion,
+    modalInfoFecha,
+    modalInfoBlockChain,
+    modalInfoDesription)
+  {
+
+    this.modalInfoNombre=modalInfoNombre;
+    this.modalInfoCategoria=modalInfoCategoria;
+    this.modalInfoSubcategoria=modalInfoSubcategoria;
+    this.modalInfoVersion=modalInfoVersion;
+    this.modalInfoFecha=modalInfoFecha;
+    this.modalInfoBlockChain=modalInfoBlockChain;
+    this.modalInfoDesription=modalInfoDesription;
+
+    this.showModalNoUser3=true;
+
+
+
+  }
+
 }

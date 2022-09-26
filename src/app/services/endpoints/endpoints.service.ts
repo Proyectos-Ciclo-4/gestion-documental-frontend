@@ -28,6 +28,10 @@ export class EndpointsService {
   findDocumentBy(categoryId: string,subCategoryName:string){
     return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsBy}/${categoryId}/${subCategoryName}`)
   }
+  updateDocument(uuid:string,body:any){
+    return this.http.put(`${environment.host.updateDocument}/${uuid}`,{...body});
+
+  }
   deleteDocumentBy(uuid:string){
     return this.http.delete(`${environment.host.deleteDocument}/${uuid}`);
   }
