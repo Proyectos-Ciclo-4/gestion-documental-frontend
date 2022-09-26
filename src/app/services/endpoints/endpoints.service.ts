@@ -26,7 +26,12 @@ export class EndpointsService {
     return this.http.post(environment.host.createDocument, { ...document });
   }
   findDocumentBy(categoryId: string,subCategoryName:string){
-    return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsBy}/${categoryId}/${subCategoryName}`)
+    if(subCategoryName!==""){
+      return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsBy}/${categoryId}/${subCategoryName}`)
+    }else{
+      return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsByCategory}/${categoryId}/`)
+    }
+
   }
   updateDocument(uuid:string,body:DocumentUpdateModel){
     return this.http.put(`${environment.host.updateDocument}/${uuid}`,{...body});

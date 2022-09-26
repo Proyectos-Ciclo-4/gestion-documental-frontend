@@ -8,6 +8,7 @@ import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/
 import { Storage, ref, uploadBytes, listAll, getDownloadURL,deleteObject,getMetadata } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
+import { stringLength } from '@firebase/util';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { SubCategory } from 'src/app/models/subcategory.model';
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
+  page: number = 1;
   uuidDoc:string;
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
@@ -115,9 +117,6 @@ export class AdminDocumentComponent implements OnInit {
         break;
     };
   }
-
-  getDocument() { }
-
   protected async onFileSelected(event: any) {
 
     const docFile = event.target.files[0];
@@ -127,22 +126,16 @@ export class AdminDocumentComponent implements OnInit {
     if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) {
 
       this.fileInAngular = docFile;
-
-      this.blobFile(docFile).then((res: any) => {
+      /* this.blobFile(docFile).then((res: any) => {
         this.imagePrevius = res.base;
-        const db = this.imagePrevius.split(',')[1];
-      });
-
+      }); */
     } else {
-
       event.target.value = '';
       this.revealForm();
-
     }
 
   }
-
-  private blobFile = async ($event: any) => new Promise((resolve, reject) => {
+  /* private blobFile = async ($event: any) => new Promise((resolve, reject) => {
 
     try {
 
@@ -169,7 +162,7 @@ export class AdminDocumentComponent implements OnInit {
       return null;
     }
 
-  });
+  }); */
 
   protected async submit() {
 
@@ -209,7 +202,12 @@ export class AdminDocumentComponent implements OnInit {
 
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile)
-    return (await getDownloadURL(docRef))
+    const op=(await getDownloadURL(docRef))
+    /* setTimeout(async()=>{
+
+    },1000) */
+    return op;
+
 
   }
 
@@ -263,6 +261,17 @@ export class AdminDocumentComponent implements OnInit {
     this.endPointService.getAllCategories().subscribe({
       next: (res) => {
         this.categories = res;
+      },
+      complete:()=>{
+        this.categories.sort((a, b) => {
+          if (a.categoryName > b.categoryName) {
+          return 1;
+          }
+          if (a.categoryName < b.categoryName) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
       }
     })
   }
@@ -271,6 +280,17 @@ export class AdminDocumentComponent implements OnInit {
     this.endPointService.getSubCategories(docCategory.value).subscribe({
       next: (res) => {
         this.subcategories = res;
+      },
+      complete:()=>{
+        this.subcategories.sort((a, b) => {
+          if (a.subCategoryName > b.subCategoryName) {
+          return 1;
+          }
+          if (a.subCategoryName < b.subCategoryName) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
       }
     })
   }
@@ -279,6 +299,17 @@ export class AdminDocumentComponent implements OnInit {
     this.endPointService.getSubCategories(docCategoryFilter.value).subscribe({
       next: (res) => {
         this.subcategoriesFilter = res;
+      },
+      complete:()=>{
+        this.subcategoriesFilter.sort((a, b) => {
+          if (a.subCategoryName > b.subCategoryName) {
+          return 1;
+          }
+          if (a.subCategoryName < b.subCategoryName) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
       }
     })
   }
@@ -288,6 +319,18 @@ export class AdminDocumentComponent implements OnInit {
     this.endPointService.findDocumentBy(docCategoryFilter.value,docSubCategoryFilter.value).subscribe({
       next: (res) => {
         this.documentsList = res;
+        docSubCategoryFilter.setValue("");
+      },
+      complete:()=>{
+        this.documentsList.sort((a, b) => {
+          if (a.name > b.name) {
+          return 1;
+          }
+          if (a.name < b.name) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
       }
     });
   }
