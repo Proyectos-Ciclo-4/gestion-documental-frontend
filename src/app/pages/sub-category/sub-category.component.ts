@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
+import { ControlSesion } from 'src/app/utils/controlSesion';
 
 @Component({
   selector: 'sub-category',
@@ -10,6 +12,8 @@ import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
   styleUrls: ['./sub-category.component.css'],
 })
 export class SubCategoryComponent implements OnInit {
+
+  controlSesion = new ControlSesion();
 
   nombre: string = '';
   formState: Boolean = false;
@@ -29,7 +33,9 @@ export class SubCategoryComponent implements OnInit {
     category: new FormControl('', { validators: [Validators.required] }),
   });
 
-  constructor(private service: EndpointsService) { }
+  constructor(
+    private service: EndpointsService,
+    private router: Router) { }
 
   protected async submit() {
 
@@ -49,7 +55,17 @@ export class SubCategoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCategoryList();
+    switch (this.controlSesion.getTypeUser()) {
+      case null:
+        this.router.navigate(['']);
+        break;
+      case 555:
+        this.router.navigate(['document']);
+        break;
+      case 777:
+        this.getCategoryList();
+        break;
+    };
   }
 
   revealForm() {

@@ -1,12 +1,3 @@
-/* .contenedor-titulo{
-    background-color: #ec7e14;
-    color: aliceblue;
-    height: 100%;
-    margin: 0% !important;
-    padding: 0% !important;
-    height: 50px;
-} */
-
 .titulo {
     display: flex;
     align-items: center;
@@ -83,4 +74,8 @@ button:disabled {
   margin-top: -8px;
   display: flex;
   flex-direction: column;
+}
+
+table tr th {
+    background: gray;
 }
