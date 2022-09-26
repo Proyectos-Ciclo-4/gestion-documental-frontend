@@ -4,10 +4,10 @@
 <div class="formCategory">
   <button class="btn_ok" (click)="revealForm()">CREAR NUEVA CATEGORÍA</button>
   <div class="create_category_box" *ngIf="formState">
-    <form class="create_category_box-form" (ngSubmit)="createCategory(body)">
+    <form class="create_category_box-form" (ngSubmit)="createCategory(body)" [formGroup]="documentForm">
       <label for="text_new_category">Nombre</label>
-      <input type="text" id="text_new_category" name="text_new_category" [(ngModel)]="category.categoryName" required="">
-      <button class="btn_cancel" type="submit">Guardar</button>
+      <input type="text" id="text_new_category" name="text_new_category" formControlName="text_new_category" [(ngModel)]="category.categoryName" required>
+      <button class="btn_cancel" type="submit" [disabled]="documentForm.invalid">Guardar</button>
     </form>
   </div>
 </div>
@@ -17,8 +17,7 @@
   <ul>
     <li *ngFor="let item of categories | paginate: { itemsPerPage: 2, currentPage: page }">{{item.categoryName}}</li>
   </ul>
-  <pagination-controls (pageChange)="page = $event" previousLabel="Atrás"
-  nextLabel="Siguiente" ></pagination-controls>
+  <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
 </div>
 <div class="modal" *ngIf="showModalCatgoryCreated">
   <div class="modal_body">

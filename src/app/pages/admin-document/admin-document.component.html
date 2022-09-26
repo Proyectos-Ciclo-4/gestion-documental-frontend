@@ -42,12 +42,10 @@
         <label for="uploads">Elige el documento a cargar:</label>
         <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
           accept=".docx, .doc, .pdf, .xlsx, .pptx" formControlName="upload">
-
       </p>
 
     </div>
-    <button type="submit" (click)="submit()" class="btn_ok"
-      [disabled]="documentForm.invalid">Guardar</button>
+    <button type="submit" (click)="submit()" class="btn_ok" [disabled]="documentForm.invalid">Guardar</button>
   </form>
 
   <!-- Modal de aviso -->
@@ -62,6 +60,7 @@
     </div>
   </div>
 </div>
+
 <!-- Modal de aviso2 -->
 <div class="modal" *ngIf="showModalNoUser2">
   <div class="modal_body">
@@ -84,7 +83,8 @@
   <div class="lista">
     <div class="elemento-lista">
       <label for="categoryFilter">Categoria*</label>
-      <select id="categoryFilter" type="text" formControlName="categoryFilter" (change)="getSubcategoriesByCategoryFilter()">
+      <select id="categoryFilter" type="text" formControlName="categoryFilter"
+        (change)="getSubcategoriesByCategoryFilter()">
         <option value="0">Selecciona una categoria</option>
         <option *ngFor="let item of categories">{{item.categoryName}}</option>
       </select>
@@ -92,10 +92,10 @@
   </div>
   <div class="elemento-lista">
     <label for="subcategoryFilter">SubCategoria</label>
-        <select id="subcategoryFilter" type="text" formControlName="subcategoryFilter">
-          <option value="0"></option>
-          <option *ngFor="let item of subcategoriesFilter">{{item.subCategoryName}}</option>
-        </select>
+    <select id="subcategoryFilter" type="text" formControlName="subcategoryFilter">
+      <option value="0"></option>
+      <option *ngFor="let item of subcategoriesFilter">{{item.subCategoryName}}</option>
+    </select>
   </div>
   <button type="submit" (click)="filterDocumentBy()">Buscar</button>
 </form>
@@ -126,13 +126,18 @@
       <td>{{item.version}}</td>
       <td>{{item.dateCreated | date}}</td>
       <td>
-        <button class="boton-menu" (click)="visualizarModal(item.name,item.categoryId,item.subCategoryName,item.version,item.dateCreated,item.blockChainId,item.description)">
+        <button class="boton-menu"
+          (click)="visualizarModal(item.name,item.categoryId,item.subCategoryName,item.version,item.dateCreated,item.blockChainId,item.description)">
           <img src="/assets/images/masicon.png" alt="" class="icono">
         </button>
-        <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument)"><img src="/assets/images/vericon.png" alt="" class="icono"></button>
-        <button *ngIf="isAdmin" class="boton-menu" (click)="upDate(item.uuid)"> <img src="/assets/images/actualizaricon.png" alt="" class="icono"></button>
-        <a download= "{{item.name}}" href="{{item.pathDocument}}" class="boton-menu"> <img src="/assets/images/descargarIcon.png" alt="" class="icono"></a>
-        <button *ngIf="isAdmin" class="boton-menu" (click)="deleteDocument(item.uuid,item.name)"><img src="/assets/images/eliminarIcon.png" alt="" class="icono"></button>
+        <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument)"><img
+            src="/assets/images/vericon.png" alt="" class="icono"></button>
+        <button *ngIf="isAdmin" class="boton-menu" (click)="upDate(item.uuid)"> <img
+            src="/assets/images/actualizaricon.png" alt="" class="icono"></button>
+        <a download="{{item.name}}" href="{{item.pathDocument}}" class="boton-menu"> <img
+            src="/assets/images/descargarIcon.png" alt="" class="icono"></a>
+        <button *ngIf="isAdmin" class="boton-menu" (click)="deleteDocument(item.uuid,item.name)"><img
+            src="/assets/images/eliminarIcon.png" alt="" class="icono"></button>
       </td>
 
     </tr>
@@ -145,31 +150,30 @@
 
 <div>
   <div class="paginacion">
-    <pagination-controls (pageChange)="page = $event" previousLabel="Atrás"
-  nextLabel="Siguiente" ></pagination-controls>
+    <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
   </div>
 </div>
 
 <div class="modal" *ngIf="showModalNoUser3">
   <div class="modal_body">
     <span class="modal_body-title">Detalles del documento</span>
-      <p class="modal_body-msj">
-        <li>Nombre del documento: {{modalInfoNombre}}</li>
-        <li>Categoria del documento: {{modalInfoCategoria}}</li>
-        <li>Subcategoria del documento:{{modalInfoSubcategoria}}</li>
-        <li>Version: {{modalInfoVersion}}</li>
-        <li>Fecha de creación: {{modalInfoFecha}}</li>
-        <li>Registro blockchain: {{modalInfoBlockChain}}</li>
-        <li>Descripción: {{modalInfoDesription}}</li>
-      </p>
-      <button (click)="revealForm3()" class="modal_body-btn btn_ok">Entendido</button>
+    <p class="modal_body-msj">
+      <li>Nombre del documento: {{modalInfoNombre}}</li>
+      <li>Categoria del documento: {{modalInfoCategoria}}</li>
+      <li>Subcategoria del documento:{{modalInfoSubcategoria}}</li>
+      <li>Version: {{modalInfoVersion}}</li>
+      <li>Fecha de creación: {{modalInfoFecha}}</li>
+      <li>Registro blockchain: {{modalInfoBlockChain}}</li>
+      <li>Descripción: {{modalInfoDesription}}</li>
+    </p>
+    <button (click)="revealForm3()" class="modal_body-btn btn_ok">Entendido</button>
   </div>
 </div>
 
 <!-- Modal de aviso4 -->
 <div class="modal" *ngIf="showModalNoUser4">
   <div class="modal_body">
-      <span class="modal_body-title">¡Necesitas iniciar sesion!</span>
+    <span class="modal_body-title">¡Necesitas iniciar sesion!</span>
     <p class="modal_body-msj">
       Para poder visualizar los elementos debes iniciar sesion con una cuenta registrada
     </p>
@@ -179,39 +183,39 @@
 </div>
 <!-- Modal de aviso 5 Actualizar Documento-->
 
-    <div class="modal" *ngIf="showModalNoUser5">
-          <div class="modal_body">
-            <form action="" [formGroup]="updateDocumentForm" class="formulario">
-              <span class="modal_body-title">Actualizar información del documento</span>
-              <div class="modal_body-msj">
-                <div class="justify-left">
-                  <div class="elemento">
-                    <label for="name">Nombre:</label>
-                    <input id="name" type="text" formControlName="nameUpdate">
-                  </div>
-
-                  <div class="justify-left">
-                    <div class="elemento">
-                      <label for="description">Descripción:</label>
-                      <input id="description" type="text" formControlName="descriptionUpdate">
-                    </div>
-                  </div>
-                  <p>
-                    <label for="uploads">Elige el documento a cargar:</label>
-                    <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
-                      accept=".docx, .doc, .pdf, .xlsx, .pptx" formControlName="uploadUpdate">
-                  </p>
-                </div>
-              </div>
-              <button type="submit" (click)="upDateDocument()" class="modal_body-btn btn_ok">Guardar</button>
-            </form>
-            <button (click)="revealForm5()" class="modal_body-btn btn_ok">Cancelar</button>
-          </div>
-        </div>
-<!-- Modal de aviso6 -->
-<div   class="modal" *ngIf="showModalNoUser6">
+<div class="modal" *ngIf="showModalNoUser5">
   <div class="modal_body">
-      <span class="modal_body-title">¿Seguro que deseas eliminar?</span>
+    <form action="" [formGroup]="updateDocumentForm" class="formulario">
+      <span class="modal_body-title">Actualizar información del documento</span>
+      <div class="modal_body-msj">
+        <div class="justify-left">
+          <div class="elemento">
+            <label for="name">Nombre:</label>
+            <input id="name" type="text" formControlName="nameUpdate">
+          </div>
+
+          <div class="justify-left">
+            <div class="elemento">
+              <label for="description">Descripción:</label>
+              <input id="description" type="text" formControlName="descriptionUpdate">
+            </div>
+          </div>
+          <p>
+            <label for="uploads">Elige el documento a cargar:</label>
+            <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
+              accept=".docx, .doc, .pdf, .xlsx, .pptx" formControlName="uploadUpdate">
+          </p>
+        </div>
+      </div>
+      <button type="submit" (click)="upDateDocument()" class="modal_body-btn btn_ok">Guardar</button>
+    </form>
+    <button (click)="revealForm5()" class="modal_body-btn btn_ok">Cancelar</button>
+  </div>
+</div>
+<!-- Modal de aviso6 -->
+<div class="modal" *ngIf="showModalNoUser6">
+  <div class="modal_body">
+    <span class="modal_body-title">¿Seguro que deseas eliminar?</span>
     <p class="modal_body-msj">
       Una vez eliminado este documento no podras acceder ni a su informacion ni a su contenido
     </p>

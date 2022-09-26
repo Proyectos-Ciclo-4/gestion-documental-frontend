@@ -10,13 +10,13 @@ import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { stringLength } from '@firebase/util';
 
-
 @Component({
   selector: 'document',
   templateUrl: './admin-document.component.html',
   styleUrls: ['./admin-document.component.css'],
 })
 export class AdminDocumentComponent implements OnInit {
+
   page: number = 1;
   uuidDoc:string;
   group: AbstractControl;
@@ -27,6 +27,7 @@ export class AdminDocumentComponent implements OnInit {
   subcategories: SubCategory[] = [];
   subcategoriesFilter: SubCategory[] = [];
   documentsList:DocumentModelQuery[]= [];
+
   // Variables de filtro
   listaCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
   listaSubCategorias: Array<String> = ['Amarillo', 'Azul', 'Rojo'] // Lista quemada hasta tener el backend
