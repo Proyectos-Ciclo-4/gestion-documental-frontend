@@ -158,12 +158,14 @@
 <div class="modal" *ngIf="showModalNoUser3">
   <div class="modal_body">
     <span class="modal_body-title">Detalles del documento</span>
+
     <p class="modal_body-msj">
       <li>Nombre del documento: {{modalInfoNombre}}</li>
       <li>Categoria del documento: {{modalInfoCategoria}}</li>
       <li>Subcategoria del documento:{{modalInfoSubcategoria}}</li>
       <li>Version: {{modalInfoVersion}}</li>
-      <li>Fecha de creación: {{modalInfoFecha}}</li>
+      <li>Fecha de creación: {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
+      <li>Hora de creación: {{modalInfoFecha | date:'h:mm a':'UTC -10'}}</li>
       <li>Registro blockchain: {{modalInfoBlockChain}}</li>
       <li>Descripción: {{modalInfoDesription}}</li>
     </p>
