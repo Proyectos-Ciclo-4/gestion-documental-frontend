@@ -61,6 +61,17 @@ export class SubCategoryComponent implements OnInit {
       next: (res) => {
         this.subCategoriesForList = res;
       },
+      complete:()=>{
+        this.categories.sort((a, b) => {
+          if (a.categoryName > b.categoryName) {
+          return 1;
+          }
+          if (a.categoryName < b.categoryName) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
+      }
     });
   }
 
