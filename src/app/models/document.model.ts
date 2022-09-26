@@ -19,3 +19,8 @@ export interface DocumentModelQuery{
   uuid: string,
   dateCreated:Date
 }
+export interface DocumentUpdateModel{
+  name: string,
+  pathDocument:string,
+  description:string
+}

@@ -4,7 +4,7 @@ import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
-import { DocumentModel, DocumentModelQuery } from 'src/app/models/document.model';
+import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
 import { Storage, ref, uploadBytes, listAll, getDownloadURL,deleteObject,getMetadata } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
@@ -20,6 +20,7 @@ export class AdminDocumentComponent implements OnInit {
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
   documentModel: DocumentModel;
+  updateModel:DocumentUpdateModel;
   categories: Category[] = [];
   subcategories: SubCategory[] = [];
   subcategoriesFilter: SubCategory[] = [];
@@ -295,14 +296,15 @@ export class AdminDocumentComponent implements OnInit {
     this.revealForm5();
   }
   upDateDocument(){
-    const docNameUpdate = this.documentForm.get('nameUpdate');
-    const docDescriptionUpdate = this.documentForm.get('descriptionUpdate');
-    const docUpload = this.documentForm.get('uploadUpdate');
-    this.endPointService.updateDocument(this.uuidDoc,{
-      name:docNameUpdate,
-      description:docDescriptionUpdate,
-      pathtDocument:docUpload
-    }).subscribe();
+    const docNameUpdate = this.updateDocumentForm.get('nameUpdate');
+    const docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
+    const docUpload = this.updateDocumentForm.get('uploadUpdate');
+    this.endPointService.updateDocument(this.uuidDoc,
+      {name:docNameUpdate.value||null,
+      description:docDescriptionUpdate.value||null,
+      pathDocument:docUpload.value||null
+    }
+    ).subscribe();
     this.revealForm5();
 
   }

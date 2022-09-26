@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ResponseVerify } from 'src/app/models/responseVerify';
 import { environment } from 'src/environments/environment.prod';
-import { DocumentModel, DocumentModelQuery } from 'src/app/models/document.model';
+import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 
@@ -28,7 +28,7 @@ export class EndpointsService {
   findDocumentBy(categoryId: string,subCategoryName:string){
     return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsBy}/${categoryId}/${subCategoryName}`)
   }
-  updateDocument(uuid:string,body:any){
+  updateDocument(uuid:string,body:DocumentUpdateModel){
     return this.http.put(`${environment.host.updateDocument}/${uuid}`,{...body});
 
   }
