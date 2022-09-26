@@ -157,7 +157,8 @@
         <li>Categoria del documento: {{modalInfoCategoria}}</li>
         <li>Subcategoria del documento:{{modalInfoSubcategoria}}</li>
         <li>Version: {{modalInfoVersion}}</li>
-        <li>Fecha de creación: {{modalInfoFecha}}</li>
+        <li>Fecha de creación: {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
+        <li>Hora de creación: {{modalInfoFecha | date:'h:mm a':'UTC -10'}}</li>
         <li>Registro blockchain: {{modalInfoBlockChain}}</li>
         <li>Descripción: {{modalInfoDesription}}</li>
       </p>
