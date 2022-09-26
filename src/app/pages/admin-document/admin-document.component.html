@@ -42,7 +42,6 @@
         <label for="uploads">Elige el documento a cargar:</label>
         <input (change)="onFileSelected($event)" type="file" id="uploads" name="uploads"
           accept=".docx, .doc, .pdf, .xlsx, .pptx" formControlName="upload">
-
       </p>
 
     </div>
@@ -131,7 +130,7 @@
         </button>
         <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument)"><img src="/assets/images/vericon.png" alt="" class="icono"></button>
         <button *ngIf="isAdmin" class="boton-menu" (click)="upDate(item.uuid)"> <img src="/assets/images/actualizaricon.png" alt="" class="icono"></button>
-        <a download= "{{item.name}}" href="{{item.pathDocument}}" class="boton-menu"> <img src="/assets/images/descargarIcon.png" alt="" class="icono"></a>
+        <a download="{{item.name}}" href="{{item.pathDocument}}" class="boton-menu"> <img src="/assets/images/descargarIcon.png" alt="" class="icono"></a>
         <button *ngIf="isAdmin" class="boton-menu" (click)="deleteDocument(item.uuid,item.name)"><img src="/assets/images/eliminarIcon.png" alt="" class="icono"></button>
       </td>
 

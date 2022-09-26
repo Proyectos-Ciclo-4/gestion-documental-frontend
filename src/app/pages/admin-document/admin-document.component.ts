@@ -18,6 +18,7 @@ import { stringLength } from '@firebase/util';
 })
 export class AdminDocumentComponent implements OnInit {
   page: number = 1;
+  urlFireBase:Promise<string>;
   uuidDoc:string;
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
@@ -124,55 +125,41 @@ export class AdminDocumentComponent implements OnInit {
     this.docType = docFile.type;
 
     if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) {
-
       this.fileInAngular = docFile;
-      /* this.blobFile(docFile).then((res: any) => {
-        this.imagePrevius = res.base;
-      }); */
     } else {
       event.target.value = '';
       this.revealForm();
     }
 
   }
-  /* private blobFile = async ($event: any) => new Promise((resolve, reject) => {
 
-    try {
+  protected submit() {
+    this.sendToStorage()
+  }
 
-      const unsafeDoc = window.URL.createObjectURL($event);
-      const docF = this.sanitizer.bypassSecurityTrustUrl(unsafeDoc);
-      const reader = new FileReader();
-      reader.readAsDataURL($event);
-      reader.onload = () => {
-        resolve({
-          blob: $event,
-          docF,
-          base: reader.result,
-        });
-      };
-      reader.onerror = (error) => {
-        resolve({
-          blob: $event,
-          docF,
-          base: null,
-        });
-      };
 
-    } catch (e) {
-      return null;
-    }
+  /**
+   * @Description sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
+   */
 
-  }); */
+  protected sendToStorage() {
+    console.log("Error en SENDSotrage")
+    const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
+    uploadBytes(docRef, this.currentDocFile).then(()=>{
+      getDownloadURL(docRef).then(res=>{
+        this.saveDocument(res)
+      })
+    })
 
-  protected async submit() {
-
+  }
+  saveDocument(res: any){
+    console.log("respuesta",res)
     const docName = this.documentForm.get('name');
     const docDescription = this.documentForm.get('description');
     const docCategory = this.documentForm.get('category');
     const docSubCategory = this.documentForm.get('subcategory');
     const docUpload = this.documentForm.get('upload');
-    const pathDocument = await this.sendToStorage()
-
+    const pathDocument = res
     this.endPointService.createDocument({
       name: docName.value,
       categoryId: docCategory.value,
@@ -189,57 +176,33 @@ export class AdminDocumentComponent implements OnInit {
       docDescription.setValue("");
       docUpload.setValue("");
       this.revealForm2();
-
     });
   }
-
-
   /**
-   * @Description sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
-   */
-
-  protected async sendToStorage(): Promise<string> {
-
-    const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
-    uploadBytes(docRef, this.currentDocFile)
-    const op=(await getDownloadURL(docRef))
-    /* setTimeout(async()=>{
-
-    },1000) */
-    return op;
-
-
-  }
-
-  /**
- * @Description getStorage es una funcion que nos sirve para obtener cada uno de los datos que se encuentran dentro de nuestro storage en firebase
+ * @Description getStorage es una funcion que nos sirve
+ * para obtener cada uno de los datos que se encuentran dentro
+ * de nuestro storage en firebase
  */
 
   private async getStorage(): Promise<void> {
-
     const docRef = ref(this.storage, 'documents')
     listAll(docRef)
       .then(async docs => {
 
         for (let doc of docs.items) {
+          console.log("Error en getSotrage")
           const url = await getDownloadURL(doc)
           this.listaDocumentos.push(url)
         }
-
       })
       .catch(err => { console.error(err) });
-
       let data:any;
       listAll(docRef).then( data => data.items.forEach(e=>{
-
         let data = e.fullPath.split('/');
         this.listaNombresStorage.push(data[1])
-
       }));
-
     console.log(this.listaDocumentos)
     console.log(this.listaNombresStorage)
-
   }
 
   /**
