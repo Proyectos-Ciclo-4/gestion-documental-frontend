@@ -6,8 +6,7 @@ export interface DocumentModel {
   version: number,
   pathDocument: string,
   blockChainId: string,
-  description: string,
-  dateCreated: Date
+  description: string
 }
 export interface DocumentModelQuery {
   name: string,

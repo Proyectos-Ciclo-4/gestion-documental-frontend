@@ -41,6 +41,7 @@ export class AdminDocumentComponent implements OnInit {
   showModalRequireLogin: boolean = false;
   showModalActualizarDocument: boolean = false;
   showModalDeleteDocument: boolean = false;
+  showModalUpdatedDocument: boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -113,17 +114,11 @@ export class AdminDocumentComponent implements OnInit {
     }
   }
 
-  protected submit() {
-    this.sendToStorage()
-  }
-
-
   /**
    * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento 
    * seleccionado por el administrador
    */
   protected sendToStorage() {
-    console.log("Error en SENDSotrage")
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
       getDownloadURL(docRef).then(res => {
@@ -133,7 +128,7 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   saveDocument(res: any) {
-    console.log("respuesta", res)
+
     const docName = this.documentForm.get('name');
     const docDescription = this.documentForm.get('description');
     const docCategory = this.documentForm.get('category');
@@ -150,8 +145,7 @@ export class AdminDocumentComponent implements OnInit {
       version: 1,
       pathDocument: pathDocument,
       blockChainId: 'blockChainId1',
-      description: docDescription.value,
-      dateCreated: new Date()
+      description: docDescription.value
 
     }).subscribe(n => {
 
@@ -271,7 +265,13 @@ export class AdminDocumentComponent implements OnInit {
         description: docDescriptionUpdate.value || null,
         pathDocument: docUpload.value || null
       }
-    ).subscribe();
+    ).subscribe({
+      complete: () => {
+        this.showModalActualizarDocument = false;
+        this.showModalUpdatedDocument = true;
+        this.reloadDocuments();
+      }
+    });
 
   }
 
