@@ -1,26 +1,27 @@
-export interface DocumentModel{
-    name: string,
-    categoryId:string,
-    subCategoryName: string,
-    version:number,
-    pathDocument:string,
-    blockChainId:string,
-    description:string,
-    dateCreated:Date
-}
-export interface DocumentModelQuery{
+export interface DocumentModel {
   name: string,
-  categoryId:string,
+  userId: String,
+  categoryId: string,
   subCategoryName: string,
-  version:number,
-  pathDocument:string,
-  blockChainId:string,
-  description:string,
-  uuid: string,
-  dateCreated:Date
+  version: number,
+  pathDocument: string,
+  blockChainId: string,
+  description: string,
+  dateCreated: Date
 }
-export interface DocumentUpdateModel{
+export interface DocumentModelQuery {
   name: string,
-  pathDocument:string,
-  description:string
+  categoryId: string,
+  subCategoryName: string,
+  version: number,
+  pathDocument: string,
+  blockChainId: string,
+  description: string,
+  uuid: string,
+  dateCreated: Date
+}
+export interface DocumentUpdateModel {
+  name: string,
+  pathDocument: string,
+  description: string
 }

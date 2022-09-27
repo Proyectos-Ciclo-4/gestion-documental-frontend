@@ -11,17 +11,18 @@ export const environment = {
     authDomain: 'gestiondocumentalsofka.firebaseapp.com',
     messagingSenderId: '102176668601',
   },
-    host:{
-      verifyUser: 'http://localhost:8080/user/',
-      createDocu: 'http://localhost:8080/document/create/',
-      createCategory: 'http://localhost:8080/category/create',
-      getCategories: 'http://localhost:8080/category/getall',
-      getSubcategories: 'http://localhost:8080/subcategory/',
-      createSubcategory: 'http://localhost:8080/subcategory/create',
-      getDocumentsBy:'http://localhost:8080/documents',
-      deleteDocument:'http://localhost:8080/document/delete',
-      updateDocument:'http://localhost:8080/document/update'
-    },
+  host: {
+    verifyUser: 'http://localhost:8080/user/',
+    createDocu: 'http://localhost:8080/document/create/',
+    createCategory: 'http://localhost:8080/category/create',
+    getCategories: 'http://localhost:8080/category/getall',
+    getSubcategories: 'http://localhost:8080/subcategory/',
+    createSubcategory: 'http://localhost:8080/subcategory/create',
+    getDocumentsBy: 'http://localhost:8080/documents',
+    deleteDocument: 'http://localhost:8080/document/delete',
+    updateDocument: 'http://localhost:8080/document/update',
+    updateDownloads: 'http://localhost:8080/download/create'
+  },
   production: false
 };
 

@@ -100,6 +100,7 @@ export class AdminDocumentComponent implements OnInit {
         break;
     };
   }
+
   protected async onFileSelected(event: any) {
 
     const docFile = event.target.files[0];
@@ -118,7 +119,8 @@ export class AdminDocumentComponent implements OnInit {
 
 
   /**
-   * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
+   * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento 
+   * seleccionado por el administrador
    */
   protected sendToStorage() {
     console.log("Error en SENDSotrage")
@@ -137,9 +139,12 @@ export class AdminDocumentComponent implements OnInit {
     const docCategory = this.documentForm.get('category');
     const docSubCategory = this.documentForm.get('subcategory');
     const docUpload = this.documentForm.get('upload');
-    const pathDocument = res
+    const pathDocument = res;
+
     this.endPointService.createDocument({
+
       name: docName.value,
+      userId: this.controlSesion.getIdUser(),
       categoryId: docCategory.value,
       subCategoryName: docSubCategory.value,
       version: 1,
@@ -147,13 +152,16 @@ export class AdminDocumentComponent implements OnInit {
       blockChainId: 'blockChainId1',
       description: docDescription.value,
       dateCreated: new Date()
+
     }).subscribe(n => {
+
       docName.setValue("");
       docCategory.setValue("");
       docSubCategory.setValue("");
       docDescription.setValue("");
       docUpload.setValue("");
       this.showModalSaveDocument = true;
+
     });
   }
 
@@ -321,6 +329,11 @@ export class AdminDocumentComponent implements OnInit {
     this.modalInfoFecha = modalInfoFecha;
     this.modalInfoBlockChain = modalInfoBlockChain;
     this.modalInfoDesription = modalInfoDesription;
+  }
+
+  downloadDoc(idDoc: string) {
+    const idUser = this.controlSesion.getIdUser();
+    this.endPointService.updateDownloads(idDoc, idUser).subscribe();
   }
 
 }
