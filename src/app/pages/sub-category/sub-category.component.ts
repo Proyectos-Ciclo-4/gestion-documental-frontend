@@ -15,6 +15,7 @@ export class SubCategoryComponent implements OnInit {
 
   controlSesion = new ControlSesion();
 
+
   nombre: string = '';
   formState: Boolean = false;
   showModalCatgoryCreated = false;
@@ -36,6 +37,7 @@ export class SubCategoryComponent implements OnInit {
   constructor(
     private service: EndpointsService,
     private router: Router) { }
+
 
   protected async submit() {
 
@@ -66,6 +68,7 @@ export class SubCategoryComponent implements OnInit {
         this.getCategoryList();
         break;
     };
+
   }
 
   revealForm() {
@@ -77,14 +80,38 @@ export class SubCategoryComponent implements OnInit {
       next: (res) => {
         this.subCategoriesForList = res;
       },
+      complete:()=>{
+        this.subCategoriesForList.sort((a, b) => {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
+      }
     });
   }
 
   getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
+        console.log("abajo: ",res)
+
         this.categories = res;
       },
+      complete:()=>{
+        this.subCategoriesForList.sort((a, b) => {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
+      }
     });
   }
 }

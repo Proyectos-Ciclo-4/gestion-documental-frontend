@@ -6,14 +6,16 @@ import { CtrCategoriesService } from 'src/app/services/control-categories/ctr-ca
 import { EndpointsService } from '../../services/endpoints/endpoints.service';
 import { ControlSesion } from 'src/app/utils/controlSesion';
 
+
 @Component({
   selector: 'category',
   templateUrl: './category.component.html',
-  styleUrls: ['./category.component.css']
+  styleUrls: ['./category.component.css'],
 })
 export class CategoryComponent implements OnInit {
 
   controlSesion = new ControlSesion();
+
   showModalCatgoryCreated = false;
   nombre: string = '';
   body: NgForm;
@@ -24,6 +26,7 @@ export class CategoryComponent implements OnInit {
 
   documentForm = new FormGroup({
     text_new_category: new FormControl('', { validators: [Validators.required] })
+
   });
 
   constructor(
@@ -46,6 +49,7 @@ export class CategoryComponent implements OnInit {
         break;
     };
 
+
   }
 
   createCategory(body: NgForm) {
@@ -58,10 +62,28 @@ export class CategoryComponent implements OnInit {
         this.getCategories();
       }
     })
+
   }
 
   revealForm() {
-    this.formState = !this.formState
+    this.formState = !this.formState;
+  }
+
+  getCategories() {
+    this.controlCategories.getCategoryList().then((list) => {
+      this.categories = list;
+      this.categories.sort((a, b) => {
+        if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) {
+          return 1;
+        }
+        if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      });
+
+    });
   }
 
   getCategories() {

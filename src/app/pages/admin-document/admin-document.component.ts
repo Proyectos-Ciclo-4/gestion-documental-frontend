@@ -204,6 +204,7 @@ export class AdminDocumentComponent implements OnInit {
           if (a.subCategoryName < b.subCategoryName) return -1;
           return 0;
         })
+
       }
     })
   }
@@ -223,6 +224,7 @@ export class AdminDocumentComponent implements OnInit {
           if (a.subCategoryName < b.subCategoryName) return -1;
           return 0;
         })
+
       }
     })
   }
@@ -243,6 +245,7 @@ export class AdminDocumentComponent implements OnInit {
           if (a.name < b.name) return -1;
           return 0;
         })
+
       }
     });
   }
