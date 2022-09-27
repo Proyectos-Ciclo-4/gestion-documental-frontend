@@ -265,10 +265,10 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete:()=>{
         this.categories.sort((a, b) => {
-          if (a.categoryName > b.categoryName) {
+          if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) {
           return 1;
           }
-          if (a.categoryName < b.categoryName) {
+          if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) {
           return -1;
           }
           // a must be equal to b
@@ -284,10 +284,10 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete:()=>{
         this.subcategories.sort((a, b) => {
-          if (a.subCategoryName > b.subCategoryName) {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
           return 1;
           }
-          if (a.subCategoryName < b.subCategoryName) {
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
           return -1;
           }
           // a must be equal to b
@@ -303,10 +303,10 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete:()=>{
         this.subcategoriesFilter.sort((a, b) => {
-          if (a.subCategoryName > b.subCategoryName) {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
           return 1;
           }
-          if (a.subCategoryName < b.subCategoryName) {
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
           return -1;
           }
           // a must be equal to b
@@ -324,10 +324,10 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete:()=>{
         this.documentsList.sort((a, b) => {
-          if (a.name > b.name) {
+          if (a.name.toLowerCase() > b.name.toLowerCase()) {
           return 1;
           }
-          if (a.name < b.name) {
+          if (a.name.toLowerCase() < b.name.toLowerCase()) {
           return -1;
           }
           // a must be equal to b
