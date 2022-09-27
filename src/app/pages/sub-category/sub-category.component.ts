@@ -62,7 +62,7 @@ export class SubCategoryComponent implements OnInit {
       case 555:
         this.router.navigate(['document']);
         break;
-      case 777:
+      case 700:
         this.getCategoryList();
         break;
     };

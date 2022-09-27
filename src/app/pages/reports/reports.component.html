@@ -1,1 +1,31 @@
-<p>reports works!</p>
+<div class="location_pag">
+    <span>Inicio/ Reportes</span>
+</div>
+
+<h2 class="titulo">Generar reportes</h2>
+
+<div class="content_form">
+
+    <form class="formulario" [formGroup]="formReports">
+        <div>
+            <div class="elemento">
+                <label for="date_start">Fecha inicio* </label>
+                <input type="date" name="date_start" id="date_start">
+            </div>
+            <div class="elemento">
+                <label for="date_end">Fecha fin* </label>
+                <input type="date" name="date_end" id="date_end">
+            </div>
+            <div class="elemento">
+                <label for="report_type">Tipo de reporte* </label>
+                <select name="report_type" id="report_type">
+                    <option value="0">Selecciona un tipo</option>
+                    <option value="1">Documento con mayor numero de descargas</option>
+                    <option value="2">Usuario con mayor numero de descargas</option>
+                </select>
+            </div>
+        </div>
+        <input [disabled]="formReports.invalid" class="btn_ok" type="submit" value="consultar">
+    </form>
+
+</div>

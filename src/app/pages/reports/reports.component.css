@@ -1,0 +1,24 @@
+.titulo {
+    display: block;
+    text-align: center;
+    background-color: var(--color-secondary);
+    color: white;
+    height: 100%;
+    padding: 10px;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.elemento {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn_ok{
+    margin: 10px;
+}

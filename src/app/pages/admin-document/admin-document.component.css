@@ -1,22 +1,16 @@
 .titulo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     text-align: center;
-    background-color: #ec7e14;
-    color: aliceblue;
+    background-color: var(--color-secondary);
+    color: white;
     height: 100%;
-    margin: 0% !important;
-    padding: 0% !important;
-    height: 50px;
-
+    padding: 10px;
 }
 
 .formulario {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 10px;
 }
 
 .elemento {
@@ -34,27 +28,11 @@
     align-items: center;
 }
 
-img{
-  width: 18px;
-  height: 18px;
-}
 .lista {
     margin-top: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-}
-
-.elemento-lista {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 200px;
-}
-
-.tabla {
-    display: flex;
-    justify-content: center;
 }
 
 .paginacion {
@@ -63,19 +41,36 @@ img{
     justify-content: center;
     align-items: center;
 }
-button:disabled {
-  background-color: #ec7c149b;
-  cursor: not-allowed;
-}
+
 .errors-container {
-  font-size: 0.75rem;
-  color: #bd0c0c;
-  margin-bottom: 16px;
-  margin-top: -8px;
-  display: flex;
-  flex-direction: column;
+    font-size: 0.75rem;
+    color: #bd0c0c;
+    margin-bottom: 16px;
+    margin-top: -8px;
+    display: flex;
+    flex-direction: column;
 }
 
-table tr th {
-    background: gray;
+/* Formulario consultar documentos */
+
+.box_form_filtros {
+    width: 100%;
+}
+
+.box_form_filtros form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.box_form_filtros button {
+    margin: 10px;
+}
+
+/* Modal update */
+
+.butttons_update {
+    display: flex;
+
 }

@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
-import { Storage, ref, uploadBytes, listAll, getDownloadURL, deleteObject, getMetadata } from '@angular/fire/storage';
+import { Storage, ref, uploadBytes, getDownloadURL, deleteObject, getMetadata } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
-import { stringLength } from '@firebase/util';
 
 @Component({
   selector: 'document',
@@ -18,8 +16,8 @@ import { stringLength } from '@firebase/util';
 export class AdminDocumentComponent implements OnInit {
 
   page: number = 1;
- 
-  uuidDoc: string;
+  idDocumentToUpdate: string;
+
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
   documentModel: DocumentModel;
@@ -29,30 +27,21 @@ export class AdminDocumentComponent implements OnInit {
   subcategoriesFilter: SubCategory[] = [];
   documentsList: DocumentModelQuery[] = [];
 
-  // Variables de filtro
-  listaDocumentos: Array<any> = []; // Lista quemada hasta tener el backend
-  listaNombresStorage: Array<string> = []; // Lista dinamica creada con los datos del storage
-
   // Helpers
   currentDocFile: any;
-  returnToView = false;
-  returnToViewObject: Object;
   private deleteDoc!: string;
   referenceDelte: any;
 
-  // ???
   controlSesion = new ControlSesion();
   isAdmin = false;
   isUser = false;
-  showModalNoUser: boolean = false;
-  showModalNoUser2: boolean = false;
-  showModalNoUser3: boolean = false;
-  showModalNoUser4: boolean = false;
-  showModalNoUser5: boolean = false;
-  showModalNoUser6: boolean = false;
-  imagePrevius: any;
+  showModalRequiresDocument: boolean = false;
+  showModalSaveDocument: boolean = false;
+  showModalDetailsDocument: boolean = false;
+  showModalRequireLogin: boolean = false;
+  showModalActualizarDocument: boolean = false;
+  showModalDeleteDocument: boolean = false;
   fileInAngular: any;
-  docType: any;
 
   //ModalInfoVariables
   modalInfoNombre: string;
@@ -82,19 +71,17 @@ export class AdminDocumentComponent implements OnInit {
     categoryFilter: new FormControl('', { validators: [Validators.required] }),
     subcategoryFilter: new FormControl(''),
   })
+
   updateDocumentForm = new FormGroup({
     nameUpdate: new FormControl(''),
     descriptionUpdate: new FormControl(''),
     uploadUpdate: new FormControl('')
   })
+
   constructor(
-    private sanitizer: DomSanitizer,
     private router: Router,
     private endPointService: EndpointsService,
-    private storage: Storage) {
-
-  }
-
+    private storage: Storage) { }
 
   ngOnInit(): void {
     this.getCategoryList()
@@ -117,15 +104,12 @@ export class AdminDocumentComponent implements OnInit {
 
     const docFile = event.target.files[0];
     this.currentDocFile = event.target.files[0];
-    this.docType = docFile.type;
 
-    if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) {
-      this.fileInAngular = docFile;
-    } else {
+    if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) this.fileInAngular = docFile;
+    else {
       event.target.value = '';
-      this.revealForm();
+      this.showModalRequiresDocument = true;
     }
-
   }
 
   protected submit() {
@@ -134,9 +118,8 @@ export class AdminDocumentComponent implements OnInit {
 
 
   /**
-   * @Description sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
+   * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
    */
-
   protected sendToStorage() {
     console.log("Error en SENDSotrage")
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
@@ -145,8 +128,8 @@ export class AdminDocumentComponent implements OnInit {
         this.saveDocument(res)
       })
     })
-
   }
+
   saveDocument(res: any) {
     console.log("respuesta", res)
     const docName = this.documentForm.get('name');
@@ -170,51 +153,27 @@ export class AdminDocumentComponent implements OnInit {
       docSubCategory.setValue("");
       docDescription.setValue("");
       docUpload.setValue("");
-      this.revealForm2();
+      this.showModalSaveDocument = true;
     });
-  }
-  /**
- * @Description getStorage es una funcion que nos sirve
- * para obtener cada uno de los datos que se encuentran dentro
- * de nuestro storage en firebase
- */
-
-  private async getStorage(): Promise<void> {
-    const docRef = ref(this.storage, 'documents')
-    listAll(docRef)
-      .then(async docs => {
-
-        for (let doc of docs.items) {
-          console.log("Error en getSotrage")
-          const url = await getDownloadURL(doc)
-          this.listaDocumentos.push(url)
-        }
-      })
-      .catch(err => { console.error(err) });
-    let data: any;
-    listAll(docRef).then(data => data.items.forEach(e => {
-      let data = e.fullPath.split('/');
-      this.listaNombresStorage.push(data[1])
-    }));
-    console.log(this.listaDocumentos)
-    console.log(this.listaNombresStorage)
   }
 
   /**
    * @Description goToViewSelectedDocument es una funcion que sirve para enviar al usuario al componente de visualizacion de documentos
    * @param url hace referencia a la url que genera firebase para obtener un archivo almacenado en storage
    */
-
-  protected goToViewSelectedDocument(url: string): void {
-
+  protected goToViewSelectedDocument(url: string, name: string): void {
     if (this.isUser) {
-      sessionStorage.setItem('docurl', url)
-      this.router.navigate([`view-document`])
-    } else {
-      this.showModalNoUser4 = true;
-    }
 
+      sessionStorage.setItem('docurl', url)
+      sessionStorage.setItem('name_document', name)
+
+      this.router.navigate([`view-document`])
+    } else this.showModalRequireLogin = true;
   }
+
+  /**
+   * 
+   */
   getCategoryList() {
     this.endPointService.getAllCategories().subscribe({
       next: (res) => {
@@ -222,18 +181,17 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.categories.sort((a, b) => {
-          if (a.categoryName > b.categoryName) {
-            return 1;
-          }
-          if (a.categoryName < b.categoryName) {
-            return -1;
-          }
-          // a must be equal to b
+          if (a.categoryName > b.categoryName) return 1;
+          if (a.categoryName < b.categoryName) return -1;
           return 0;
         })
       }
     })
   }
+
+  /**
+   * 
+   */
   getSubcategoriesByCategory() {
     const docCategory = this.documentForm.get('category');
     this.endPointService.getSubCategories(docCategory.value).subscribe({
@@ -242,18 +200,17 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.subcategories.sort((a, b) => {
-          if (a.subCategoryName > b.subCategoryName) {
-            return 1;
-          }
-          if (a.subCategoryName < b.subCategoryName) {
-            return -1;
-          }
-          // a must be equal to b
+          if (a.subCategoryName > b.subCategoryName) return 1;
+          if (a.subCategoryName < b.subCategoryName) return -1;
           return 0;
         })
       }
     })
   }
+
+  /**
+   * 
+   */
   getSubcategoriesByCategoryFilter() {
     const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
     this.endPointService.getSubCategories(docCategoryFilter.value).subscribe({
@@ -262,119 +219,91 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.subcategoriesFilter.sort((a, b) => {
-          if (a.subCategoryName > b.subCategoryName) {
-            return 1;
-          }
-          if (a.subCategoryName < b.subCategoryName) {
-            return -1;
-          }
-          // a must be equal to b
+          if (a.subCategoryName > b.subCategoryName) return 1;
+          if (a.subCategoryName < b.subCategoryName) return -1;
           return 0;
         })
       }
     })
   }
+
+  /**
+   * 
+   */
   filterDocumentBy() {
     const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
     const docSubCategoryFilter = this.finDocumentForm.get('subcategoryFilter');
     this.endPointService.findDocumentBy(docCategoryFilter.value, docSubCategoryFilter.value).subscribe({
       next: (res) => {
         this.documentsList = res;
-        docSubCategoryFilter.setValue("");
       },
       complete: () => {
         this.documentsList.sort((a, b) => {
-          if (a.name > b.name) {
-            return 1;
-          }
-          if (a.name < b.name) {
-            return -1;
-          }
-          // a must be equal to b
+          if (a.name > b.name) return 1;
+          if (a.name < b.name) return -1;
           return 0;
         })
       }
     });
   }
-  upDate(uuid: string) {
-    this.uuidDoc = uuid;
-    this.revealForm5();
+
+  confirmUpdateDocument(uuid: string) {
+    this.idDocumentToUpdate = uuid;
+    this.showModalActualizarDocument = true;
   }
-  upDateDocument() {
+
+  updateDocument() {
+
     const docNameUpdate = this.updateDocumentForm.get('nameUpdate');
     const docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
     const docUpload = this.updateDocumentForm.get('uploadUpdate');
-    this.endPointService.updateDocument(this.uuidDoc,
+    this.endPointService.updateDocument(this.idDocumentToUpdate,
       {
         name: docNameUpdate.value || null,
         description: docDescriptionUpdate.value || null,
         pathDocument: docUpload.value || null
       }
     ).subscribe();
-    this.revealForm5();
 
   }
-  //Controladores de los modales
-  protected revealForm() {
-    this.showModalNoUser = !this.showModalNoUser;
-  }
-  protected revealForm2() {
-    this.showModalNoUser2 = !this.showModalNoUser2;
-  }
-  protected revealForm3() {
-    this.showModalNoUser3 = false;
-  }
-  protected revealForm5() {
-    this.showModalNoUser5 = !this.showModalNoUser5;
-  }
 
-  // Manda a el usuarioa la pagina de login, guardando en el sessionStorage los datos del filtro que realizo
-  protected revealForm4_1() {
+  // Manda a el usuario la pagina de login, guardando en el sessionStorage los datos del filtro que realizo
+  protected goToLogin() {
     this.router.navigate(['/'])
   }
 
-  // Quita el modal de la vista
-  protected revealForm4_2() {
-    this.showModalNoUser4 = false;
-  }
-
-  deleteDocument(uuid: string, name: string) {
-
-
+  /**
+   * confirmDeleteDocument muestra un modal para que el usuario confirme sei desea eliminar el documento
+   * @param uuid Id de documento a eliminar
+   * @param name Nombre del documento a eliminar
+   */
+  confirmDeleteDocument(uuid: string, name: string) {
     this.referenceDelte = ref(this.storage, `documents/${name}`)
-
     this.deleteDoc = uuid;
-    this.showModalNoUser6 = true;
-
+    this.showModalDeleteDocument = true;
   }
 
-  // Confirma que el usuario quiere realizar la respectiva eliminacion de ese documento
-  protected revealForm6_1() {
+  /**
+   * Elimina el documento de Firestone 
+   */
+  protected deleteDocument() {
 
-    deleteObject(this.referenceDelte)
-      .then(res => console.log(res))
-      .catch(e => console.log(e));
-
+    deleteObject(this.referenceDelte);
     this.endPointService.deleteDocumentBy(this.deleteDoc).subscribe({
-      next: (res) => {
-        console.log("Documento Eliminado Correctamente!")
-      }
+      next: (res) => { this.reloadDocuments(); }
     })
-
-    this.showModalNoUser6 = false;
-
+    this.showModalDeleteDocument = false;
   }
 
-  // Quita el modal de la vista
-  protected revealForm6_2() {
-    this.showModalNoUser6 = false;
+  /**
+   * Recarga los documentos, limpiando la lista de documentos y la carga nuevamente
+   */
+  reloadDocuments() {
+    this.documentsList = [];
+    this.filterDocumentBy();
   }
 
-  showDetails() {
-    this.showModalNoUser3 = true;
-  }
-
-  visualizarModal(
+  viewModalDetailsDocument(
     modalInfoNombre,
     modalInfoCategoria,
     modalInfoSubcategoria,
@@ -383,6 +312,8 @@ export class AdminDocumentComponent implements OnInit {
     modalInfoBlockChain,
     modalInfoDesription) {
 
+    this.showModalDetailsDocument = true;
+
     this.modalInfoNombre = modalInfoNombre;
     this.modalInfoCategoria = modalInfoCategoria;
     this.modalInfoSubcategoria = modalInfoSubcategoria;
@@ -390,9 +321,6 @@ export class AdminDocumentComponent implements OnInit {
     this.modalInfoFecha = modalInfoFecha;
     this.modalInfoBlockChain = modalInfoBlockChain;
     this.modalInfoDesription = modalInfoDesription;
-
-    this.showModalNoUser3 = true;
-
   }
 
 }
