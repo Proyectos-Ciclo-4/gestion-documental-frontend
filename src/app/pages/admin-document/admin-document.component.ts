@@ -179,10 +179,11 @@ export class AdminDocumentComponent implements OnInit {
    * @param url hace referencia a la url que genera firebase para obtener un archivo almacenado en storage
    */
   protected goToViewSelectedDocument(url: string, name: string): void {
-    if (this.isUser) {
 
-      sessionStorage.setItem('docurl', url)
-      sessionStorage.setItem('name_document', name)
+    sessionStorage.setItem('docurl', url)
+    sessionStorage.setItem('name_document', name)
+
+    if (this.isUser) {
 
       let nowurl = location.href;
       nowurl = nowurl.replace("document","view-document");
@@ -190,6 +191,7 @@ export class AdminDocumentComponent implements OnInit {
       window.open(nowurl,"_blank");
 
     } else this.showModalNoUserRequireLogin = true;
+
   }
 
   /**
@@ -363,10 +365,20 @@ export class AdminDocumentComponent implements OnInit {
               this.isUser = true;
               this.showModalNoUserRequireLogin = false;
 
+              let nowurl = location.href;
+              nowurl = nowurl.replace("document","view-document");
+
+              window.open(nowurl,"_blank");
+
             }else if(data.tipo == 555){
 
               this.isUser = true;
               this.showModalNoUserRequireLogin = false;
+
+              let nowurl = location.href;
+              nowurl = nowurl.replace("document","view-document");
+
+              window.open(nowurl,"_blank");
 
             }
           }
