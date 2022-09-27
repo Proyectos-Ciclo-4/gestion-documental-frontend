@@ -1,3 +1,4 @@
+import { LoginService } from 'src/app/services/login/login.service';
 import { Component, OnInit } from '@angular/core';
 import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
@@ -31,6 +32,7 @@ export class AdminDocumentComponent implements OnInit {
   currentDocFile: any;
   private deleteDoc!: string;
   referenceDelte: any;
+  disableLoginWithEmail = false;
 
   controlSesion = new ControlSesion();
   isAdmin = false;
@@ -42,6 +44,8 @@ export class AdminDocumentComponent implements OnInit {
   showModalActualizarDocument: boolean = false;
   showModalDeleteDocument: boolean = false;
   showModalUpdatedDocument: boolean = false;
+  showModalNoUserRequireLogin: boolean = false;
+  showModalNoUser: boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -82,7 +86,9 @@ export class AdminDocumentComponent implements OnInit {
   constructor(
     private router: Router,
     private endPointService: EndpointsService,
-    private storage: Storage) { }
+    private storage: Storage,
+    private login$: LoginService,
+    private endpoint$: EndpointsService) { }
 
   ngOnInit(): void {
     this.getCategoryList()
@@ -100,6 +106,23 @@ export class AdminDocumentComponent implements OnInit {
         this.isAdmin = false;
         break;
     };
+
+    document.addEventListener('keydown', (event) => {
+
+      if (event.code == "Escape") {
+        this.showModalRequiresDocument = false;
+        this.showModalSaveDocument = false;
+        this.showModalDetailsDocument = false;
+        this.showModalRequireLogin = false;
+        this.showModalActualizarDocument = false;
+        this.showModalDeleteDocument = false;
+        this.showModalUpdatedDocument = false;
+        this.showModalNoUserRequireLogin = false;
+        this.showModalNoUser = false;
+      }
+
+    }, false);
+
   }
 
   protected async onFileSelected(event: any) {
@@ -164,17 +187,23 @@ export class AdminDocumentComponent implements OnInit {
    * @param url hace referencia a la url que genera firebase para obtener un archivo almacenado en storage
    */
   protected goToViewSelectedDocument(url: string, name: string): void {
+
+    sessionStorage.setItem('docurl', url)
+    sessionStorage.setItem('name_document', name)
+
     if (this.isUser) {
 
-      sessionStorage.setItem('docurl', url)
-      sessionStorage.setItem('name_document', name)
+      let nowurl = location.href;
+      nowurl = nowurl.replace("document", "view-document");
 
-      this.router.navigate([`view-document`])
-    } else this.showModalRequireLogin = true;
+      window.open(nowurl, "_blank");
+
+    } else this.showModalNoUserRequireLogin = true;
+
   }
 
   /**
-   * 
+   *
    */
   getCategoryList() {
     this.endPointService.getAllCategories().subscribe({
@@ -192,7 +221,7 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    */
   getSubcategoriesByCategory() {
     const docCategory = this.documentForm.get('category');
@@ -211,7 +240,7 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    */
   getSubcategoriesByCategoryFilter() {
     const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
@@ -230,7 +259,7 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    */
   filterDocumentBy() {
     const docCategoryFilter = this.finDocumentForm.get('categoryFilter');
@@ -292,7 +321,7 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   /**
-   * Elimina el documento de Firestone 
+   * Elimina el documento de Firestone
    */
   protected deleteDocument() {
 
@@ -336,4 +365,43 @@ export class AdminDocumentComponent implements OnInit {
     this.endPointService.updateDownloads(idDoc, idUser).subscribe();
   }
 
+  loginWithGoogle() {
+
+    this.login$.login().then((data) => {
+
+      this.endpoint$.verifyUser(data.user.email)
+        .subscribe(data => {
+
+          if (data == null) this.showModalNoUser = true;
+
+          else {
+            this.controlSesion.writeSesionUser(data);
+
+            if (data.tipo == 700) {
+
+              this.isAdmin = true;
+              this.isUser = true;
+              this.showModalNoUserRequireLogin = false;
+
+              let nowurl = location.href;
+              nowurl = nowurl.replace("document", "view-document");
+
+              window.open(nowurl, "_blank");
+
+            } else if (data.tipo == 555) {
+
+              this.isUser = true;
+              this.showModalNoUserRequireLogin = false;
+
+              let nowurl = location.href;
+              nowurl = nowurl.replace("document", "view-document");
+
+              window.open(nowurl, "_blank");
+
+            }
+          }
+
+        });
+    });
+  }
 }
