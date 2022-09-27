@@ -74,3 +74,37 @@
     display: flex;
 
 }
+
+/* Modal no user require login */
+.formNoUserRequireLogin{
+
+  margin: 0 auto;
+  width: 70vh;
+  height: 12vh;
+
+}
+
+.btn_login_google {
+  display: flex;
+  margin: 10px auto;
+  width: 60%;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid gray;
+  background: white;
+  border-radius: var(--border-radius_gen);
+  cursor: pointer;
+}
+
+.btn_login_google img {
+  width: 25px;
+  height: 25px;
+  margin: 0px 10px;
+}
+
+.no-account-msj span {
+  font-weight: bold;
+  color: var(--color-options);
+  cursor: pointer;
+}
