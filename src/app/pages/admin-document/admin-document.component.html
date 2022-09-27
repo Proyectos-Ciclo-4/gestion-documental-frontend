@@ -130,14 +130,10 @@
           (click)="visualizarModal(item.name,item.categoryId,item.subCategoryName,item.version,item.dateCreated,item.blockChainId,item.description)">
           <img src="/assets/images/masicon.png" alt="" class="icono">
         </button>
-        <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument)"><img
-            src="/assets/images/vericon.png" alt="" class="icono"></button>
-        <button *ngIf="isAdmin" class="boton-menu" (click)="upDate(item.uuid)"> <img
-            src="/assets/images/actualizaricon.png" alt="" class="icono"></button>
-        <a download="{{item.name}}" href="{{item.pathDocument}}" class="boton-menu"> <img
-            src="/assets/images/descargarIcon.png" alt="" class="icono"></a>
-        <button *ngIf="isAdmin" class="boton-menu" (click)="deleteDocument(item.uuid,item.name)"><img
-            src="/assets/images/eliminarIcon.png" alt="" class="icono"></button>
+        <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument)"><img src="/assets/images/vericon.png" alt="" class="icono"></button>
+        <button *ngIf="isAdmin" class="boton-menu" (click)="upDate(item.uuid)"> <img src="/assets/images/actualizaricon.png" alt="" class="icono"></button>
+        <a download="{{item.name}}" href="{{item.pathDocument}}" class="boton-menu"> <img src="/assets/images/descargarIcon.png" alt="" class="icono"></a>
+        <button *ngIf="isAdmin" class="boton-menu" (click)="deleteDocument(item.uuid,item.name)"><img src="/assets/images/eliminarIcon.png" alt="" class="icono"></button>
       </td>
 
     </tr>
@@ -157,16 +153,17 @@
 <div class="modal" *ngIf="showModalNoUser3">
   <div class="modal_body">
     <span class="modal_body-title">Detalles del documento</span>
-    <p class="modal_body-msj">
-      <li>Nombre del documento: {{modalInfoNombre}}</li>
-      <li>Categoria del documento: {{modalInfoCategoria}}</li>
-      <li>Subcategoria del documento:{{modalInfoSubcategoria}}</li>
-      <li>Version: {{modalInfoVersion}}</li>
-      <li>Fecha de creación: {{modalInfoFecha}}</li>
-      <li>Registro blockchain: {{modalInfoBlockChain}}</li>
-      <li>Descripción: {{modalInfoDesription}}</li>
-    </p>
-    <button (click)="revealForm3()" class="modal_body-btn btn_ok">Entendido</button>
+      <p class="modal_body-msj">
+        <li>Nombre del documento: {{modalInfoNombre}}</li>
+        <li>Categoria del documento: {{modalInfoCategoria}}</li>
+        <li>Subcategoria del documento:{{modalInfoSubcategoria}}</li>
+        <li>Version: {{modalInfoVersion}}</li>
+        <li>Fecha de creación: {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
+        <li>Hora de creación: {{modalInfoFecha | date:'h:mm a':'UTC -10'}}</li>
+        <li>Registro blockchain: {{modalInfoBlockChain}}</li>
+        <li>Descripción: {{modalInfoDesription}}</li>
+      </p>
+      <button (click)="revealForm3()" class="modal_body-btn btn_ok">Entendido</button>
   </div>
 </div>
 
