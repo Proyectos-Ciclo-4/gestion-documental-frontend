@@ -2,14 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Category } from 'src/app/models/category.model';
 import { CtrCategoriesService } from 'src/app/services/control-categories/ctr-categories.service';
-import { EndpointsService } from '../../services/endpoints/endpoints.service'
+import { EndpointsService } from '../../services/endpoints/endpoints.service';
 @Component({
   selector: 'category',
   templateUrl: './category.component.html',
-  styleUrls: ['./category.component.css']
+  styleUrls: ['./category.component.css'],
 })
 export class CategoryComponent implements OnInit {
-
   showModalCatgoryCreated = false;
   nombre: string = '';
   body: NgForm;
@@ -19,13 +18,15 @@ export class CategoryComponent implements OnInit {
   page: number = 1;
 
   documentForm = new FormGroup({
-    text_new_category: new FormControl('', { validators: [Validators.required] })
+    text_new_category: new FormControl('', {
+      validators: [Validators.required],
+    }),
   });
 
   constructor(
     private service: EndpointsService,
     private controlCategories: CtrCategoriesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getCategories();
@@ -39,17 +40,28 @@ export class CategoryComponent implements OnInit {
       complete: () => {
         this.categories = [];
         this.getCategories();
-      }
-    })
+      },
+    });
   }
 
   revealForm() {
-    this.formState = !this.formState
+    this.formState = !this.formState;
   }
 
   getCategories() {
     this.controlCategories.getCategoryList().then((list) => {
       this.categories = list;
+      this.categories.sort((a, b) => {
+        if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) {
+          return 1;
+        }
+        if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) {
+          return -1;
+        }
+        // a must be equal to b
+        return 0;
+      });
+
     });
   }
 }

@@ -50,6 +50,7 @@ export class SubCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategoryList();
+    this.getSubCategoryForList();
   }
 
   revealForm() {
@@ -59,14 +60,15 @@ export class SubCategoryComponent implements OnInit {
   getSubCategoryForList() {
     this.service.getSubCategories(this.selectedOption).subscribe({
       next: (res) => {
+        console.log("arriba: ",res)
         this.subCategoriesForList = res;
       },
       complete:()=>{
-        this.categories.sort((a, b) => {
-          if (a.categoryName > b.categoryName) {
+        this.subCategoriesForList.sort((a, b) => {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
           return 1;
           }
-          if (a.categoryName < b.categoryName) {
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
           return -1;
           }
           // a must be equal to b
@@ -78,8 +80,21 @@ export class SubCategoryComponent implements OnInit {
   getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
+        console.log("abajo: ",res)
+
         this.categories = res;
       },
+      complete:()=>{
+        this.subCategoriesForList.sort((a, b) => {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
+      }
     });
   }
 }
