@@ -10,33 +10,37 @@ import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
   styleUrls: ['./sub-category.component.css'],
 })
 export class SubCategoryComponent implements OnInit {
+
   nombre: string = '';
-  body: NgForm;
   formState: Boolean = false;
-  subcategories: SubCategory[] = [];
-  subcategory: SubCategory = new SubCategory();
   showModalCatgoryCreated = false;
-  categories: Category[] = [];
-  categoryName: string = '';
-  selectedOption: string;
+
+  selectedOption: string = '0';
   page: number = 1;
+
+  // for create subcategory
+  categories: Category[] = [];
+
+  // for list subcategory
+  subCategoriesForList: SubCategory[] = [];
 
   documentForm = new FormGroup({
     name: new FormControl('', { validators: [Validators.required] }),
     category: new FormControl('', { validators: [Validators.required] }),
   });
 
-  constructor(private service: EndpointsService) {}
+  constructor(private service: EndpointsService) { }
 
   protected async submit() {
 
     const docName = this.documentForm.get('name');
     const docCategory = this.documentForm.get('category');
-    console.log("name:", docName.value)
-    console.log("category:", docCategory.value)
+
     this.service.createSubCategory({
+
       categoryId: docCategory.value,
       subCategoryName: docName.value,
+
     }).subscribe(n => {
       docName.setValue("");
       docCategory.setValue("");
@@ -46,33 +50,51 @@ export class SubCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategoryList();
+    this.getSubCategoryForList();
   }
-  getSubcategoriesByCategory() {
-    const docCategory = this.documentForm.get('category');
-    this.service.getSubCategories(docCategory.value).subscribe({
-      next: (res) => {
-        this.subcategories = res;
-      },
-    });
-  }
+
   revealForm() {
     this.formState = !this.formState;
   }
-  getSubCategoryList() {
-    this.service.getSubCategories(this.subcategory.categoryId).subscribe({
+
+  getSubCategoryForList() {
+    this.service.getSubCategories(this.selectedOption).subscribe({
       next: (res) => {
-        this.subcategories = res;
+        console.log("arriba: ",res)
+        this.subCategoriesForList = res;
       },
+      complete:()=>{
+        this.subCategoriesForList.sort((a, b) => {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
+      }
     });
   }
-  selectCategory() {
-    this.getSubCategoryList();
-  }
+
   getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
+        console.log("abajo: ",res)
+
         this.categories = res;
       },
+      complete:()=>{
+        this.subCategoriesForList.sort((a, b) => {
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
+      }
     });
   }
 }

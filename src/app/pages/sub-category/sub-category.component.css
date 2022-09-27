@@ -12,12 +12,14 @@
   margin-top: 10px;
 
 }
+
 .elemento {
   margin-top: 10px;
   display: flex;
   justify-content: center;
   padding: 2%;
 }
+
 .create_category_box-form {
   display: flex;
   flex-direction: column;
@@ -37,13 +39,15 @@
 }
 
 .create_category_box-form button {
-  margin: 20px;
+  margin: 20px auto;
 }
 
 .list_categories {
   width: 100%;
   margin: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .list_categories-title {
