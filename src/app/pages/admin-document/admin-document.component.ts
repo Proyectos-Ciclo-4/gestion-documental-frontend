@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
-import { Storage, ref, uploadBytes, getDownloadURL, deleteObject, getMetadata } from '@angular/fire/storage';
+import { Storage, uploadBytes, getDownloadURL, deleteObject, getMetadata, ref, getBlob } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 
@@ -44,7 +44,8 @@ export class AdminDocumentComponent implements OnInit {
   showModalActualizarDocument: boolean = false;
   showModalDeleteDocument: boolean = false;
   showModalUpdatedDocument: boolean = false;
-  showModalNoUserRequireLogin: boolean = false;
+  showModalNoUserRequireLoginTolookDoc: boolean = false;
+  showModalNoUserRequireLoginToDownloadDoc: boolean = false;
   showModalNoUser: boolean = false;
   fileInAngular: any;
 
@@ -117,7 +118,8 @@ export class AdminDocumentComponent implements OnInit {
         this.showModalActualizarDocument = false;
         this.showModalDeleteDocument = false;
         this.showModalUpdatedDocument = false;
-        this.showModalNoUserRequireLogin = false;
+        this.showModalNoUserRequireLoginTolookDoc = false;
+        this.showModalNoUserRequireLoginToDownloadDoc = false;
         this.showModalNoUser = false;
       }
 
@@ -198,7 +200,7 @@ export class AdminDocumentComponent implements OnInit {
 
       window.open(nowurl, "_blank");
 
-    } else this.showModalNoUserRequireLogin = true;
+    } else this.showModalNoUserRequireLoginTolookDoc = true;
 
   }
 
@@ -213,13 +215,14 @@ export class AdminDocumentComponent implements OnInit {
       complete: () => {
         this.categories.sort((a, b) => {
           if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
       }
     })
   }
@@ -236,13 +239,14 @@ export class AdminDocumentComponent implements OnInit {
       complete: () => {
         this.subcategories.sort((a, b) => {
           if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
       }
     })
   }
@@ -259,13 +263,14 @@ export class AdminDocumentComponent implements OnInit {
       complete: () => {
         this.subcategoriesFilter.sort((a, b) => {
           if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
 
       }
     })
@@ -284,13 +289,14 @@ export class AdminDocumentComponent implements OnInit {
       complete: () => {
         this.documentsList.sort((a, b) => {
           if (a.name.toLowerCase() > b.name.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.name.toLowerCase() < b.name.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
       }
     });
   }
@@ -377,12 +383,26 @@ export class AdminDocumentComponent implements OnInit {
     this.modalInfoDesription = modalInfoDesription;
   }
 
-  downloadDoc(idDoc: string) {
+  async downloadDoc(nameDoc: string, idDoc: string) {
+
+    const reference = ref(this.storage, `documents/${nameDoc}`);
+    getBlob(reference).then((blob) => {
+
+      const newFile = new File([blob], nameDoc, { type: blob.type });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(newFile);
+      a.target = '_blank';
+
+      blob.type == 'application/pdf' ? a.download = `${nameDoc}.pdf` : a.download = `${nameDoc}`;
+      a.click();
+
+    });
+
     const idUser = this.controlSesion.getIdUser();
     this.endPointService.updateDownloads(idDoc, idUser).subscribe();
   }
 
-  loginWithGoogle() {
+  loginWithGoogleLookDocument() {
 
     this.login$.login().then((data) => {
 
@@ -390,35 +410,50 @@ export class AdminDocumentComponent implements OnInit {
         .subscribe(data => {
 
           if (data == null) this.showModalNoUser = true;
-
           else {
+
             this.controlSesion.writeSesionUser(data);
+            let nowurl = location.href;
 
             if (data.tipo == 700) {
 
               this.isAdmin = true;
               this.isUser = true;
-              this.showModalNoUserRequireLogin = false;
-
-              let nowurl = location.href;
               nowurl = nowurl.replace("document", "view-document");
 
-              window.open(nowurl, "_blank");
+            } else if (data.tipo == 555) this.isUser = true;
 
-            } else if (data.tipo == 555) {
-
-              this.isUser = true;
-              this.showModalNoUserRequireLogin = false;
-
-              let nowurl = location.href;
-              nowurl = nowurl.replace("document", "view-document");
-
-              window.open(nowurl, "_blank");
-
-            }
+            window.open(nowurl, "_blank");
+            this.showModalNoUserRequireLoginTolookDoc = false;
           }
 
         });
     });
   }
+
+  loginWithGoogleDownloadDocument() {
+    this.login$.login().then((data) => {
+
+      this.endpoint$.verifyUser(data.user.email)
+        .subscribe(data => {
+
+          if (data == null) this.showModalNoUser = true;
+          else {
+
+            this.controlSesion.writeSesionUser(data);
+            if (data.tipo == 700) {
+
+              this.isAdmin = true;
+              this.isUser = true;
+
+            } else if (data.tipo == 555) this.isUser = true;
+
+            this.showModalNoUserRequireLoginToDownloadDoc = false;
+            //this.downloadDoc();
+          }
+
+        });
+    });
+  }
+
 }

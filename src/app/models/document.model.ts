@@ -8,6 +8,13 @@ export interface DocumentModel {
   blockChainId: string,
   description: string
 }
+
+export interface DocumentModelBlockchain {
+  name: string,
+  version: number,
+  pathDocument: string,
+  description: string
+}
 export interface DocumentModelQuery {
   name: string,
   categoryId: string,
