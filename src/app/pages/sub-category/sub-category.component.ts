@@ -37,17 +37,28 @@ export class SubCategoryComponent implements OnInit {
 
     const docName = this.documentForm.get('name');
     const docCategory = this.documentForm.get('category');
+    this.service.getSubCategoriesToCompare( docCategory.value, docName.value).subscribe({
+      next: (res) => {
+        this.subCategoriesToCompare = res;
+        this.subcategoriesExist = this.subCategoriesToCompare.length
+      }, complete: () => {
+        if(this.subcategoriesExist == 0){
+          this.service.createSubCategory({
 
-    this.service.createSubCategory({
+            categoryId: docCategory.value,
+            subCategoryName: docName.value,
 
-      categoryId: docCategory.value,
-      subCategoryName: docName.value,
+          }).subscribe(n => {
+            docName.setValue("");
+            docCategory.setValue("");
+            this.showModalCatgoryCreated = true;
+          });
+        } else {
+          this.showModalSubCatgoryExist = true;
+        }
+      }
+    })
 
-    }).subscribe(n => {
-      docName.setValue("");
-      docCategory.setValue("");
-      this.showModalCatgoryCreated = true;
-    });
   }
 
   ngOnInit(): void {
@@ -62,7 +73,6 @@ export class SubCategoryComponent implements OnInit {
   getSubCategoryForList() {
     this.service.getSubCategories(this.selectedOption).subscribe({
       next: (res) => {
-        console.log("arriba: ",res)
         this.subCategoriesForList = res;
       },
       complete:()=>{
@@ -82,8 +92,6 @@ export class SubCategoryComponent implements OnInit {
   getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
-        console.log("abajo: ",res)
-
         this.categories = res;
       },
       complete:()=>{

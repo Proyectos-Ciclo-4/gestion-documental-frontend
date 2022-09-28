@@ -18,6 +18,7 @@ export const environment = {
       getCategories: 'http://localhost:8080/category/getall',
       getCategoriesToCompareEndPoint: 'http://localhost:8080/category/compare',
       getSubcategories: 'http://localhost:8080/subcategory/',
+      getSubcategoriesToCompareEndPoint: 'http://localhost:8080/subcategory/compare',
       createSubcategory: 'http://localhost:8080/subcategory/create',
       getDocumentsBy:'http://localhost:8080/documents',
       deleteDocument:'http://localhost:8080/document/delete',
