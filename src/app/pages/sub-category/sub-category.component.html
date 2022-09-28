@@ -36,7 +36,7 @@
   </div>
 
   <ul>
-    <li *ngFor="let res of subCategoriesForList | paginate: { itemsPerPage: 2, currentPage: page }">
+    <li *ngFor="let res of subCategoriesForList | paginate: { itemsPerPage: maxPage, currentPage: page }">
       {{ res.subCategoryName }}
     </li>
   </ul>

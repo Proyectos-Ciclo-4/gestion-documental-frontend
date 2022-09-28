@@ -207,6 +207,13 @@ form label {
     text-align: start;
 }
 
+.modal_body-footer {
+    display: block;
+    font-size: 0.8rem;
+    text-align: center;
+    color: gray;
+}
+
 .modal_body-btn {
     margin: 2px;
 }

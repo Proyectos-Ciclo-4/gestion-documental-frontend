@@ -5,12 +5,16 @@ import { Category } from 'src/app/models/category.model';
 import { CtrCategoriesService } from 'src/app/services/control-categories/ctr-categories.service';
 import { EndpointsService } from '../../services/endpoints/endpoints.service';
 import { ControlSesion } from 'src/app/utils/controlSesion';
+import { environment } from 'src/environments/environment.prod';
 @Component({
   selector: 'category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css'],
 })
 export class CategoryComponent implements OnInit {
+
+  page: number = 1;
+  maxPage = environment.paginationmax;
 
   controlSesion = new ControlSesion();
   showModalCatgoryCreated = false;
@@ -19,7 +23,6 @@ export class CategoryComponent implements OnInit {
   formState: Boolean = false;
   categories: Category[] = [];
   category: Category = new Category();
-  page: number = 1;
 
   documentForm = new FormGroup({
     text_new_category: new FormControl('', {

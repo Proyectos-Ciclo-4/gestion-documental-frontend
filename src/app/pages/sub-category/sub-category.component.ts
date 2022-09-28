@@ -5,6 +5,7 @@ import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { ControlSesion } from 'src/app/utils/controlSesion';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'sub-category',
@@ -13,6 +14,9 @@ import { ControlSesion } from 'src/app/utils/controlSesion';
 })
 export class SubCategoryComponent implements OnInit {
 
+  page: number = 1;
+  maxPage = environment.paginationmax;
+
   controlSesion = new ControlSesion();
 
   nombre: string = '';
@@ -20,8 +24,6 @@ export class SubCategoryComponent implements OnInit {
   showModalCatgoryCreated = false;
 
   selectedOption: string = '0';
-  page: number = 1;
-
   // for create subcategory
   categories: Category[] = [];
 
@@ -80,19 +82,20 @@ export class SubCategoryComponent implements OnInit {
   getSubCategoryForList() {
     this.service.getSubCategories(this.selectedOption).subscribe({
       next: (res) => {
-        console.log("arriba: ",res)
+        console.log("arriba: ", res)
         this.subCategoriesForList = res;
       },
-      complete:()=>{
+      complete: () => {
         this.subCategoriesForList.sort((a, b) => {
           if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
       }
     });
   }
@@ -100,20 +103,21 @@ export class SubCategoryComponent implements OnInit {
   getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
-        console.log("abajo: ",res)
+        console.log("abajo: ", res)
 
         this.categories = res;
       },
-      complete:()=>{
+      complete: () => {
         this.subCategoriesForList.sort((a, b) => {
           if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
       }
     });
   }

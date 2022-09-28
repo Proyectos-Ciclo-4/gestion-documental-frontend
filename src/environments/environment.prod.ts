@@ -20,7 +20,8 @@ export const environment = {
     deleteDocument: 'http://localhost:8080/document/delete',
     updateDocument: 'http://localhost:8080/document/update',
     updateDownloads: 'http://localhost:8080/download/create',
-    getDownloadsByperiod:'http://localhost:8080/downloads'
+    getDownloadsByperiod: 'http://localhost:8080/downloads'
   },
+  paginationmax: 5,
   production: true,
 };

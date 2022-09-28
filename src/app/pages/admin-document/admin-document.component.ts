@@ -8,6 +8,7 @@ import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/
 import { Storage, uploadBytes, getDownloadURL, deleteObject, getMetadata, ref, getBlob } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'document',
@@ -17,6 +18,8 @@ import { SubCategory } from 'src/app/models/subcategory.model';
 export class AdminDocumentComponent implements OnInit {
 
   page: number = 1;
+  maxPage = environment.paginationmax;
+
   idDocumentToUpdate: string;
 
   group: AbstractControl;
@@ -45,7 +48,7 @@ export class AdminDocumentComponent implements OnInit {
   showModalActualizarDocument: boolean = false;
   showModalDeleteDocument: boolean = false;
   showModalUpdatedDocument: boolean = false;
-  showModalNoUserRequireLoginTolookDoc: boolean = false;
+  showModalNoUserRequireLoginTolookDoc: boolean = true;
   showModalNoUserRequireLoginToDownloadDoc: boolean = false;
   showModalNoUser: boolean = false;
   showModalNoDocAndName: boolean = false;
@@ -95,7 +98,6 @@ export class AdminDocumentComponent implements OnInit {
     private endpoint$: EndpointsService) { }
 
   ngOnInit(): void {
-    this.getCategoryList()
     switch (this.controlSesion.getTypeUser()) {
       case null:
         this.isUser = false;
@@ -128,6 +130,7 @@ export class AdminDocumentComponent implements OnInit {
 
     }, false);
 
+    this.getCategoryList()
   }
 
   protected async onFileSelected(event: any) {
@@ -202,7 +205,6 @@ export class AdminDocumentComponent implements OnInit {
 
       let nowurl = location.href;
       nowurl = nowurl.replace("document", "view-document");
-
       window.open(nowurl, "_blank");
 
     } else this.showModalNoUserRequireLoginTolookDoc = true;
@@ -219,13 +221,8 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.categories.sort((a, b) => {
-          if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) {
-            return 1;
-          }
-          if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) {
-            return -1;
-          }
-          // a must be equal to b
+          if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) return 1;
+          if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) return -1;
           return 0;
         })
       }
@@ -267,13 +264,8 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.subcategoriesFilter.sort((a, b) => {
-          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
-            return 1;
-          }
-          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
-            return -1;
-          }
-          // a must be equal to b
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) return 1;
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) return -1;
           return 0;
         })
 
@@ -293,13 +285,8 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.documentsList.sort((a, b) => {
-          if (a.name.toLowerCase() > b.name.toLowerCase()) {
-            return 1;
-          }
-          if (a.name.toLowerCase() < b.name.toLowerCase()) {
-            return -1;
-          }
-          // a must be equal to b
+          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1;
+          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1;
           return 0;
         })
       }
@@ -343,14 +330,10 @@ export class AdminDocumentComponent implements OnInit {
       });
 
     } else if (otherDocInput) {
-
       this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value)
 
-    } else {
+    } else this.showModalNoDocAndName = true;
 
-      this.showModalNoDocAndName = true;
-
-    }
 
     this.updateDocumentForm = new FormGroup({
       nameUpdate: new FormControl(''),
@@ -452,21 +435,29 @@ export class AdminDocumentComponent implements OnInit {
 
   async downloadDoc(nameDoc: string, idDoc: string) {
 
-    const reference = ref(this.storage, `documents/${nameDoc}`);
-    getBlob(reference).then((blob) => {
+    if (this.isUser) {
 
-      const newFile = new File([blob], nameDoc, { type: blob.type });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(newFile);
-      a.target = '_blank';
+      const reference = ref(this.storage, `documents/${nameDoc}`);
+      getBlob(reference).then((blob) => {
 
-      blob.type == 'application/pdf' ? a.download = `${nameDoc}.pdf` : a.download = `${nameDoc}`;
-      a.click();
+        const newFile = new File([blob], nameDoc, { type: blob.type });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(newFile);
+        a.target = '_blank';
 
-    });
+        blob.type == 'application/pdf' ? a.download = `${nameDoc}.pdf` : a.download = `${nameDoc}`;
+        a.click();
 
-    const idUser = this.controlSesion.getIdUser();
-    this.endPointService.updateDownloads(idDoc, idUser).subscribe();
+      });
+
+      const idUser = this.controlSesion.getIdUser();
+      this.endPointService.updateDownloads(idDoc, idUser).subscribe();
+
+    } else {
+      sessionStorage.setItem('docId', idDoc);
+      sessionStorage.setItem('docName', nameDoc);
+      this.showModalNoUserRequireLoginToDownloadDoc = true;
+    }
   }
 
   loginWithGoogleLookDocument() {
@@ -499,6 +490,7 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   loginWithGoogleDownloadDocument() {
+
     this.login$.login().then((data) => {
 
       this.endpoint$.verifyUser(data.user.email)
@@ -516,7 +508,7 @@ export class AdminDocumentComponent implements OnInit {
             } else if (data.tipo == 555) this.isUser = true;
 
             this.showModalNoUserRequireLoginToDownloadDoc = false;
-            //this.downloadDoc();
+            this.downloadDoc(sessionStorage.getItem('docName'), sessionStorage.getItem('docId'));
           }
 
         });
