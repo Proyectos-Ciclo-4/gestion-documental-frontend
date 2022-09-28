@@ -246,7 +246,7 @@ export class AdminDocumentComponent implements OnInit {
           if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
             return -1;
           }
-          // a must be equal to b
+
           return 0;
         })
       }

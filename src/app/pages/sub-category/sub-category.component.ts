@@ -22,7 +22,9 @@ export class SubCategoryComponent implements OnInit {
   nombre: string = '';
   formState: Boolean = false;
   showModalCatgoryCreated = false;
-
+  showModalSubCatgoryExist = false;
+  subcategoriesExist: number = 0;
+  subCategoriesToCompare: SubCategory[] = [];
   selectedOption: string = '0';
   // for create subcategory
   categories: Category[] = [];
@@ -43,21 +45,29 @@ export class SubCategoryComponent implements OnInit {
 
     const docName = this.documentForm.get('name');
     const docCategory = this.documentForm.get('category');
+    this.service.getSubCategoriesToCompare(docCategory.value, docName.value).subscribe({
+      next: (res) => {
+        this.subCategoriesToCompare = res;
+        this.subcategoriesExist = this.subCategoriesToCompare.length
+      }, complete: () => {
+        if (this.subcategoriesExist == 0) {
+          this.service.createSubCategory({
 
-    this.service.createSubCategory({
+            categoryId: docCategory.value,
+            subCategoryName: docName.value,
 
-      categoryId: docCategory.value,
-      subCategoryName: docName.value,
-
-    }).subscribe(n => {
-      docName.setValue("");
-      docCategory.setValue("");
-      this.showModalCatgoryCreated = true;
-    });
+          }).subscribe(n => {
+            docName.setValue("");
+            docCategory.setValue("");
+            this.showModalCatgoryCreated = true;
+          });
+        } else {
+          this.showModalSubCatgoryExist = true;
+        }
+      }
+    })
   }
-
   ngOnInit(): void {
-
     switch (this.controlSesion.getTypeUser()) {
       case null:
         this.router.navigate(['']);
@@ -67,14 +77,10 @@ export class SubCategoryComponent implements OnInit {
         break;
       case 700:
         this.getCategoryList();
+        this.getSubCategoryForList();
         break;
     };
-
-    this.getCategoryList();
-    this.getSubCategoryForList();
-
   }
-
   revealForm() {
     this.formState = !this.formState;
   }
@@ -82,7 +88,6 @@ export class SubCategoryComponent implements OnInit {
   getSubCategoryForList() {
     this.service.getSubCategories(this.selectedOption).subscribe({
       next: (res) => {
-        console.log("arriba: ", res)
         this.subCategoriesForList = res;
       },
       complete: () => {
@@ -103,8 +108,6 @@ export class SubCategoryComponent implements OnInit {
   getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
-        console.log("abajo: ", res)
-
         this.categories = res;
       },
       complete: () => {

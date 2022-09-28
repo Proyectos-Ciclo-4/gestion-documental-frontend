@@ -21,12 +21,22 @@
   </ul>
   <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
 </div>
-<div class="modal" *ngIf="showModalCatgoryCreated">
+<div class="modal" *ngIf="showModalCategoryCreated">
   <div class="modal_body">
     <span class="modal_body-title">Categorias</span>
     <p class="modal_body-msj">
       Se creo correctamente la categoria
     </p>
-    <button class="btn_ok" (click)="showModalCatgoryCreated = false">Entendido</button>
+    <button class="btn_ok" (click)="showModalCategoryCreated = false">Entendido</button>
+  </div>
+</div>
+
+<div class="modal" *ngIf="showModalCategoryExist">
+  <div class="modal_body">
+    <span class="modal_body-title">Categorias</span>
+    <p class="modal_body-msj">
+      Esta categoría ya existe
+    </p>
+    <button class="btn_ok" (click)="showModalCategoryExist = false">Entendido</button>
   </div>
 </div>

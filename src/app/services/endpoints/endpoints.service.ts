@@ -72,17 +72,22 @@ export class EndpointsService {
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${environment.host.getCategories}`);
   }
-  /**
- * SUBCATEGORY ENDPOINTS
- * @param subcategory
- * @returns
- */
-  createSubCategory(subcategory: object): Observable<object> {
-    return this.http.post(environment.host.createSubcategory, { ...subcategory });
+  getCategoriesToCompare(categoryName: string): Observable<Category[]> {
+    return this.http.get<Category[]>(`${environment.host.getCategoriesToCompareEndPoint}/${categoryName}`);
   }
-
-  getSubCategories(categoryId: string): Observable<SubCategory[]> {
-    return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}`);
-  }
+    /**
+   * SUBCATEGORY ENDPOINTS
+   * @param subcategory
+   * @returns
+   */
+     createSubCategory(subcategory: object): Observable<object> {
+      return this.http.post(environment.host.createSubcategory, { ...subcategory });
+    }
+    getSubCategories(categoryId: string): Observable<SubCategory[]> {
+      return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}`);
+    }
+    getSubCategoriesToCompare(categoryId: string, subCategoryName: string): Observable<SubCategory[]> {
+      return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}/${subCategoryName}`);
+    }
 
 }
