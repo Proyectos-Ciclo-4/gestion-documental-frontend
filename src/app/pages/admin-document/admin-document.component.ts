@@ -10,6 +10,7 @@ import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { KeyValuePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { reload } from '@angular/fire/auth';
 
 @Component({
   selector: 'document',
@@ -49,6 +50,8 @@ export class AdminDocumentComponent implements OnInit {
   showModalUpdatedDocument: boolean = false;
   showModalNoUserRequireLogin: boolean = false;
   showModalNoUser: boolean = false;
+  showModalNoDocAndName: boolean = false;
+  showModalNothingSelected: boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -291,27 +294,19 @@ export class AdminDocumentComponent implements OnInit {
 
   updateDocument() {
 
-    const docNameUpdate = this.updateDocumentForm.get('nameUpdate');
-    const docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
-    const docUpload = this.updateDocumentForm.get('uploadUpdate');
-    this.endPointService.updateDocument(this.idDocumentToUpdate,
-      {
-        name: docNameUpdate.value || null,
-        description: docDescriptionUpdate.value || null,
-        pathDocument: docUpload.value || null
-      }
-    ).subscribe({
-      complete: () => {
-        this.showModalActualizarDocument = false;
-        this.showModalUpdatedDocument = true;
-        this.reloadDocuments();
-      }
-    });
+    let docNameUpdate = this.updateDocumentForm.get('nameUpdate');
+    let docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
+    let docUpload = this.updateDocumentForm.get('uploadUpdate');
 
-    const onlyDescriptionChange:boolean = (docDescriptionUpdate.value).trim() !== "" && docNameUpdate.value === "" && docUpload.value == "";
-    const otherDocInput:boolean = (docUpload.value).trim() !== "";
+    const onlyDescriptionChange:boolean = ((""+docDescriptionUpdate.value).trim() !== "") && ((""+docNameUpdate.value).trim() == "") && ((""+docUpload.value).trim() == "");
+    const otherDocInput:boolean = (""+docUpload.value).trim() !== "";
+    const nothingSelected:boolean = ((""+docDescriptionUpdate.value).trim() === "") && ((""+docNameUpdate.value).trim() === "") && ((""+docUpload.value).trim() === "");
 
-    if(onlyDescriptionChange){
+    if(nothingSelected){
+
+      this.showModalNothingSelected =true;
+
+    } else if(onlyDescriptionChange){
 
       this.endPointService.updateDocument(
         this.idDocumentToUpdate,
@@ -320,7 +315,13 @@ export class AdminDocumentComponent implements OnInit {
           description: docDescriptionUpdate.value || null,
           pathDocument: null
         }
-      ).subscribe();
+      ).subscribe(e=>{
+
+        this.showModalUpdatedDocument = true;
+        this.showModalActualizarDocument = false;
+        this.reloadDocuments()
+
+      });
 
     }else if(otherDocInput){
 
@@ -328,9 +329,15 @@ export class AdminDocumentComponent implements OnInit {
 
     }else{
 
-      alert ("Si cambia el nombre debe agregar un documento [ Por ahora 😔]")
+      this.showModalNoDocAndName = true;
 
     }
+
+    this.updateDocumentForm = new FormGroup({
+      nameUpdate: new FormControl(''),
+      descriptionUpdate: new FormControl(''),
+      uploadUpdate: new FormControl('')
+    });
 
   }
 
@@ -354,7 +361,10 @@ export class AdminDocumentComponent implements OnInit {
             description: description || null,
             pathDocument: res
           }
-        ).subscribe();
+        ).subscribe( e => this.reloadDocuments() );
+
+        this.showModalUpdatedDocument = true;
+        this.showModalActualizarDocument = false;
 
       })
     })
@@ -375,7 +385,7 @@ export class AdminDocumentComponent implements OnInit {
    * @param uuid Id de documento a eliminar
    * @param name Nombre del documento a eliminar
    */
-  confirmDeleteDocument(uuid: string, name: string) {
+  confirmDeleteDocument(uuid: string, name:string) {
     this.referenceDelte = ref(this.storage, `documents/${name}`)
     this.deleteDoc = uuid;
     this.showModalDeleteDocument = true;

@@ -291,3 +291,25 @@
   </div>
 </div>
 
+<!-- Modal de cargar documento + archivo -->
+<div class="modal" *ngIf="showModalNoDocAndName">
+  <div class="modal_body">
+      <span class="modal_body-title">Si desea realizar el cambio de nombre debe ingresar un nuevo documento</span>
+      <p class="modal_body-msj">
+          Por motivos tecnicos en nuestra base de datos debe añadir un nuevo archivo al cambiar el nombre del mismo
+      </p>
+      <button (click)="showModalNoDocAndName = false" class="btn_ok modal_body-btn">Entendido</button>
+  </div>
+</div>
+
+<!-- Modal  nada seleccionado -->
+<div class="modal" *ngIf="showModalNothingSelected">
+  <div class="modal_body">
+      <span class="modal_body-title">No has selecionado nada</span>
+      <p class="modal_body-msj">
+          Debes seleccionar la casilla que quieras actualizar
+      </p>
+      <button (click)="showModalNothingSelected = false" class="btn_ok modal_body-btn">Entendido</button>
+  </div>
+</div>
+
