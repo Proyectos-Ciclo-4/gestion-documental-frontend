@@ -135,28 +135,6 @@
   </div>
 </div>
 
-<!-- Modal de aviso requerimientos de documentos-->
-<div class="modal" *ngIf="showModalRequiresDocument">
-  <div class="modal_body">
-    <span class="modal_body-title">Información</span>
-    <p class="modal_body-msj">
-      Solo se pueden subir documentos de tipo PDF, Word, PowerPoint y Excel. Su tamaño no puede ser mayor a 1 MB.
-    </p>
-    <button (click)="showModalRequiresDocument = false" class="modal_body-btn btn_ok">Entendido</button>
-  </div>
-</div>
-
-<!-- Modal de aviso documento guardado -->
-<div class="modal" *ngIf="showModalSaveDocument">
-  <div class="modal_body">
-    <span class="modal_body-title">Información</span>
-    <p class="modal_body-msj">
-      Documento guardado Exitosamente!
-    </p>
-    <button (click)="showModalSaveDocument = false" class="modal_body-btn btn_ok">Entendido</button>
-  </div>
-</div>
-
 <!-- Modal de aviso ver detalles documento -->
 <div class="modal" *ngIf="showModalDetailsDocument">
   <div class="modal_body">
@@ -290,9 +268,8 @@
 <!-- Modal de cargar documento + archivo -->
 <div class="modal" *ngIf="showModalNoDocAndName">
   <div class="modal_body">
-    <span class="modal_body-title">Si desea realizar el cambio de nombre debe ingresar un nuevo documento</span>
     <p class="modal_body-msj">
-      Por motivos tecnicos en nuestra base de datos debe añadir un nuevo archivo al cambiar el nombre del mismo
+      Debe cargar un archivo para completar la actualización
     </p>
     <button (click)="showModalNoDocAndName = false" class="btn_ok modal_body-btn">Entendido</button>
   </div>
@@ -309,4 +286,25 @@
   </div>
 </div>
 
->>>>>>> a87c5e99bf23182de9551bc9697d5690e842011a
+<!-- Modal de aviso requerimientos de documentos-->
+<div class="modal" *ngIf="showModalRequiresDocument">
+  <div class="modal_body">
+    <span class="modal_body-title">Información</span>
+    <p class="modal_body-msj">
+      Solo se pueden subir documentos de tipo PDF, Word, PowerPoint y Excel. Su tamaño no puede ser mayor a 1 MB.
+    </p>
+    <button (click)="showModalRequiresDocument = false" class="modal_body-btn btn_ok">Entendido</button>
+  </div>
+</div>
+
+<!-- Modal de aviso documento guardado -->
+<div class="modal" *ngIf="showModalSaveDocument">
+  <div class="modal_body">
+    <span class="modal_body-title">Información</span>
+    <p class="modal_body-msj">
+      Documento guardado Exitosamente!
+    </p>
+    <button (click)="showModalSaveDocument = false" class="modal_body-btn btn_ok">Entendido</button>
+  </div>
+</div>
+

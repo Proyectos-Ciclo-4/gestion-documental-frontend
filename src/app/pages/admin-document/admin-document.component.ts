@@ -150,9 +150,9 @@ export class AdminDocumentComponent implements OnInit {
   protected sendToStorage() {
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
-      console.log(this.currentDocFile)
       getDownloadURL(docRef).then(res => {
         this.saveDocument(res)
+        this.reloadDocuments()
       })
     })
   }
