@@ -5,7 +5,6 @@
 <div *ngIf="isAdmin">
 
   <!-- Creacion de documentos -->
-
   <h2 class="titulo">CREAR NUEVO DOCUMENTO</h2>
   <form [formGroup]="documentForm" class="formulario">
     <div>
@@ -44,7 +43,7 @@
       </p>
 
     </div>
-    <button type="submit" (click)="submit()" class="btn_ok" [disabled]="documentForm.invalid">Guardar</button>
+    <button type="submit" (click)="sendToStorage()" class="btn_ok" [disabled]="documentForm.invalid">Guardar</button>
   </form>
 
 </div>
@@ -115,8 +114,9 @@
         <button *ngIf="!isAdmin && !isUser" class="boton-menu" (click)="showModalRequireLogin = true"><img
             src="/assets/images/download.svg" alt="" class="icon"></button>
 
-        <button *ngIf="isAdmin || isUser" class="boton-menu"> <a download="{{item.name}}"
-            href="{{item.pathDocument}}"><img src="/assets/images/download.svg" alt="" class="icon"></a></button>
+        <button *ngIf="isAdmin || isUser" class="boton-menu"> <a (click)="downloadDoc(item.uuid)"
+            download="{{item.name}}" href="{{item.pathDocument}}"><img src="/assets/images/download.svg" alt=""
+              class="icon"></a></button>
 
         <button *ngIf="isAdmin" class="boton-menu" (click)="confirmDeleteDocument(item.uuid,item.name)"><img
             src="/assets/images/delete.svg" alt="" class="icon"></button>
@@ -129,7 +129,6 @@
 </div>
 
 <!-- Botones de paginacion de la tabla -->
-
 <div>
   <div class="paginacion">
     <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
@@ -165,13 +164,13 @@
 
     <div class="modal_body-msj">
       <ul>
-        <li><span class="bold">Nombre del documento:</span> {{modalInfoNombre}}</li>
-        <li><span class="bold">Categoria del documento:</span> {{modalInfoCategoria}}</li>
-        <li><span class="bold">Subcategoria del documento:</span>{{modalInfoSubcategoria}}</li>
+        <li><span class="bold">Nombre del documento: </span> {{modalInfoNombre}}</li>
+        <li><span class="bold">Categoria del documento: </span> {{modalInfoCategoria}}</li>
+        <li><span class="bold">Subcategoria del documento: </span>{{modalInfoSubcategoria}}</li>
         <li><span class="bold">Version:</span> {{modalInfoVersion}}</li>
-        <li><span class="bold">Fecha de creación:</span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
-        <li><span class="bold">Hora de creación:</span> {{modalInfoFecha | date:'h:mm a':'UTC -10'}}</li>
-        <li><span class="bold">Registro blockchain:</span> {{modalInfoBlockChain}}</li>
+        <li><span class="bold">Fecha de creación: </span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
+        <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'h:mm a':'UTC -5'}}</li>
+        <li><span class="bold">Registro blockchain: </span> {{modalInfoBlockChain}}</li>
         <li><span class="bold">Descripción:</span> {{modalInfoDesription}}</li>
       </ul>
     </div>
@@ -222,6 +221,17 @@
         <button (click)="showModalActualizarDocument = false" class="modal_body-btn btn_cancel">Cancelar</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal de aviso documento actualizado -->
+<div class="modal" *ngIf="showModalUpdatedDocument">
+  <div class="modal_body">
+    <span class="modal_body-title">¡Actualizado!</span>
+    <p class="modal_body-msj">
+      Documento actualizado correctamente
+    </p>
+    <button (click)="showModalUpdatedDocument = false" class="modal_body-btn btn_ok">Confirmar</button>
   </div>
 </div>
 

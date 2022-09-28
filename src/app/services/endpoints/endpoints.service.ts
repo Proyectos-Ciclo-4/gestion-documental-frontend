@@ -25,20 +25,31 @@ export class EndpointsService {
   createDocument(document: DocumentModel) {
     return this.http.post(environment.host.createDocument, { ...document });
   }
-  findDocumentBy(categoryId: string,subCategoryName:string){
-    if(subCategoryName!==""){
+
+  findDocumentBy(categoryId: string, subCategoryName: string) {
+    if (subCategoryName !== "") {
       return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsBy}/${categoryId}/${subCategoryName}`)
-    }else{
+    } else {
       return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsByCategory}/${categoryId}/`)
     }
-
   }
-  updateDocument(uuid:string,body:DocumentUpdateModel){
-    return this.http.put(`${environment.host.updateDocument}/${uuid}`,{...body});
 
+  updateDocument(uuid: string, body: DocumentUpdateModel) {
+    return this.http.put(`${environment.host.updateDocument}/${uuid}`, { ...body });
   }
-  deleteDocumentBy(uuid:string){
+
+  deleteDocumentBy(uuid: string) {
     return this.http.delete(`${environment.host.deleteDocument}/${uuid}`);
+  }
+
+  updateDownloads(docId: string, userId: String) {
+
+    const body = {
+      "documentId": docId,
+      "userId": userId
+    }
+
+    return this.http.post(`${environment.host.updateDownloads}`, { ...body })
   }
 
   /**
@@ -49,19 +60,21 @@ export class EndpointsService {
   createCategory(category: object): Observable<object> {
     return this.http.post(environment.host.createCategory, { ...category });
   }
+
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${environment.host.getCategories}`);
   }
-    /**
-   * SUBCATEGORY ENDPOINTS
-   * @param subcategory
-   * @returns
-   */
-     createSubCategory(subcategory: object): Observable<object> {
-      return this.http.post(environment.host.createSubcategory, { ...subcategory });
-    }
-    getSubCategories(categoryId: string): Observable<SubCategory[]> {
-      return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}`);
-    }
+  /**
+ * SUBCATEGORY ENDPOINTS
+ * @param subcategory
+ * @returns
+ */
+  createSubCategory(subcategory: object): Observable<object> {
+    return this.http.post(environment.host.createSubcategory, { ...subcategory });
+  }
+
+  getSubCategories(categoryId: string): Observable<SubCategory[]> {
+    return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}`);
+  }
 
 }

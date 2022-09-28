@@ -46,8 +46,9 @@ export class AdminDocumentComponent implements OnInit {
   showModalRequireLogin: boolean = false;
   showModalActualizarDocument: boolean = false;
   showModalDeleteDocument: boolean = false;
-  showModalNoUserRequireLogin:boolean = false;
-  showModalNoUser:boolean = false;
+  showModalUpdatedDocument: boolean = false;
+  showModalNoUserRequireLogin: boolean = false;
+  showModalNoUser: boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -112,10 +113,16 @@ export class AdminDocumentComponent implements OnInit {
 
     document.addEventListener('keydown', (event) => {
 
-      var codeValue = event.code;
-
-      if(codeValue=="Escape"){
-        this.showModalNoUserRequireLogin=false;
+      if (event.code == "Escape") {
+        this.showModalRequiresDocument = false;
+        this.showModalSaveDocument = false;
+        this.showModalDetailsDocument = false;
+        this.showModalRequireLogin = false;
+        this.showModalActualizarDocument = false;
+        this.showModalDeleteDocument = false;
+        this.showModalUpdatedDocument = false;
+        this.showModalNoUserRequireLogin = false;
+        this.showModalNoUser = false;
       }
 
     }, false);
@@ -135,15 +142,11 @@ export class AdminDocumentComponent implements OnInit {
     }
   }
 
-  protected submit() {
-    this.sendToStorage()
-  }
-
   /**
-   * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
+   * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento
+   * seleccionado por el administrador
    */
   protected sendToStorage() {
-    console.log("Error en SENDSotrage")
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
       console.log(this.currentDocFile)
@@ -154,29 +157,34 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   saveDocument(res: any) {
-    console.log("respuesta", res)
+
     const docName = this.documentForm.get('name');
     const docDescription = this.documentForm.get('description');
     const docCategory = this.documentForm.get('category');
     const docSubCategory = this.documentForm.get('subcategory');
     const docUpload = this.documentForm.get('upload');
-    const pathDocument = res
+    const pathDocument = res;
+
     this.endPointService.createDocument({
+
       name: docName.value,
+      userId: this.controlSesion.getIdUser(),
       categoryId: docCategory.value,
       subCategoryName: docSubCategory.value,
       version: 1,
       pathDocument: pathDocument,
       blockChainId: 'blockChainId1',
-      description: docDescription.value,
-      dateCreated: new Date()
+      description: docDescription.value
+
     }).subscribe(n => {
+
       docName.setValue("");
       docCategory.setValue("");
       docSubCategory.setValue("");
       docDescription.setValue("");
       docUpload.setValue("");
       this.showModalSaveDocument = true;
+
     });
   }
 
@@ -192,9 +200,9 @@ export class AdminDocumentComponent implements OnInit {
     if (this.isUser) {
 
       let nowurl = location.href;
-      nowurl = nowurl.replace("document","view-document");
+      nowurl = nowurl.replace("document", "view-document");
 
-      window.open(nowurl,"_blank");
+      window.open(nowurl, "_blank");
 
     } else this.showModalNoUserRequireLogin = true;
 
@@ -286,6 +294,19 @@ export class AdminDocumentComponent implements OnInit {
     const docNameUpdate = this.updateDocumentForm.get('nameUpdate');
     const docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
     const docUpload = this.updateDocumentForm.get('uploadUpdate');
+    this.endPointService.updateDocument(this.idDocumentToUpdate,
+      {
+        name: docNameUpdate.value || null,
+        description: docDescriptionUpdate.value || null,
+        pathDocument: docUpload.value || null
+      }
+    ).subscribe({
+      complete: () => {
+        this.showModalActualizarDocument = false;
+        this.showModalUpdatedDocument = true;
+        this.reloadDocuments();
+      }
+    });
 
     const onlyDescriptionChange:boolean = (docDescriptionUpdate.value).trim() !== "" && docNameUpdate.value === "" && docUpload.value == "";
     const otherDocInput:boolean = (docUpload.value).trim() !== "";
@@ -400,7 +421,12 @@ export class AdminDocumentComponent implements OnInit {
     this.modalInfoDesription = modalInfoDesription;
   }
 
-  loginWithGoogle(){
+  downloadDoc(idDoc: string) {
+    const idUser = this.controlSesion.getIdUser();
+    this.endPointService.updateDownloads(idDoc, idUser).subscribe();
+  }
+
+  loginWithGoogle() {
 
     this.login$.login().then((data) => {
 
@@ -412,35 +438,31 @@ export class AdminDocumentComponent implements OnInit {
           else {
             this.controlSesion.writeSesionUser(data);
 
-            if (data.tipo == 700){
+            if (data.tipo == 700) {
 
               this.isAdmin = true;
               this.isUser = true;
               this.showModalNoUserRequireLogin = false;
 
               let nowurl = location.href;
-              nowurl = nowurl.replace("document","view-document");
+              nowurl = nowurl.replace("document", "view-document");
 
-              window.open(nowurl,"_blank");
+              window.open(nowurl, "_blank");
 
-            }else if(data.tipo == 555){
+            } else if (data.tipo == 555) {
 
               this.isUser = true;
               this.showModalNoUserRequireLogin = false;
 
               let nowurl = location.href;
-              nowurl = nowurl.replace("document","view-document");
+              nowurl = nowurl.replace("document", "view-document");
 
-              window.open(nowurl,"_blank");
+              window.open(nowurl, "_blank");
 
             }
           }
 
         });
     });
-
   }
-
 }
-
-
