@@ -8,6 +8,7 @@
     --color-gray-2: #d9d9d988;
     --color-options: #2520ff;
     --border-radius_gen: 6px;
+    --color-reports: #257b4c ;
 }
 
 body {
@@ -132,11 +133,17 @@ form label {
     border: none;
     color: white;
 }
-
+.btn_report{
+  background:var(--color-reports);
+  border: none;
+  color: white;
+}
 .btn_ok:hover {
     box-shadow: 0px 0px 6px var(--color-secondary);
 }
-
+.btn_report:hover{
+  background:rgba(37, 123, 76, 0.825);
+}
 .btn_cancel {
     background: var(--color-gray-2);
     color: gray;

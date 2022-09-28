@@ -379,7 +379,8 @@ export class AdminDocumentComponent implements OnInit {
 
   downloadDoc(idDoc: string) {
     const idUser = this.controlSesion.getIdUser();
-    this.endPointService.updateDownloads(idDoc, idUser).subscribe();
+    const userEmail=this.controlSesion.getEmailUser();
+    this.endPointService.updateDownloads(idDoc, userEmail).subscribe();
   }
 
   loginWithGoogle() {

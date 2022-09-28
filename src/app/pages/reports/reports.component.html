@@ -29,11 +29,12 @@
     </form>
 
 </div>
-<div>
-  <button (click)="downloadReport()">Descargar reporte</button>
-</div>
-<!-- Tabla que contiene los documentos creados -->
-<div>
+
+<!-- Tabla que contiene los documentos y sus descargas -->
+<div *ngIf="showDownloadReport">
+  <div>
+    <button class="btn_report btn" (click)="downloadReport()">Descargar reporte</button>
+  </div>
   <table class="excel-table" id="excel-table" name="excel-table">
     <tr>
       <th>Nombre</th>
@@ -41,18 +42,31 @@
       <th>SubCategoria</th>
       <th>Version</th>
       <th>Número de descargas</th>
-      <!-- <th>Hora creación</th> -->
-      <!-- <th>Fecha de creación</th> -->
-      <!--<th>Fecha de actualizacion</th> -->
-
     </tr>
-
     <tr *ngFor="let item of documentsWithDownloads | paginate: { itemsPerPage: 50, currentPage: page }">
-
       <td>{{item.name}}</td>
       <td>{{item.categoryId}}</td>
       <td>{{item.subCategoryName}}</td>
       <td>{{item.version}}</td>
+      <td>{{item.downloads}}</td>
+    </tr>
+
+  </table>
+
+</div>
+<!-- Tabla que contiene los usuarios y sus descargas -->
+<div *ngIf="showUserReport">
+  <div>
+    <button class="btn_report btn" (click)="downloadReportByUser()">Descargar reporte</button>
+  </div>
+  <table class="excel-table2" id="excel-table2" name="excel-table2">
+    <tr>
+      <th>Usuario</th>
+      <th>Número de descargas</th>
+    </tr>
+
+    <tr *ngFor="let item of usersWithDownloads | paginate: { itemsPerPage: 50, currentPage: page }">
+      <td>{{item.userId}}</td>
       <td>{{item.downloads}}</td>
     </tr>
 
