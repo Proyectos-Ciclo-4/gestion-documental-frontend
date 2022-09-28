@@ -48,7 +48,7 @@ export class AdminDocumentComponent implements OnInit {
   showModalActualizarDocument: boolean = false;
   showModalDeleteDocument: boolean = false;
   showModalUpdatedDocument: boolean = false;
-  showModalNoUserRequireLoginTolookDoc: boolean = true;
+  showModalNoUserRequireLoginTolookDoc: boolean = false;
   showModalNoUserRequireLoginToDownloadDoc: boolean = false;
   showModalNoUser: boolean = false;
   showModalNoDocAndName: boolean = false;

@@ -166,8 +166,7 @@
         <li><span class="bold">Subcategoria del documento: </span>{{modalInfoSubcategoria}}</li>
         <li><span class="bold">Version:</span> {{modalInfoVersion}}</li>
         <li><span class="bold">Fecha de creación: </span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
-        <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'h:mm a':'UTC -5'}}</li>
-        <li><span class="bold">Registro blockchain: </span> {{modalInfoBlockChain}}</li>
+        <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'h:mm a':'UTC -5'}}</li> 
         <li><span class="bold">Descripción:</span> {{modalInfoDesription}}</li>
       </ul>
     </div>
@@ -306,9 +305,9 @@
 <!-- Modal de cargar documento + archivo -->
 <div class="modal" *ngIf="showModalNoDocAndName">
   <div class="modal_body">
-    <span class="modal_body-title">Si desea realizar el cambio de nombre debe ingresar un nuevo documento</span>
+    <span class="modal_body-title">Campos requeridos</span>
     <p class="modal_body-msj">
-      Por motivos tecnicos en nuestra base de datos debe añadir un nuevo archivo al cambiar el nombre del mismo
+      Para realizar la actualizacion de un documento, es requerido que 
     </p>
     <button (click)="showModalNoDocAndName = false" class="btn_ok modal_body-btn">Entendido</button>
   </div>
@@ -317,7 +316,7 @@
 <!-- Modal  nada seleccionado -->
 <div class="modal" *ngIf="showModalNothingSelected">
   <div class="modal_body">
-    <span class="modal_body-title">No has selecionado nada</span>
+    <span class="modal_body-title">¡Importante!</span>
     <p class="modal_body-msj">
       Debes seleccionar la casilla que quieras actualizar
     </p>

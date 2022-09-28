@@ -10,7 +10,10 @@ export class ControlSesion {
         const data: ResponseVerify = this.convertSessionStorage();
         return data == null ? null : data._id;
     }
-
+    getEmailUser(): string {
+      const data: ResponseVerify = this.convertSessionStorage();
+      return data == null ? null : data.email;
+  }
     getTypeUser(): Number {
         const data: ResponseVerify = this.convertSessionStorage();
         return data == null ? null : data.tipo;
