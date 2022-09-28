@@ -109,7 +109,7 @@
         <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument, item.name)"><img
             src="/assets/images/eye.svg" alt="" class="icon eye"></button>
 
-        <button *ngIf="isAdmin" class="boton-menu" (click)="confirmUpdateDocument(item.uuid)"> <img
+        <button *ngIf="isAdmin" class="boton-menu" (click)="confirmUpdateDocument(item.uuid)" (click)="setNameDocumentToUpdate(item.name)"> <img
             src="/assets/images/update-alt.svg" alt="" class="icon"></button>
 
         <button *ngIf="!isAdmin && !isUser" class="boton-menu" (click)="showModalRequireLogin = true"><img

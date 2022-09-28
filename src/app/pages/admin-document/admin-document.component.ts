@@ -8,6 +8,8 @@ import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/
 import { Storage, ref, uploadBytes, getDownloadURL, deleteObject, getMetadata } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
+import { KeyValuePipe } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'document',
@@ -33,6 +35,7 @@ export class AdminDocumentComponent implements OnInit {
   private deleteDoc!: string;
   referenceDelte: any;
   disableLoginWithEmail = false;
+  nameDocumentToUpdate!: string;
 
   controlSesion = new ControlSesion();
   isAdmin = false;
@@ -87,7 +90,8 @@ export class AdminDocumentComponent implements OnInit {
     private endPointService: EndpointsService,
     private storage: Storage,
     private login$: LoginService,
-    private endpoint$: EndpointsService) { }
+    private endpoint$: EndpointsService,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.getCategoryList()
@@ -117,13 +121,15 @@ export class AdminDocumentComponent implements OnInit {
     }, false);
 
   }
+
   protected async onFileSelected(event: any) {
 
     const docFile = event.target.files[0];
     this.currentDocFile = event.target.files[0];
 
-    if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) this.fileInAngular = docFile;
-    else {
+    if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) {
+      this.fileInAngular = docFile;
+    } else {
       event.target.value = '';
       this.showModalRequiresDocument = true;
     }
@@ -133,7 +139,6 @@ export class AdminDocumentComponent implements OnInit {
     this.sendToStorage()
   }
 
-
   /**
    * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento seleccionado por el administrador
    */
@@ -141,6 +146,7 @@ export class AdminDocumentComponent implements OnInit {
     console.log("Error en SENDSotrage")
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
+      console.log(this.currentDocFile)
       getDownloadURL(docRef).then(res => {
         this.saveDocument(res)
       })
@@ -280,14 +286,62 @@ export class AdminDocumentComponent implements OnInit {
     const docNameUpdate = this.updateDocumentForm.get('nameUpdate');
     const docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
     const docUpload = this.updateDocumentForm.get('uploadUpdate');
-    this.endPointService.updateDocument(this.idDocumentToUpdate,
-      {
-        name: docNameUpdate.value || null,
-        description: docDescriptionUpdate.value || null,
-        pathDocument: docUpload.value || null
-      }
-    ).subscribe();
 
+    const onlyDescriptionChange:boolean = (docDescriptionUpdate.value).trim() !== "" && docNameUpdate.value === "" && docUpload.value == "";
+    const otherDocInput:boolean = (docUpload.value).trim() !== "";
+
+    if(onlyDescriptionChange){
+
+      this.endPointService.updateDocument(
+        this.idDocumentToUpdate,
+        {
+          name: null,
+          description: docDescriptionUpdate.value || null,
+          pathDocument: null
+        }
+      ).subscribe();
+
+    }else if(otherDocInput){
+
+      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value)
+
+    }else{
+
+      alert ("Si cambia el nombre debe agregar un documento [ Por ahora 😔]")
+
+    }
+
+  }
+
+  protected sendToStorageVersionUpdateWithNameChange(name:string,lastname:string,docUpload,description) {
+
+    const docRef = ref(this.storage, `documents/${name}`);
+
+    // Elimina el archivo con el nombre anterior en dado caso sea diferente
+    if(name != lastname){
+      const docRefDelete = ref(this.storage, `documents/${lastname}`);
+      deleteObject(docRefDelete)
+    }
+
+    uploadBytes(docRef, docUpload).then(() => {
+      getDownloadURL(docRef).then(res => {
+
+        this.endPointService.updateDocument(
+          this.idDocumentToUpdate,
+          {
+            name: name || null,
+            description: description || null,
+            pathDocument: res
+          }
+        ).subscribe();
+
+      })
+    })
+
+  }
+
+  setNameDocumentToUpdate(nombre:string){
+    this.nameDocumentToUpdate=nombre;
   }
 
   // Manda a el usuario la pagina de login, guardando en el sessionStorage los datos del filtro que realizo
@@ -345,7 +399,6 @@ export class AdminDocumentComponent implements OnInit {
     this.modalInfoBlockChain = modalInfoBlockChain;
     this.modalInfoDesription = modalInfoDesription;
   }
-
 
   loginWithGoogle(){
 
