@@ -58,14 +58,11 @@ export class SubCategoryComponent implements OnInit {
         }
       }
     })
-
   }
-
   ngOnInit(): void {
     this.getCategoryList();
     this.getSubCategoryForList();
   }
-
   revealForm() {
     this.formState = !this.formState;
   }
