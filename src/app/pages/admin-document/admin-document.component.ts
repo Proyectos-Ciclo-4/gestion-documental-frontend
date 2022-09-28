@@ -138,7 +138,7 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   /**
-   * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento 
+   * sendToStorage es una funcion que sirve para enviar hacia el storage de firebase el documento
    * seleccionado por el administrador
    */
   protected sendToStorage() {
@@ -212,10 +212,14 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.categories.sort((a, b) => {
-          if (a.categoryName > b.categoryName) return 1;
-          if (a.categoryName < b.categoryName) return -1;
-          return 0;
-        })
+          if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
       }
     })
   }
@@ -231,10 +235,14 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.subcategories.sort((a, b) => {
-          if (a.subCategoryName > b.subCategoryName) return 1;
-          if (a.subCategoryName < b.subCategoryName) return -1;
-          return 0;
-        })
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
       }
     })
   }
@@ -250,10 +258,15 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.subcategoriesFilter.sort((a, b) => {
-          if (a.subCategoryName > b.subCategoryName) return 1;
-          if (a.subCategoryName < b.subCategoryName) return -1;
-          return 0;
-        })
+          if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
+          return 1;
+          }
+          if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
+
       }
     })
   }
@@ -270,10 +283,14 @@ export class AdminDocumentComponent implements OnInit {
       },
       complete: () => {
         this.documentsList.sort((a, b) => {
-          if (a.name > b.name) return 1;
-          if (a.name < b.name) return -1;
-          return 0;
-        })
+          if (a.name.toLowerCase() > b.name.toLowerCase()) {
+          return 1;
+          }
+          if (a.name.toLowerCase() < b.name.toLowerCase()) {
+          return -1;
+          }
+          // a must be equal to b
+          return 0;})
       }
     });
   }

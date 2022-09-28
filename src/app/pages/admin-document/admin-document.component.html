@@ -86,9 +86,7 @@
       <th>Categoria</th>
       <th>SubCategoria</th>
       <th>Version</th>
-      <!-- <th>Hora creación</th> -->
       <th>Fecha de creación</th>
-      <!--<th>Fecha de actualizacion</th> -->
       <th>Propiedades</th>
     </tr>
 
@@ -105,6 +103,7 @@
           (click)="viewModalDetailsDocument(item.name,item.categoryId,item.subCategoryName,item.version,item.dateCreated,item.blockChainId,item.description)">
           <img src="/assets/images/circle-plus.svg" alt="" class="icon plus">
         </button>
+
         <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument, item.name)"><img
             src="/assets/images/eye.svg" alt="" class="icon eye"></button>
 
@@ -120,6 +119,7 @@
 
         <button *ngIf="isAdmin" class="boton-menu" (click)="confirmDeleteDocument(item.uuid,item.name)"><img
             src="/assets/images/delete.svg" alt="" class="icon"></button>
+
       </td>
 
     </tr>
