@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { CtrCategoriesService } from 'src/app/services/control-categories/ctr-categories.service';
 import { EndpointsService } from '../../services/endpoints/endpoints.service';
+import { ControlSesion } from 'src/app/utils/controlSesion';
+
 @Component({
   selector: 'category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.css'],
 })
 export class CategoryComponent implements OnInit {
+
+  controlSesion = new ControlSesion();
   showModalCatgoryCreated = false;
   showModalCatgoryExist = false;
   nombre: string = '';
@@ -28,11 +33,24 @@ export class CategoryComponent implements OnInit {
 
   constructor(
     private service: EndpointsService,
-    private controlCategories: CtrCategoriesService
-  ) {}
+    private controlCategories: CtrCategoriesService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.getCategories();
+
+    switch (this.controlSesion.getTypeUser()) {
+      case null:
+        this.router.navigate(['']);
+        break;
+      case 555:
+        this.router.navigate(['document']);
+        break;
+      case 700:
+        this.getCategories();
+        break;
+    };
+
   }
 
 

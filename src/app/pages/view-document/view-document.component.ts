@@ -9,6 +9,7 @@ import { ActivatedRoute, Route } from '@angular/router';
 export class ViewDocumentComponent implements OnInit {
 
   doc: string;
+  name_doc = sessionStorage.getItem('name_document');
 
   // doc="https://docs.google.com/spreadsheets/d/1LEa9PtJTPKNFSDSAA0Rn4g40wksM3jt2/edit?usp=sharing&ouid=108098759828941113844&rtpof=true&sd=true" //drive
   // doc="https://firebasestorage.googleapis.com/v0/b/appcards-307a5.appspot.com/o/Modelo-factura.xlsx?alt=media&token=1ffc1543-da82-4a9f-a53e-6afd1381b488" // storage excel
@@ -17,9 +18,7 @@ export class ViewDocumentComponent implements OnInit {
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-
     this.doc = sessionStorage.getItem('docurl')
-
   }
 
 }

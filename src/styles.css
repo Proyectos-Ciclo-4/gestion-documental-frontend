@@ -42,12 +42,81 @@ select {
     padding: 6px;
 }
 
+ul {
+    padding: 0px;
+}
+
+ul li {
+    font-size: 1.1rem;
+    list-style: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+/* TABLE */
+
+table {
+    width: 100%;
+    justify-content: center;
+    border: 1px solid gray;
+}
+
+table tr:nth-child(odd) {
+    background: var(--color-gray-2);
+}
+
+table tr th,
+table tr td {
+    padding: 10px;
+    text-align: center;
+}
+
+table tr .icons_actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+table tr td .boton-menu {
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    padding: 4px 6px;
+    transition: all 0.5s ease-in-out;
+}
+
+table tr td .boton-menu:hover {
+    transform: scale(1.1);
+}
+
+table tr td .icon {
+    width: 24px;
+    height: 24px;
+}
+
+table tr td .eye {
+    width: 30px;
+    height: 28px;
+}
+
+/* BUTTON */
+
+button:disabled,
+input[type="submit"]:disabled {
+    background-color: #ec7c149b;
+    cursor: not-allowed;
+}
+
 /* LABEL FORM */
 form label {
     font-size: 1.3rem;
     font-weight: bold;
     margin: 0px 10px;
-  }
+}
 
 .btn_ok,
 .btn_cancel {

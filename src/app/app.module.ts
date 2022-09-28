@@ -16,10 +16,10 @@ import { AdminDocumentComponent } from './pages/admin-document/admin-document.co
 import { CommonModule } from '@angular/common';
 import { NgxDocViewerModule } from 'ngx-doc-viewer';
 import { ViewDocumentComponent } from './pages/view-document/view-document.component';
-import { ControlSesion } from './utils/controlSesion';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { ReportsComponent } from './pages/reports/reports.component';
 @NgModule({
 
   declarations: [
@@ -30,7 +30,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
     CategoryComponent,
     SubCategoryComponent,
     AdminDocumentComponent,
-    ViewDocumentComponent
+    ViewDocumentComponent,
+    ReportsComponent
   ],
 
   imports: [
