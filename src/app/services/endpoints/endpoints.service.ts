@@ -52,6 +52,9 @@ export class EndpointsService {
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${environment.host.getCategories}`);
   }
+  getCategoriesToCompare(categoryName: string): Observable<Category[]> {
+    return this.http.get<Category[]>(`${environment.host.getCategoriesToCompareEndPoint}/${categoryName}`);
+  }
     /**
    * SUBCATEGORY ENDPOINTS
    * @param subcategory

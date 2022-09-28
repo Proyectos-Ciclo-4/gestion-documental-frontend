@@ -14,7 +14,9 @@ export class SubCategoryComponent implements OnInit {
   nombre: string = '';
   formState: Boolean = false;
   showModalCatgoryCreated = false;
-
+  showModalSubCatgoryExist = false;
+  subcategoriesExist: number = 0;
+  subCategoriesToCompare: SubCategory[] = [];
   selectedOption: string = '0';
   page: number = 1;
 

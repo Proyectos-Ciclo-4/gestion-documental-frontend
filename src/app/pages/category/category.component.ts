@@ -10,12 +10,15 @@ import { EndpointsService } from '../../services/endpoints/endpoints.service';
 })
 export class CategoryComponent implements OnInit {
   showModalCatgoryCreated = false;
+  showModalCatgoryExist = false;
   nombre: string = '';
   body: NgForm;
   formState: Boolean = false;
   categories: Category[] = [];
+  categoriesToCompare: Category[] = [];
   category: Category = new Category();
   page: number = 1;
+  existCategories: number = 0;
 
   documentForm = new FormGroup({
     text_new_category: new FormControl('', {
@@ -32,18 +35,31 @@ export class CategoryComponent implements OnInit {
     this.getCategories();
   }
 
-  createCategory(body: NgForm) {
-    this.service.createCategory(this.category).subscribe({
-      next: (resp) => {
-        this.showModalCatgoryCreated = true;
-      },
-      complete: () => {
-        this.categories = [];
-        this.getCategories();
-      },
-    });
-  }
 
+  createCategory(body: NgForm) {
+    this.service.getCategoriesToCompare(this.category.categoryName).subscribe({
+      next: (res) => {
+        this.categoriesToCompare = res;
+        this.existCategories =  this.categoriesToCompare.length
+        console.log("LAS QUE SE COMPARAN", this.categoriesToCompare,"total:", this.existCategories)
+      }, complete: () => {
+        if(this.existCategories == 0) {
+          this.service.createCategory(this.category).subscribe({
+            next: (resp) => {
+              this.showModalCatgoryCreated = true;
+            },
+            complete: () => {
+              this.categories = [];
+              this.getCategories();
+
+            },
+          });
+        } else {
+          this.showModalCatgoryExist = true;
+        }
+      }
+    })
+  }
   revealForm() {
     this.formState = !this.formState;
   }

@@ -28,3 +28,12 @@
     <button class="btn_ok" (click)="showModalCatgoryCreated = false">Entendido</button>
   </div>
 </div>
+<div class="modal" *ngIf="showModalCatgoryExist">
+  <div class="modal_body">
+    <span class="modal_body-title">Categorias</span>
+    <p class="modal_body-msj">
+      Esta categoría ya existe
+    </p>
+    <button class="btn_ok" (click)="showModalCatgoryExist = false">Entendido</button>
+  </div>
+</div>
