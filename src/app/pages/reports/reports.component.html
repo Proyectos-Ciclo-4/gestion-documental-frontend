@@ -10,22 +10,52 @@
         <div>
             <div class="elemento">
                 <label for="date_start">Fecha inicio* </label>
-                <input type="date" name="date_start" id="date_start">
+                <input type="date" id="date_start" name="date_start" id="date_start" formControlName="date_start">
             </div>
             <div class="elemento">
                 <label for="date_end">Fecha fin* </label>
-                <input type="date" name="date_end" id="date_end">
+                <input type="date" id="date_end" name="date_end" id="date_end" formControlName="date_end">
             </div>
             <div class="elemento">
                 <label for="report_type">Tipo de reporte* </label>
-                <select name="report_type" id="report_type">
+                <select name="report_type" id="report_type" formControlName="report_type">
                     <option value="0">Selecciona un tipo</option>
                     <option value="1">Documento con mayor numero de descargas</option>
                     <option value="2">Usuario con mayor numero de descargas</option>
                 </select>
             </div>
         </div>
-        <input [disabled]="formReports.invalid" class="btn_ok" type="submit" value="consultar">
+        <button [disabled]="formReports.invalid" class="btn_ok" type="submit" value="consultar" (click)="generateReport()">Generar reporte</button>
     </form>
+
+</div>
+<div>
+  <button (click)="downloadReport()">Descargar reporte</button>
+</div>
+<!-- Tabla que contiene los documentos creados -->
+<div>
+  <table class="excel-table" id="excel-table" name="excel-table">
+    <tr>
+      <th>Nombre</th>
+      <th>Categoria</th>
+      <th>SubCategoria</th>
+      <th>Version</th>
+      <th>Número de descargas</th>
+      <!-- <th>Hora creación</th> -->
+      <!-- <th>Fecha de creación</th> -->
+      <!--<th>Fecha de actualizacion</th> -->
+
+    </tr>
+
+    <tr *ngFor="let item of documentsWithDownloads | paginate: { itemsPerPage: 50, currentPage: page }">
+
+      <td>{{item.name}}</td>
+      <td>{{item.categoryId}}</td>
+      <td>{{item.subCategoryName}}</td>
+      <td>{{item.version}}</td>
+      <td>{{item.downloads}}</td>
+    </tr>
+
+  </table>
 
 </div>

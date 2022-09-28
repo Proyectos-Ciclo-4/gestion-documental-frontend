@@ -1,6 +1,6 @@
 export interface DocumentModel {
   name: string,
-  userId: String,
+  userId: string,
   categoryId: string,
   subCategoryName: string,
   version: number,
@@ -23,4 +23,17 @@ export interface DocumentUpdateModel {
   name: string,
   pathDocument: string,
   description: string
+}
+
+export interface DocumentWithDownloads{
+  name: string,
+  categoryId: string,
+  subCategoryName: string,
+  version: number,
+  pathDocument: string,
+  blockChainId: string,
+  description: string,
+  uuid: string,
+  dateCreated: Date,
+  downloads:number
 }

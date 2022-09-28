@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment.prod';
 import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
+import { DownloadModel } from 'src/app/models/download.model';
 
 @Injectable({
   providedIn: 'root'
@@ -41,9 +42,16 @@ export class EndpointsService {
   deleteDocumentBy(uuid: string) {
     return this.http.delete(`${environment.host.deleteDocument}/${uuid}`);
   }
-
+  getDocumentById(id:string){
+    return this.http.get<DocumentModelQuery>(`${environment.host.getDocumentsById}/${id}`)
+  }
+  /**
+   *Downloads Query and Commands
+   */
+  getDownloadByPeriod(startDate:string,finalDate:string){
+    return this.http.get<DownloadModel[]>(`${environment.host.getDownloadsByperiod}/${startDate}/${finalDate}`)
+  }
   updateDownloads(docId: string, userId: String) {
-
     const body = {
       "documentId": docId,
       "userId": userId
