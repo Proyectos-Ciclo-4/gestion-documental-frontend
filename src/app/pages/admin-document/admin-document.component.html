@@ -107,8 +107,9 @@
         <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument, item.name)"><img
             src="/assets/images/eye.svg" alt="" class="icon eye"></button>
 
-        <button *ngIf="isAdmin" class="boton-menu" (click)="confirmUpdateDocument(item.uuid)"> <img
-            src="/assets/images/update-alt.svg" alt="" class="icon"></button>
+        <button *ngIf="isAdmin" class="boton-menu" (click)="confirmUpdateDocument(item.uuid)"
+          (click)="setNameDocumentToUpdate(item.name)"> <img src="/assets/images/update-alt.svg" alt=""
+            class="icon"></button>
 
         <button *ngIf="!isAdmin && !isUser" class="boton-menu" (click)="showModalRequireLogin = true"><img
             src="/assets/images/download.svg" alt="" class="icon"></button>
@@ -284,3 +285,28 @@
     <button (click)="showModalNoUser = false" class="btn_ok modal_body-btn">Entendido</button>
   </div>
 </div>
+
+
+<!-- Modal de cargar documento + archivo -->
+<div class="modal" *ngIf="showModalNoDocAndName">
+  <div class="modal_body">
+    <span class="modal_body-title">Si desea realizar el cambio de nombre debe ingresar un nuevo documento</span>
+    <p class="modal_body-msj">
+      Por motivos tecnicos en nuestra base de datos debe añadir un nuevo archivo al cambiar el nombre del mismo
+    </p>
+    <button (click)="showModalNoDocAndName = false" class="btn_ok modal_body-btn">Entendido</button>
+  </div>
+</div>
+
+<!-- Modal  nada seleccionado -->
+<div class="modal" *ngIf="showModalNothingSelected">
+  <div class="modal_body">
+    <span class="modal_body-title">No has selecionado nada</span>
+    <p class="modal_body-msj">
+      Debes seleccionar la casilla que quieras actualizar
+    </p>
+    <button (click)="showModalNothingSelected = false" class="btn_ok modal_body-btn">Entendido</button>
+  </div>
+</div>
+
+>>>>>>> a87c5e99bf23182de9551bc9697d5690e842011a

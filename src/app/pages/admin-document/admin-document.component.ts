@@ -33,6 +33,7 @@ export class AdminDocumentComponent implements OnInit {
   private deleteDoc!: string;
   referenceDelte: any;
   disableLoginWithEmail = false;
+  nameDocumentToUpdate!: string;
 
   controlSesion = new ControlSesion();
   isAdmin = false;
@@ -47,6 +48,8 @@ export class AdminDocumentComponent implements OnInit {
   showModalNoUserRequireLoginTolookDoc: boolean = false;
   showModalNoUserRequireLoginToDownloadDoc: boolean = false;
   showModalNoUser: boolean = false;
+  showModalNoDocAndName: boolean = false;
+  showModalNothingSelected: boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -132,8 +135,9 @@ export class AdminDocumentComponent implements OnInit {
     const docFile = event.target.files[0];
     this.currentDocFile = event.target.files[0];
 
-    if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) this.fileInAngular = docFile;
-    else {
+    if (this.docsAllowed.includes(docFile.type) && event.target.files[0].size <= this.MAX_DOC_SIZE) {
+      this.fileInAngular = docFile;
+    } else {
       event.target.value = '';
       this.showModalRequiresDocument = true;
     }
@@ -146,6 +150,7 @@ export class AdminDocumentComponent implements OnInit {
   protected sendToStorage() {
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
+      console.log(this.currentDocFile)
       getDownloadURL(docRef).then(res => {
         this.saveDocument(res)
       })
@@ -308,23 +313,85 @@ export class AdminDocumentComponent implements OnInit {
 
   updateDocument() {
 
-    const docNameUpdate = this.updateDocumentForm.get('nameUpdate');
-    const docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
-    const docUpload = this.updateDocumentForm.get('uploadUpdate');
-    this.endPointService.updateDocument(this.idDocumentToUpdate,
-      {
-        name: docNameUpdate.value || null,
-        description: docDescriptionUpdate.value || null,
-        pathDocument: docUpload.value || null
-      }
-    ).subscribe({
-      complete: () => {
-        this.showModalActualizarDocument = false;
+    let docNameUpdate = this.updateDocumentForm.get('nameUpdate');
+    let docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
+    let docUpload = this.updateDocumentForm.get('uploadUpdate');
+
+    const onlyDescriptionChange: boolean = (("" + docDescriptionUpdate.value).trim() !== "") && (("" + docNameUpdate.value).trim() == "") && (("" + docUpload.value).trim() == "");
+    const otherDocInput: boolean = ("" + docUpload.value).trim() !== "";
+    const nothingSelected: boolean = (("" + docDescriptionUpdate.value).trim() === "") && (("" + docNameUpdate.value).trim() === "") && (("" + docUpload.value).trim() === "");
+
+    if (nothingSelected) {
+
+      this.showModalNothingSelected = true;
+
+    } else if (onlyDescriptionChange) {
+
+      this.endPointService.updateDocument(
+        this.idDocumentToUpdate,
+        {
+          name: null,
+          description: docDescriptionUpdate.value || null,
+          pathDocument: null
+        }
+      ).subscribe(e => {
+
         this.showModalUpdatedDocument = true;
-        this.reloadDocuments();
-      }
+        this.showModalActualizarDocument = false;
+        this.reloadDocuments()
+
+      });
+
+    } else if (otherDocInput) {
+
+      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value)
+
+    } else {
+
+      this.showModalNoDocAndName = true;
+
+    }
+
+    this.updateDocumentForm = new FormGroup({
+      nameUpdate: new FormControl(''),
+      descriptionUpdate: new FormControl(''),
+      uploadUpdate: new FormControl('')
     });
 
+  }
+
+  protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description) {
+
+    const docRef = ref(this.storage, `documents/${name}`);
+
+    // Elimina el archivo con el nombre anterior en dado caso sea diferente
+    if (name != lastname) {
+      const docRefDelete = ref(this.storage, `documents/${lastname}`);
+      deleteObject(docRefDelete)
+    }
+
+    uploadBytes(docRef, docUpload).then(() => {
+      getDownloadURL(docRef).then(res => {
+
+        this.endPointService.updateDocument(
+          this.idDocumentToUpdate,
+          {
+            name: name || null,
+            description: description || null,
+            pathDocument: res
+          }
+        ).subscribe(e => this.reloadDocuments());
+
+        this.showModalUpdatedDocument = true;
+        this.showModalActualizarDocument = false;
+
+      })
+    })
+
+  }
+
+  setNameDocumentToUpdate(nombre: string) {
+    this.nameDocumentToUpdate = nombre;
   }
 
   // Manda a el usuario la pagina de login, guardando en el sessionStorage los datos del filtro que realizo
@@ -455,5 +522,4 @@ export class AdminDocumentComponent implements OnInit {
         });
     });
   }
-
 }
