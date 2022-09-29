@@ -567,7 +567,6 @@ export class AdminDocumentComponent implements OnInit {
 
             this.controlSesion.writeSesionUser(data);
             if (data.tipo == 700) {
-
               this.isAdmin = true;
               this.isUser = true;
 
