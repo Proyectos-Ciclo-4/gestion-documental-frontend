@@ -13,7 +13,7 @@ export const environment = {
   },
   host: {
     verifyUser: 'http://localhost:8080/user/',
-    createDocument: 'http://localhost:8080/document/create/',
+    createDocument: 'http://localhost:8080/document/create',
     createCategory: 'http://localhost:8080/category/create',
     getCategories: 'http://localhost:8080/category/getall',
     getCategoriesToCompareEndPoint: 'http://localhost:8080/category/compare',
@@ -27,6 +27,10 @@ export const environment = {
     updateDocument: 'http://localhost:8080/document/update',
     updateDownloads: 'http://localhost:8080/download/create',
     getDownloadsByperiod: 'http://localhost:8080/downloads'
+  },
+  blockchain: {
+    putData: 'https://albertus-main.herokuapp.com/create/block',
+    getData: 'https://albertus-view.herokuapp.com/block/'
   },
   paginationmax: 5,
   production: false

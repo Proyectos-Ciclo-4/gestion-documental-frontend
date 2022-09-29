@@ -60,10 +60,10 @@ export class CategoryComponent implements OnInit {
     this.service.getCategoriesToCompare(this.category.categoryName).subscribe({
       next: (res) => {
         this.categoriesToCompare = res;
-        this.existCategories =  this.categoriesToCompare.length
-        console.log("LAS QUE SE COMPARAN", this.categoriesToCompare,"total:", this.existCategories)
+        this.existCategories = this.categoriesToCompare.length
+
       }, complete: () => {
-        if(this.existCategories == 0) {
+        if (this.existCategories == 0) {
           this.service.createCategory(this.category).subscribe({
             next: (resp) => {
               this.showModalCategoryCreated = true;
@@ -88,13 +88,8 @@ export class CategoryComponent implements OnInit {
     this.controlCategories.getCategoryList().then((list) => {
       this.categories = list;
       this.categories.sort((a, b) => {
-        if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) {
-          return 1;
-        }
-        if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) {
-          return -1;
-        }
-        // a must be equal to b
+        if (a.categoryName.toLowerCase() > b.categoryName.toLowerCase()) return 1;
+        if (a.categoryName.toLowerCase() < b.categoryName.toLowerCase()) return -1;
         return 0;
       });
 
