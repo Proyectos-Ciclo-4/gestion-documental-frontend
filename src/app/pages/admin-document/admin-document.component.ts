@@ -133,6 +133,7 @@ export class AdminDocumentComponent implements OnInit {
     }, false);
 
     this.getCategoryList()
+    
   }
 
   protected async onFileSelected(event: any) {
@@ -577,4 +578,5 @@ export class AdminDocumentComponent implements OnInit {
         });
     });
   }
+
 }
