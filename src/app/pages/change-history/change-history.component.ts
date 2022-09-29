@@ -34,7 +34,10 @@ export class ChangeHistoryComponent implements OnInit {
 
     })
     console.log("R:",this.listDocHistory)
-
-
+    this.listDocHistory.sort((a, b) => {
+      if (b.date > a.date) { return 1; }
+      if (b.date < a.date) { return -1; }
+      return 0;
+    })
   }
 }

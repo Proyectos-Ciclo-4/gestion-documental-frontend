@@ -51,6 +51,7 @@ export class AdminDocumentComponent implements OnInit {
   showModalUpdatedDocument: boolean = false;
   showModalNoUserRequireLoginTolookDoc: boolean = false;
   showModalNoUserRequireLoginToDownloadDoc: boolean = false;
+  showModalNoUserRequireLoginToShowHistoryDoc: boolean=false;
   showModalNoUser: boolean = false;
   showModalNoDocAndName: boolean = false;
   showModalNothingSelected: boolean = false;
@@ -580,8 +581,34 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   goToHistoryDocument(data: object) {
-    localStorage.setItem("history_doc", JSON.stringify(data));
-    this.router.navigate(['change-history']);
+    if (this.isUser|| this.isAdmin) {
+      localStorage.setItem("history_doc", JSON.stringify(data));
+      this.router.navigate(['change-history']);
+    }else{
+      this.showModalNoUserRequireLoginToShowHistoryDoc = true;
+    }
   }
+  loginWithGoogleHistoryDocument(){
+    this.login$.login().then((data) => {
 
+      this.endPointService.verifyUser(data.user.email)
+        .subscribe(data => {
+
+          if (data == null) this.showModalNoUser = true;
+          else {
+
+            this.controlSesion.writeSesionUser(data);
+            if (data.tipo == 700) {
+              this.isAdmin = true;
+              this.isUser = true;
+
+            } else if (data.tipo == 555) this.isUser = true;
+
+            this.showModalNoUserRequireLoginToShowHistoryDoc = false;
+          }
+
+        });
+    });
+  }
 }
+
