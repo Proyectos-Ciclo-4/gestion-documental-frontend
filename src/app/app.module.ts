@@ -20,6 +20,7 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ReportsComponent } from './pages/reports/reports.component';
+import { ChangeHistoryComponent } from './pages/change-history/change-history.component';
 @NgModule({
 
   declarations: [
@@ -31,7 +32,8 @@ import { ReportsComponent } from './pages/reports/reports.component';
     SubCategoryComponent,
     AdminDocumentComponent,
     ViewDocumentComponent,
-    ReportsComponent
+    ReportsComponent,
+    ChangeHistoryComponent,
   ],
 
   imports: [
