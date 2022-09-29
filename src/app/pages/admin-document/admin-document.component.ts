@@ -337,18 +337,21 @@ export class AdminDocumentComponent implements OnInit {
 
   protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description) {
 
-    const docRef = ref(this.storage, `documents/${name}`);
-
     // Elimina el archivo con el nombre anterior en dado caso sea diferente
-    if (name != lastname) {
+    if (name != lastname && (name!="")) {
       const docRefDelete = ref(this.storage, `documents/${lastname}`);
       deleteObject(docRefDelete)
     }
 
+    let nameSend = name;
+
     // NombrePorFin
     if(name==""){
-      console.log("Name vacio")
+      nameSend = lastname
+      console.log(nameSend);
     }
+
+    const docRef = ref(this.storage, `documents/${name}`);
 
     uploadBytes(docRef, docUpload).then(() => {
       getDownloadURL(docRef).then(res => {
@@ -356,7 +359,7 @@ export class AdminDocumentComponent implements OnInit {
         this.endPointService.updateDocument(
           this.idDocumentToUpdate,
           {
-            name: name || null,
+            name: nameSend || null,
             description: description || null,
             pathDocument: res
           }
