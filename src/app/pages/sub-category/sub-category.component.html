@@ -36,7 +36,7 @@
   </div>
 
   <ul>
-    <li *ngFor="let res of subCategoriesForList | paginate: { itemsPerPage: 2, currentPage: page }">
+    <li *ngFor="let res of subCategoriesForList | paginate: { itemsPerPage: maxPage, currentPage: page }">
       {{ res.subCategoryName }}
     </li>
   </ul>
@@ -50,5 +50,14 @@
     <button class="btn_ok" (click)="showModalCatgoryCreated = false">
       Entendido
     </button>
+  </div>
+</div>
+<div class="modal" *ngIf="showModalSubCatgoryExist">
+  <div class="modal_body">
+    <span class="modal_body-title">Subcategorias</span>
+    <p class="modal_body-msj">
+      Esta subcategoría ya existe
+    </p>
+    <button class="btn_ok" (click)="showModalSubCatgoryExist = false">Entendido</button>
   </div>
 </div>

@@ -14,6 +14,7 @@ export interface DocumentModelBlockchain {
   version: number,
   pathDocument: string,
   description: string
+  date: Date
 }
 export interface DocumentModelQuery {
   name: string,
@@ -32,7 +33,7 @@ export interface DocumentUpdateModel {
   description: string
 }
 
-export interface DocumentWithDownloads{
+export interface DocumentWithDownloads {
   name: string,
   categoryId: string,
   subCategoryName: string,
@@ -42,5 +43,5 @@ export interface DocumentWithDownloads{
   description: string,
   uuid: string,
   dateCreated: Date,
-  downloads:number
+  downloads: number
 }

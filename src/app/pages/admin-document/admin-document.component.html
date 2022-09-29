@@ -90,7 +90,7 @@
       <th>Propiedades</th>
     </tr>
 
-    <tr *ngFor="let item of documentsList | paginate: { itemsPerPage: 50, currentPage: page }">
+    <tr *ngFor="let item of documentsList | paginate: { itemsPerPage: maxPage, currentPage: page }">
 
       <td>{{item.name}}</td>
       <td>{{item.categoryId}}</td>
@@ -111,10 +111,7 @@
           (click)="setNameDocumentToUpdate(item.name)"> <img src="/assets/images/update-alt.svg" alt=""
             class="icon"></button>
 
-        <button *ngIf="!isAdmin && !isUser" class="boton-menu" (click)="showModalRequireLogin = true"><img
-            src="/assets/images/download.svg" alt="" class="icon"></button>
-
-        <button *ngIf="isAdmin || isUser" class="boton-menu" (click)="downloadDoc(item.name, item.uuid)">
+        <button class="boton-menu" (click)="downloadDoc(item.name, item.uuid)">
           <img src="/assets/images/download.svg" alt="" class="icon"></button>
 
         <button *ngIf="isAdmin" class="boton-menu" (click)="confirmDeleteDocument(item.uuid,item.name)"><img
@@ -148,7 +145,6 @@
         <li><span class="bold">Version:</span> {{modalInfoVersion}}</li>
         <li><span class="bold">Fecha de creación: </span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
         <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'h:mm a':'UTC -5'}}</li>
-        <li><span class="bold">Registro blockchain: </span> {{modalInfoBlockChain}}</li>
         <li><span class="bold">Descripción:</span> {{modalInfoDesription}}</li>
       </ul>
     </div>
@@ -217,34 +213,53 @@
 
 <div class="modal" *ngIf="showModalNoUserRequireLoginTolookDoc">
   <div class="modal_body">
-    <span class="modal_body-title">Inicia sesion para visualizar</span>
+    <span class="modal_body-title">Inicia sesion</span>
     <div class="modal_body-msj">
-
+      <p>Es necesario iniciar sesion para visualizar el documento</p>
+    </div>
+    <div class="butttons_update">
       <button class="btn_login_google" (click)="loginWithGoogleLookDocument()">
         Iniciar sesión
         <img src="/assets/images/logo_google.png" alt="Logo google">
       </button>
-
-      <footer>Presiones Esc para salir</footer>
-
+      <button class="btn_cancel" (click)="showModalNoUserRequireLoginTolookDoc = false">cancelar</button>
     </div>
-
+    <span class="modal_body-footer">Presiones Esc para salir</span>
   </div>
 </div>
 
 <!-- Modal de inicio de sesion descargar documento -->
 
-<div class="modal" *ngIf="showModalNoUserRequireLoginToDownloadDoc">
+<div class="modal" *ngIf="showModalNoUserRequireLoginTolookDoc">
   <div class="modal_body">
-    <span class="modal_body-title">Inicia sesion para descar</span>
+    <span class="modal_body-title">Inicia sesion</span>
     <div class="modal_body-msj">
-
-      <button class="btn_login_google" (click)="loginWithGoogleDownloadDocument()">
+      <p>Es necesario iniciar sesion para visualizar el documento</p>
+    </div>
+    <div class="butttons_update">
+      <button class="btn_login_google" (click)="loginWithGoogleLookDocument()">
         Iniciar sesión
         <img src="/assets/images/logo_google.png" alt="Logo google">
       </button>
+      <button class="btn_cancel" (click)="showModalNoUserRequireLoginTolookDoc = false">cancelar</button>
+    </div>
+    <span class="modal_body-footer">Presiones Esc para salir</span>
+  </div>
+</div>
 
-      <footer>Presiones Esc para salir</footer>
+<div class="modal" *ngIf="showModalNoUserRequireLoginToDownloadDoc">
+  <div class="modal_body">
+    <span class="modal_body-title">Inicia sesion</span>
+    <div class="modal_body-msj">
+      <p>Es necesario iniciar sesion para descargar el documento</p>
+      <div class="butttons_update">
+        <button class="btn_login_google" (click)="loginWithGoogleDownloadDocument()">
+          Iniciar sesión
+          <img src="/assets/images/logo_google.png" alt="Logo google">
+        </button>
+        <button class="btn_cancel" (click)="showModalNoUserRequireLoginToDownloadDoc = false">cancelar</button>
+      </div>
+      <span class="modal_body-footer">Presiones Esc para salir</span>
     </div>
 
   </div>
@@ -268,6 +283,7 @@
 <!-- Modal de cargar documento + archivo -->
 <div class="modal" *ngIf="showModalNoDocAndName">
   <div class="modal_body">
+    <span class="modal_body-title">Campos requeridos</span>
     <p class="modal_body-msj">
       Debe cargar un archivo para completar la actualización
     </p>
@@ -278,12 +294,13 @@
 <!-- Modal  nada seleccionado -->
 <div class="modal" *ngIf="showModalNothingSelected">
   <div class="modal_body">
-    <span class="modal_body-title">No has selecionado nada</span>
+    <span class="modal_body-title">¡Importante!</span>
     <p class="modal_body-msj">
       Debes seleccionar la casilla que quieras actualizar
     </p>
     <button (click)="showModalNothingSelected = false" class="btn_ok modal_body-btn">Entendido</button>
   </div>
+
 </div>
 
 <!-- Modal de aviso requerimientos de documentos-->
@@ -307,4 +324,3 @@
     <button (click)="showModalSaveDocument = false" class="modal_body-btn btn_ok">Entendido</button>
   </div>
 </div>
-

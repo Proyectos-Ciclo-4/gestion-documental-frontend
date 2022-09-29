@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ControlSesion } from 'src/app/utils/controlSesion';
 import { LoginService } from '../services/login/login.service';
@@ -25,7 +25,7 @@ export class NavbarComponent implements OnInit {
   }
 
   controlMenu() {
-    this.menuVisible = true;
+    this.menuVisible = !this.menuVisible;
     setTimeout(() => {
       this.menuVisible = false;
     }, 5000);

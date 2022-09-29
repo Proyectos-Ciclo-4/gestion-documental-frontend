@@ -5,6 +5,7 @@ import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { ControlSesion } from 'src/app/utils/controlSesion';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'sub-category',
@@ -13,15 +14,18 @@ import { ControlSesion } from 'src/app/utils/controlSesion';
 })
 export class SubCategoryComponent implements OnInit {
 
+  page: number = 1;
+  maxPage = environment.paginationmax;
+
   controlSesion = new ControlSesion();
 
   nombre: string = '';
   formState: Boolean = false;
   showModalCatgoryCreated = false;
-
+  showModalSubCatgoryExist = false;
+  subcategoriesExist: number = 0;
+  subCategoriesToCompare: SubCategory[] = [];
   selectedOption: string = '0';
-  page: number = 1;
-
   // for create subcategory
   categories: Category[] = [];
 
@@ -41,21 +45,29 @@ export class SubCategoryComponent implements OnInit {
 
     const docName = this.documentForm.get('name');
     const docCategory = this.documentForm.get('category');
+    this.service.getSubCategoriesToCompare(docCategory.value, docName.value).subscribe({
+      next: (res) => {
+        this.subCategoriesToCompare = res;
+        this.subcategoriesExist = this.subCategoriesToCompare.length
+      }, complete: () => {
+        if (this.subcategoriesExist == 0) {
+          this.service.createSubCategory({
 
-    this.service.createSubCategory({
+            categoryId: docCategory.value,
+            subCategoryName: docName.value,
 
-      categoryId: docCategory.value,
-      subCategoryName: docName.value,
-
-    }).subscribe(n => {
-      docName.setValue("");
-      docCategory.setValue("");
-      this.showModalCatgoryCreated = true;
-    });
+          }).subscribe(n => {
+            docName.setValue("");
+            docCategory.setValue("");
+            this.showModalCatgoryCreated = true;
+          });
+        } else {
+          this.showModalSubCatgoryExist = true;
+        }
+      }
+    })
   }
-
   ngOnInit(): void {
-
     switch (this.controlSesion.getTypeUser()) {
       case null:
         this.router.navigate(['']);
@@ -65,14 +77,10 @@ export class SubCategoryComponent implements OnInit {
         break;
       case 700:
         this.getCategoryList();
+        this.getSubCategoryForList();
         break;
     };
-
-    this.getCategoryList();
-    this.getSubCategoryForList();
-
   }
-
   revealForm() {
     this.formState = !this.formState;
   }
@@ -80,19 +88,19 @@ export class SubCategoryComponent implements OnInit {
   getSubCategoryForList() {
     this.service.getSubCategories(this.selectedOption).subscribe({
       next: (res) => {
-        console.log("arriba: ",res)
         this.subCategoriesForList = res;
       },
-      complete:()=>{
+      complete: () => {
         this.subCategoriesForList.sort((a, b) => {
           if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
       }
     });
   }
@@ -100,20 +108,19 @@ export class SubCategoryComponent implements OnInit {
   getCategoryList() {
     this.service.getAllCategories().subscribe({
       next: (res) => {
-        console.log("abajo: ",res)
-
         this.categories = res;
       },
-      complete:()=>{
+      complete: () => {
         this.subCategoriesForList.sort((a, b) => {
           if (a.subCategoryName.toLowerCase() > b.subCategoryName.toLowerCase()) {
-          return 1;
+            return 1;
           }
           if (a.subCategoryName.toLowerCase() < b.subCategoryName.toLowerCase()) {
-          return -1;
+            return -1;
           }
           // a must be equal to b
-          return 0;})
+          return 0;
+        })
       }
     });
   }

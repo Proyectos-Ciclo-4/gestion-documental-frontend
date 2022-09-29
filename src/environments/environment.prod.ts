@@ -12,7 +12,9 @@ export const environment = {
     createDocument: 'http://localhost:8080/document/create/',
     createCategory: 'http://localhost:8080/category/create',
     getCategories: 'http://localhost:8080/category/getall',
+    getCategoriesToCompareEndPoint: 'http://localhost:8080/category/compare',
     getSubcategories: 'http://localhost:8080/subcategory/',
+    getSubcategoriesToCompareEndPoint: 'http://localhost:8080/subcategory/compare',
     createSubcategory: 'http://localhost:8080/subcategory/create',
     getDocumentsBy: 'http://localhost:8080/documents',
     getDocumentsById: 'http://localhost:8080/documento',
@@ -20,7 +22,8 @@ export const environment = {
     deleteDocument: 'http://localhost:8080/document/delete',
     updateDocument: 'http://localhost:8080/document/update',
     updateDownloads: 'http://localhost:8080/download/create',
-    getDownloadsByperiod:'http://localhost:8080/downloads'
+    getDownloadsByperiod: 'http://localhost:8080/downloads'
   },
+  paginationmax: 5,
   production: true,
 };
