@@ -132,28 +132,6 @@
   </div>
 </div>
 
-<!-- Modal de aviso requerimientos de documentos-->
-<div class="modal" *ngIf="showModalRequiresDocument">
-  <div class="modal_body">
-    <span class="modal_body-title">Información</span>
-    <p class="modal_body-msj">
-      Solo se pueden subir documentos de tipo PDF, Word, PowerPoint y Excel. Su tamaño no puede ser mayor a 1 MB.
-    </p>
-    <button (click)="showModalRequiresDocument = false" class="modal_body-btn btn_ok">Entendido</button>
-  </div>
-</div>
-
-<!-- Modal de aviso documento guardado -->
-<div class="modal" *ngIf="showModalSaveDocument">
-  <div class="modal_body">
-    <span class="modal_body-title">Información</span>
-    <p class="modal_body-msj">
-      Documento guardado Exitosamente!
-    </p>
-    <button (click)="showModalSaveDocument = false" class="modal_body-btn btn_ok">Entendido</button>
-  </div>
-</div>
-
 <!-- Modal de aviso ver detalles documento -->
 <div class="modal" *ngIf="showModalDetailsDocument">
   <div class="modal_body">
@@ -166,7 +144,7 @@
         <li><span class="bold">Subcategoria del documento: </span>{{modalInfoSubcategoria}}</li>
         <li><span class="bold">Version:</span> {{modalInfoVersion}}</li>
         <li><span class="bold">Fecha de creación: </span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
-        <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'h:mm a':'UTC -5'}}</li> 
+        <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'h:mm a':'UTC -5'}}</li>
         <li><span class="bold">Descripción:</span> {{modalInfoDesription}}</li>
       </ul>
     </div>
@@ -307,7 +285,7 @@
   <div class="modal_body">
     <span class="modal_body-title">Campos requeridos</span>
     <p class="modal_body-msj">
-      Para realizar la actualizacion de un documento, es requerido que 
+      Debe cargar un archivo para completar la actualización
     </p>
     <button (click)="showModalNoDocAndName = false" class="btn_ok modal_body-btn">Entendido</button>
   </div>
@@ -321,5 +299,28 @@
       Debes seleccionar la casilla que quieras actualizar
     </p>
     <button (click)="showModalNothingSelected = false" class="btn_ok modal_body-btn">Entendido</button>
+  </div>
+
+</div>
+
+<!-- Modal de aviso requerimientos de documentos-->
+<div class="modal" *ngIf="showModalRequiresDocument">
+  <div class="modal_body">
+    <span class="modal_body-title">Información</span>
+    <p class="modal_body-msj">
+      Solo se pueden subir documentos de tipo PDF, Word, PowerPoint y Excel. Su tamaño no puede ser mayor a 1 MB.
+    </p>
+    <button (click)="showModalRequiresDocument = false" class="modal_body-btn btn_ok">Entendido</button>
+  </div>
+</div>
+
+<!-- Modal de aviso documento guardado -->
+<div class="modal" *ngIf="showModalSaveDocument">
+  <div class="modal_body">
+    <span class="modal_body-title">Información</span>
+    <p class="modal_body-msj">
+      Documento guardado Exitosamente!
+    </p>
+    <button (click)="showModalSaveDocument = false" class="modal_body-btn btn_ok">Entendido</button>
   </div>
 </div>

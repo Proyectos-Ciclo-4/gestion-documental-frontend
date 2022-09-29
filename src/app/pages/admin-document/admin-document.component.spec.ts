@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewDocumentComponent } from './admin-document.component';
+import { AdminDocumentComponent } from './admin-document.component';
 
 describe('ViewDocumentComponent', () => {
-  let component: ViewDocumentComponent;
-  let fixture: ComponentFixture<ViewDocumentComponent>;
+  let component: AdminDocumentComponent;
+  let fixture: ComponentFixture<AdminDocumentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewDocumentComponent ]
+      declarations: [AdminDocumentComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
-    fixture = TestBed.createComponent(ViewDocumentComponent);
+    fixture = TestBed.createComponent(AdminDocumentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

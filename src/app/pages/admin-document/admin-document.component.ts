@@ -153,9 +153,9 @@ export class AdminDocumentComponent implements OnInit {
   protected sendToStorage() {
     const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
-      console.log(this.currentDocFile)
       getDownloadURL(docRef).then(res => {
         this.saveDocument(res)
+        this.reloadDocuments()
       })
     })
   }
@@ -325,8 +325,6 @@ export class AdminDocumentComponent implements OnInit {
 
         this.showModalUpdatedDocument = true;
         this.showModalActualizarDocument = false;
-        this.reloadDocuments()
-
       });
 
     } else if (otherDocInput) {
@@ -334,13 +332,7 @@ export class AdminDocumentComponent implements OnInit {
 
     } else this.showModalNoDocAndName = true;
 
-
-    this.updateDocumentForm = new FormGroup({
-      nameUpdate: new FormControl(''),
-      descriptionUpdate: new FormControl(''),
-      uploadUpdate: new FormControl('')
-    });
-
+    this.cleanFormUpdate();
   }
 
   protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description) {
@@ -367,10 +359,17 @@ export class AdminDocumentComponent implements OnInit {
 
         this.showModalUpdatedDocument = true;
         this.showModalActualizarDocument = false;
-
       })
     })
 
+  }
+
+  cleanFormUpdate() {
+    this.updateDocumentForm = new FormGroup({
+      nameUpdate: new FormControl(''),
+      descriptionUpdate: new FormControl(''),
+      uploadUpdate: new FormControl('')
+    });
   }
 
   setNameDocumentToUpdate(nombre: string) {
@@ -450,8 +449,8 @@ export class AdminDocumentComponent implements OnInit {
 
       });
 
-      const idUser = this.controlSesion.getIdUser();
-      this.endPointService.updateDownloads(idDoc, idUser).subscribe();
+      const userEmail = this.controlSesion.getEmailUser();
+      this.endPointService.updateDownloads(idDoc, userEmail).subscribe();
 
     } else {
       sessionStorage.setItem('docId', idDoc);
