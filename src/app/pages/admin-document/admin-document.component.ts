@@ -54,6 +54,7 @@ export class AdminDocumentComponent implements OnInit {
   showModalNoUser: boolean = false;
   showModalNoDocAndName: boolean = false;
   showModalNothingSelected: boolean = false;
+  showModalLoader:boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -170,6 +171,8 @@ export class AdminDocumentComponent implements OnInit {
     const docUpload = this.documentForm.get('upload');
     const pathDocument = res;
 
+    this.showModalLoader = true;
+
     this.generateBase64Doc(this.currentDocFile).then((base64: any) => {
 
       const docToSendBlockchain: DocumentModelBlockchain = {
@@ -196,15 +199,19 @@ export class AdminDocumentComponent implements OnInit {
           blockChainId: hash,
           description: docDescription.value
 
-        }).subscribe(n => {
-
-          docName.setValue("");
-          docCategory.setValue("");
-          docSubCategory.setValue("");
-          docDescription.setValue("");
-          docUpload.setValue("");
-          this.showModalSaveDocument = true;
-
+        }).subscribe({
+          next: (n) => {
+            docName.setValue("");
+            docCategory.setValue("");
+            docSubCategory.setValue("");
+            docDescription.setValue("");
+            docUpload.setValue("");
+          },
+          error: () => {},
+          complete: () => {
+            this.showModalSaveDocument = true;
+            this.showModalLoader = false;
+          },
         });
       })
 
