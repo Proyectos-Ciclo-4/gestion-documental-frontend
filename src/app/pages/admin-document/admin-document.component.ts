@@ -54,7 +54,7 @@ export class AdminDocumentComponent implements OnInit {
   showModalNoUser: boolean = false;
   showModalNoDocAndName: boolean = false;
   showModalNothingSelected: boolean = false;
-  showModalLoader:boolean = false;
+  showModalLoader: boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -187,7 +187,7 @@ export class AdminDocumentComponent implements OnInit {
       this.endPointService.putDataBlockchain(docToSendBlockchain).subscribe((response) => {
 
         const hash = response.hash;
-        
+
         this.endPointService.createDocument({
 
           name: docName.value,
@@ -196,7 +196,7 @@ export class AdminDocumentComponent implements OnInit {
           subCategoryName: docSubCategory.value,
           version: 1,
           pathDocument: pathDocument,
-          blockChainId: hash,
+          blockChainId: [hash],
           description: docDescription.value
 
         }).subscribe({
@@ -207,7 +207,7 @@ export class AdminDocumentComponent implements OnInit {
             docDescription.setValue("");
             docUpload.setValue("");
           },
-          error: () => {},
+          error: () => { },
           complete: () => {
             this.showModalSaveDocument = true;
             this.showModalLoader = false;
@@ -338,6 +338,9 @@ export class AdminDocumentComponent implements OnInit {
     this.endPointService.findDocumentBy(docCategoryFilter.value, docSubCategoryFilter.value).subscribe({
       next: (res) => {
         this.documentsList = res;
+
+        console.log(res);
+
       },
       complete: () => {
         this.documentsList.sort((a, b) => {
@@ -394,7 +397,7 @@ export class AdminDocumentComponent implements OnInit {
   protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description) {
 
     // Elimina el archivo con el nombre anterior en dado caso sea diferente
-    if (name != lastname && (name!="")) {
+    if (name != lastname && (name != "")) {
       const docRefDelete = ref(this.storage, `documents/${lastname}`);
       deleteObject(docRefDelete)
     }
@@ -402,7 +405,7 @@ export class AdminDocumentComponent implements OnInit {
     let nameSend = name;
 
     // NombrePorFin
-    if(name==""){
+    if (name == "") {
       nameSend = lastname
       console.log(nameSend);
     }
@@ -577,4 +580,10 @@ export class AdminDocumentComponent implements OnInit {
         });
     });
   }
+
+  goToHistoryDocument(data: object) {
+    localStorage.setItem("history_doc", JSON.stringify(data));
+    this.router.navigate(['change-history']);
+  }
+
 }

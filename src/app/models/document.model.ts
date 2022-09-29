@@ -5,7 +5,7 @@ export interface DocumentModel {
   subCategoryName: string,
   version: number,
   pathDocument: string,
-  blockChainId: string,
+  blockChainId: [string],
   description: string
 }
 
@@ -22,7 +22,7 @@ export interface DocumentModelQuery {
   subCategoryName: string,
   version: number,
   pathDocument: string,
-  blockChainId: string,
+  blockChainId: [string],
   description: string,
   uuid: string,
   dateCreated: Date
@@ -39,7 +39,7 @@ export interface DocumentWithDownloads {
   subCategoryName: string,
   version: number,
   pathDocument: string,
-  blockChainId: string,
+  blockChainId: [string],
   description: string,
   uuid: string,
   dateCreated: Date,

@@ -117,6 +117,9 @@
         <button *ngIf="isAdmin" class="boton-menu" (click)="confirmDeleteDocument(item.uuid,item.name)"><img
             src="/assets/images/delete.svg" alt="" class="icon"></button>
 
+        <button *ngIf="isAdmin" class="boton-menu" (click)="goToHistoryDocument(item.blockChainId)"><img
+            src="/assets/images/version-line.svg" alt="" class="icon"></button>
+
       </td>
 
     </tr>
@@ -327,11 +330,10 @@
 
 <!-- Loader -->
 
-<div class="modal"*ngIf="showModalLoader">
+<div class="modal" *ngIf="showModalLoader">
   <div class="modal_body">
 
     <div class="loader"></div>
 
   </div>
 </div>
-

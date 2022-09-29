@@ -13,10 +13,22 @@ export class ChangeHistoryComponent implements OnInit {
   constructor(
     private router: Router,
     private endpoint$: EndpointsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+
+    const listIdBlocks = JSON.parse(localStorage.getItem("history_doc"));
+    console.log(listIdBlocks);
+
+    this.endpoint$.getDataBlockchain(listIdBlocks[0]).subscribe({
+      next: (response) => {
+        console.log(response);
+      }
+    })
+
   }
+
+
 
 
 
