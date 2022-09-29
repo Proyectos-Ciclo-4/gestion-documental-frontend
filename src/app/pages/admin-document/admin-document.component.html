@@ -117,6 +117,9 @@
         <button *ngIf="isAdmin" class="boton-menu" (click)="confirmDeleteDocument(item.uuid,item.name)"><img
             src="/assets/images/delete.svg" alt="" class="icon"></button>
 
+        <button class="boton-menu" (click)="goToHistoryDocument(item.blockChainId)"><img
+            src="/assets/images/version-line.svg" alt="" class="icon"></button>
+
       </td>
 
     </tr>
@@ -144,7 +147,7 @@
         <li><span class="bold">Subcategoria del documento: </span>{{modalInfoSubcategoria}}</li>
         <li><span class="bold">Version:</span> {{modalInfoVersion}}</li>
         <li><span class="bold">Fecha de creación: </span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
-        <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'h:mm a':'UTC -5'}}</li>
+        <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'HH:mm:ss':'UTC -5'}}</li>
         <li><span class="bold">Descripción:</span> {{modalInfoDesription}}</li>
       </ul>
     </div>
@@ -327,11 +330,26 @@
 
 <!-- Loader -->
 
-<div class="modal"*ngIf="showModalLoader">
+<div class="modal" *ngIf="showModalLoader">
   <div class="modal_body">
-
     <div class="loader"></div>
-
+    <p>Subiendo archivo...</p>
   </div>
 </div>
-
+<!-- Modal para ver el historial de versiones -->
+<div class="modal" *ngIf="showModalNoUserRequireLoginToShowHistoryDoc">
+  <div class="modal_body">
+    <span class="modal_body-title">Inicia sesion</span>
+    <div class="modal_body-msj">
+      <p>Es necesario iniciar sesion para ver el historial de versiones del documento</p>
+    </div>
+    <div class="butttons_update">
+      <button class="btn_login_google" (click)="loginWithGoogleHistoryDocument()">
+        Iniciar sesión
+        <img src="/assets/images/logo_google.png" alt="Logo google">
+      </button>
+      <button class="btn_cancel" (click)="showModalNoUserRequireLoginToShowHistoryDoc = false">cancelar</button>
+    </div>
+    <span class="modal_body-footer">Presiones Esc para salir</span>
+  </div>
+</div>

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { DocumentModel, DocumentModelQuery, DocumentUpdateModel, DocumentModelBlockchain } from 'src/app/models/document.model';
-import { Storage, uploadBytes, getDownloadURL, deleteObject, getMetadata, ref, getBlob } from '@angular/fire/storage';
+import { Storage, uploadBytes, getDownloadURL, deleteObject, ref, getBlob } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { environment } from 'src/environments/environment.prod';
@@ -51,10 +51,11 @@ export class AdminDocumentComponent implements OnInit {
   showModalUpdatedDocument: boolean = false;
   showModalNoUserRequireLoginTolookDoc: boolean = false;
   showModalNoUserRequireLoginToDownloadDoc: boolean = false;
+  showModalNoUserRequireLoginToShowHistoryDoc: boolean=false;
   showModalNoUser: boolean = false;
   showModalNoDocAndName: boolean = false;
   showModalNothingSelected: boolean = false;
-  showModalLoader:boolean = false;
+  showModalLoader: boolean = false;
   fileInAngular: any;
 
   //ModalInfoVariables
@@ -133,7 +134,7 @@ export class AdminDocumentComponent implements OnInit {
     }, false);
 
     this.getCategoryList()
-    
+
   }
 
   protected async onFileSelected(event: any) {
@@ -181,7 +182,9 @@ export class AdminDocumentComponent implements OnInit {
         version: 1,
         pathDocument: base64.base,
         description: docDescription.value,
-        date: new Date()
+        date: new Date(),
+        categoryId: docCategory.value,
+        subCategoryName: docSubCategory.value
       }
 
 
@@ -197,7 +200,7 @@ export class AdminDocumentComponent implements OnInit {
           subCategoryName: docSubCategory.value,
           version: 1,
           pathDocument: pathDocument,
-          blockChainId: hash,
+          blockChainId: [hash],
           description: docDescription.value
 
         }).subscribe({
@@ -208,7 +211,7 @@ export class AdminDocumentComponent implements OnInit {
             docDescription.setValue("");
             docUpload.setValue("");
           },
-          error: () => {},
+          error: () => { },
           complete: () => {
             this.showModalSaveDocument = true;
             this.showModalLoader = false;
@@ -395,7 +398,7 @@ export class AdminDocumentComponent implements OnInit {
   protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description) {
 
     // Elimina el archivo con el nombre anterior en dado caso sea diferente
-    if (name != lastname && (name!="")) {
+    if (name != lastname && (name != "")) {
       const docRefDelete = ref(this.storage, `documents/${lastname}`);
       deleteObject(docRefDelete)
     }
@@ -403,7 +406,7 @@ export class AdminDocumentComponent implements OnInit {
     let nameSend = name;
 
     // NombrePorFin
-    if(name==""){
+    if (name == "") {
       nameSend = lastname
       console.log(nameSend);
     }
@@ -565,7 +568,6 @@ export class AdminDocumentComponent implements OnInit {
 
             this.controlSesion.writeSesionUser(data);
             if (data.tipo == 700) {
-
               this.isAdmin = true;
               this.isUser = true;
 
@@ -579,4 +581,37 @@ export class AdminDocumentComponent implements OnInit {
     });
   }
 
+  goToHistoryDocument(data: object) {
+    if (this.isUser|| this.isAdmin) {
+      localStorage.setItem("history_doc", JSON.stringify(data));
+      this.router.navigate(['change-history']);
+    }else{
+      this.showModalNoUserRequireLoginToShowHistoryDoc = true;
+    }
+  }
+
+  loginWithGoogleHistoryDocument(){
+    this.login$.login().then((data) => {
+
+      this.endPointService.verifyUser(data.user.email)
+        .subscribe(data => {
+
+          if (data == null) this.showModalNoUser = true;
+          else {
+
+            this.controlSesion.writeSesionUser(data);
+            if (data.tipo == 700) {
+              this.isAdmin = true;
+              this.isUser = true;
+
+            } else if (data.tipo == 555) this.isUser = true;
+
+            this.showModalNoUserRequireLoginToShowHistoryDoc = false;
+          }
+
+        });
+    });
+  }
+  
 }
+

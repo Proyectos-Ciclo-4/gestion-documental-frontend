@@ -8,7 +8,7 @@
     --color-gray-2: #d9d9d988;
     --color-options: #2520ff;
     --border-radius_gen: 6px;
-    --color-reports: #257b4c ;
+    --color-reports: #257b4c;
 }
 
 body {
@@ -133,17 +133,21 @@ form label {
     border: none;
     color: white;
 }
-.btn_report{
-  background:var(--color-reports);
-  border: none;
-  color: white;
+
+.btn_report {
+    background: var(--color-reports);
+    border: none;
+    color: white;
 }
+
 .btn_ok:hover {
     box-shadow: 0px 0px 6px var(--color-secondary);
 }
-.btn_report:hover{
-  background:rgba(37, 123, 76, 0.825);
+
+.btn_report:hover {
+    background: rgba(37, 123, 76, 0.825);
 }
+
 .btn_cancel {
     background: var(--color-gray-2);
     color: gray;
@@ -179,10 +183,9 @@ form label {
     align-items: center;
 }
 
-.modal_body {
+.modal_body{
     max-width: 60%;
     max-height: 80%;
-    overflow-y: scroll;
     background: white;
     padding: 14px;
     border-radius: var(--border-radius_gen);
@@ -223,4 +226,24 @@ form label {
 
 .modal_body-btn {
     margin: 2px;
+}
+
+/* LOADER */
+
+.loader {
+    margin: 0px auto;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border-style: solid;
+    border-color: var(--color-secondary);
+    border-width: 6px 4px 2px 0px;
+    animation: loader_anim 0.8s linear infinite;
+    transform-origin: 50% 50%;
+}
+
+@keyframes loader_anim {
+    100% {
+        transform: rotateZ(360deg);
+    }
 }

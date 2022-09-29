@@ -8,6 +8,7 @@ import { ReportsComponent } from './pages/reports/reports.component';
 import { SubCategoryComponent } from './pages/sub-category/sub-category.component';
 import { AdminDocumentComponent } from './pages/admin-document/admin-document.component';
 import { ViewDocumentComponent } from './pages/view-document/view-document.component';
+import { ChangeHistoryComponent } from './pages/change-history/change-history.component';
 
 const routes: Routes = [{
   path: '',
@@ -36,6 +37,10 @@ const routes: Routes = [{
 {
   path: 'view-document',
   component: ViewDocumentComponent
+},
+{
+  path: 'change-history',
+  component: ChangeHistoryComponent
 },
 {
   path: '**',

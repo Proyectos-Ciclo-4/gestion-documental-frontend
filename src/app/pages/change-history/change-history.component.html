@@ -1,0 +1,40 @@
+<div class="location_pag">
+  <span>Inicio/ Historial de versiones</span>
+</div>
+<!-- Tabla que contiene los documentos creados -->
+<div>
+
+  <table>
+    <tr>
+      <th>Nombre</th>
+      <th>Categoria</th>
+      <th>SubCategoria</th>
+      <th>Version</th>
+      <th>Fecha de creación</th>
+      <th>Hora de creación</th>
+      <th>Descargar</th>
+
+      <!--<th>Fecha de actualizacion</th> -->
+    </tr>
+    <tr *ngFor="let item of listDocHistory | paginate: { itemsPerPage: 50, currentPage: page }">
+      <td>{{item.name}}</td>
+      <td>{{item.categoryId}}</td>
+      <td>{{item.subCategoryName}}</td>
+      <td>{{item.version}}</td>
+      <td>{{item.date | date:'dd/MM/yyyy'}}</td>
+      <td>{{item.date| date:'HH:mm:ss':'UTC -5'}}</td>
+      <td>
+        <a class="boton-menu" [download]="item.name" [href]="item.pathDocument">
+          <img src="/assets/images/download.svg" alt="" class="icon">
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- Botones de paginacion de la tabla -->
+<div>
+  <div class="paginacion">
+    <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
+  </div>
+</div>
