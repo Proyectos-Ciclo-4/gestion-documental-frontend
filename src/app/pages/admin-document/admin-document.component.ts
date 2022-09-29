@@ -57,6 +57,8 @@ export class AdminDocumentComponent implements OnInit {
   showModalNothingSelected: boolean = false;
   showModalLoader: boolean = false;
   fileInAngular: any;
+  cateogryToUpdate: string;
+  subcateogryToUpdate: string;
 
   //ModalInfoVariables
   modalInfoNombre: string;
@@ -98,7 +100,8 @@ export class AdminDocumentComponent implements OnInit {
     private endPointService: EndpointsService,
     private storage: Storage,
     private login$: LoginService,
-    private sanitizer: DomSanitizer) { }
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
     switch (this.controlSesion.getTypeUser()) {
@@ -155,7 +158,12 @@ export class AdminDocumentComponent implements OnInit {
    * seleccionado por el administrador
    */
   protected sendToStorage() {
-    const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
+
+    const category:string = this.documentForm.get('category').value;
+    const subcategory:string = this.documentForm.get('subcategory').value;
+    const name:string = this.documentForm.get('name').value;
+
+    const docRef = ref(this.storage, `documents/${category}/${subcategory}/${name}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
       getDownloadURL(docRef).then(res => {
         this.saveDocument(res)
@@ -353,9 +361,11 @@ export class AdminDocumentComponent implements OnInit {
     });
   }
 
-  confirmUpdateDocument(uuid: string) {
+  confirmUpdateDocument(uuid: string,cateogryToUpdate:string,subcateogryToUpdate:string) {
     this.idDocumentToUpdate = uuid;
     this.showModalActualizarDocument = true;
+    this.cateogryToUpdate = cateogryToUpdate
+    this.subcateogryToUpdate = subcateogryToUpdate
   }
 
   updateDocument() {
@@ -388,18 +398,18 @@ export class AdminDocumentComponent implements OnInit {
       });
 
     } else if (otherDocInput) {
-      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value)
+      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value,this.cateogryToUpdate,this.subcateogryToUpdate)
 
     } else this.showModalNoDocAndName = true;
 
     this.cleanFormUpdate();
   }
 
-  protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description) {
+  protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description, category, subcategory) {
 
     // Elimina el archivo con el nombre anterior en dado caso sea diferente
     if (name != lastname && (name != "")) {
-      const docRefDelete = ref(this.storage, `documents/${lastname}`);
+      const docRefDelete = ref(this.storage, `documents/${category}/${subcategory}/${lastname}`);
       deleteObject(docRefDelete)
     }
 
@@ -411,7 +421,7 @@ export class AdminDocumentComponent implements OnInit {
       console.log(nameSend);
     }
 
-    const docRef = ref(this.storage, `documents/${name}`);
+    const docRef = ref(this.storage, `documents/${category}/${subcategory}/${name}`);
 
     uploadBytes(docRef, docUpload).then(() => {
       getDownloadURL(docRef).then(res => {
@@ -454,8 +464,8 @@ export class AdminDocumentComponent implements OnInit {
    * @param uuid Id de documento a eliminar
    * @param name Nombre del documento a eliminar
    */
-  confirmDeleteDocument(uuid: string, name: string) {
-    this.referenceDelte = ref(this.storage, `documents/${name}`)
+  confirmDeleteDocument(uuid: string, name: string,cateogory,subcategory) {
+    this.referenceDelte = ref(this.storage, `documents/${cateogory}/${subcategory}/${name}`)
     this.deleteDoc = uuid;
     this.showModalDeleteDocument = true;
   }
@@ -612,6 +622,6 @@ export class AdminDocumentComponent implements OnInit {
         });
     });
   }
-  
+
 }
 
