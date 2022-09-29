@@ -29,7 +29,8 @@ export interface DocumentModelQuery {
   blockChainId: [string],
   description: string,
   uuid: string,
-  dateCreated: Date
+  dateCreated: Date,
+  lastDateDownload : Date
 }
 export interface DocumentUpdateModel {
   name: string,

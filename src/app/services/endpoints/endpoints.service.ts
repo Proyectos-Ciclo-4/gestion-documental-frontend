@@ -47,6 +47,11 @@ export class EndpointsService {
   getDocumentById(id: string) {
     return this.http.get<DocumentModelQuery>(`${environment.host.getDocumentsById}/${id}`)
   }
+
+  updateDownloadsDateDoc(uuid: string) {
+    return this.http.put(`${environment.host.updateDateDownloadsDocument}/${uuid}`, {});
+  }
+
   /**
    *Downloads Query and Commands
    */
@@ -59,7 +64,7 @@ export class EndpointsService {
       "documentId": docId,
       "userId": userId
     }
-
+    this.updateDownloadsDateDoc(docId).subscribe();
     return this.http.post(`${environment.host.updateDownloads}`, { ...body })
   }
 

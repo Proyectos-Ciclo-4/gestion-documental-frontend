@@ -21,6 +21,7 @@ export const environment = {
     getDocumentsByCategory: 'http://localhost:8080/document',
     deleteDocument: 'http://localhost:8080/document/delete',
     updateDocument: 'http://localhost:8080/document/update',
+    updateDateDownloadsDocument: 'http://localhost:8080/document/update/lastDownload',
     updateDownloads: 'http://localhost:8080/download/create',
     getDownloadsByperiod: 'http://localhost:8080/downloads'
   },

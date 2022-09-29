@@ -57,15 +57,18 @@ export class AdminDocumentComponent implements OnInit {
   showModalNothingSelected: boolean = false;
   showModalLoader: boolean = false;
   fileInAngular: any;
+  cateogryToUpdate: string;
+  subcateogryToUpdate: string;
 
   //ModalInfoVariables
   modalInfoNombre: string;
   modalInfoCategoria: string;
   modalInfoSubcategoria: string;
-  modalInfoVersion: string;
-  modalInfoFecha: string;
-  modalInfoBlockChain: string;
+  modalInfoVersion: number;
+  modalInfoFecha: Date;
+  modalInfoFechaDownload: any;
   modalInfoDesription: string;
+  dateIsEqualsToDownload = false;
 
   docsAllowed: String[] = [
     'application/pdf',
@@ -98,7 +101,8 @@ export class AdminDocumentComponent implements OnInit {
     private endPointService: EndpointsService,
     private storage: Storage,
     private login$: LoginService,
-    private sanitizer: DomSanitizer) { }
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
     switch (this.controlSesion.getTypeUser()) {
@@ -135,6 +139,7 @@ export class AdminDocumentComponent implements OnInit {
     }, false);
 
     this.getCategoryList()
+
   }
 
   protected async onFileSelected(event: any) {
@@ -155,7 +160,12 @@ export class AdminDocumentComponent implements OnInit {
    * seleccionado por el administrador
    */
   protected sendToStorage() {
-    const docRef = ref(this.storage, `documents/${this.documentForm.get('name').value}`);
+
+    const category: string = this.documentForm.get('category').value;
+    const subcategory: string = this.documentForm.get('subcategory').value;
+    const name: string = this.documentForm.get('name').value;
+
+    const docRef = ref(this.storage, `documents/${category}/${subcategory}/${name}`);
     uploadBytes(docRef, this.currentDocFile).then(() => {
       getDownloadURL(docRef).then(res => {
         this.saveDocument(res)
@@ -354,9 +364,11 @@ export class AdminDocumentComponent implements OnInit {
     });
   }
 
-  confirmUpdateDocument(uuid: string) {
+  confirmUpdateDocument(uuid: string, cateogryToUpdate: string, subcateogryToUpdate: string) {
     this.idDocumentToUpdate = uuid;
     this.showModalActualizarDocument = true;
+    this.cateogryToUpdate = cateogryToUpdate
+    this.subcateogryToUpdate = subcateogryToUpdate
   }
 
   updateDocument() {
@@ -389,18 +401,18 @@ export class AdminDocumentComponent implements OnInit {
       });
 
     } else if (otherDocInput) {
-      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value)
+      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value, this.cateogryToUpdate, this.subcateogryToUpdate)
 
     } else this.showModalNoDocAndName = true;
 
     this.cleanFormUpdate();
   }
 
-  protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description) {
+  protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description, category, subcategory) {
 
     // Elimina el archivo con el nombre anterior en dado caso sea diferente
     if (name != lastname && (name != "")) {
-      const docRefDelete = ref(this.storage, `documents/${lastname}`);
+      const docRefDelete = ref(this.storage, `documents/${category}/${subcategory}/${lastname}`);
       deleteObject(docRefDelete)
     }
 
@@ -412,7 +424,7 @@ export class AdminDocumentComponent implements OnInit {
       console.log(nameSend);
     }
 
-    const docRef = ref(this.storage, `documents/${name}`);
+    const docRef = ref(this.storage, `documents/${category}/${subcategory}/${name}`);
 
     uploadBytes(docRef, docUpload).then(() => {
       getDownloadURL(docRef).then(res => {
@@ -455,8 +467,8 @@ export class AdminDocumentComponent implements OnInit {
    * @param uuid Id de documento a eliminar
    * @param name Nombre del documento a eliminar
    */
-  confirmDeleteDocument(uuid: string, name: string) {
-    this.referenceDelte = ref(this.storage, `documents/${name}`)
+  confirmDeleteDocument(uuid: string, name: string, cateogory, subcategory) {
+    this.referenceDelte = ref(this.storage, `documents/${cateogory}/${subcategory}/${name}`)
     this.deleteDoc = uuid;
     this.showModalDeleteDocument = true;
   }
@@ -481,31 +493,32 @@ export class AdminDocumentComponent implements OnInit {
     this.filterDocumentBy();
   }
 
-  viewModalDetailsDocument(
-    modalInfoNombre,
-    modalInfoCategoria,
-    modalInfoSubcategoria,
-    modalInfoVersion,
-    modalInfoFecha,
-    modalInfoBlockChain,
-    modalInfoDesription) {
+  viewModalDetailsDocument(data: DocumentModelQuery) {
 
     this.showModalDetailsDocument = true;
 
-    this.modalInfoNombre = modalInfoNombre;
-    this.modalInfoCategoria = modalInfoCategoria;
-    this.modalInfoSubcategoria = modalInfoSubcategoria;
-    this.modalInfoVersion = modalInfoVersion;
-    this.modalInfoFecha = modalInfoFecha;
-    this.modalInfoBlockChain = modalInfoBlockChain;
-    this.modalInfoDesription = modalInfoDesription;
+    this.modalInfoNombre = data.name;
+    this.modalInfoCategoria = data.categoryId;
+    this.modalInfoSubcategoria = data.subCategoryName;
+    this.modalInfoVersion = data.version;
+    this.modalInfoFecha = data.dateCreated;
+
+    if (data.dateCreated === data.lastDateDownload) {
+      this.modalInfoFechaDownload = "None";
+      this.dateIsEqualsToDownload = true;
+    } else {
+      this.modalInfoFechaDownload = data.lastDateDownload;
+      this.dateIsEqualsToDownload = false;
+    }
+
+    this.modalInfoDesription = data.description;
   }
 
-  async downloadDoc(nameDoc: string, idDoc: string) {
+  async downloadDoc(nameDoc: string, idDoc: string, category: string, subcategories: string) {
 
     if (this.isUser) {
 
-      const reference = ref(this.storage, `documents/${nameDoc}`);
+      const reference = ref(this.storage, `documents/${category}/${subcategories}/${nameDoc}`);
       getBlob(reference).then((blob) => {
 
         const newFile = new File([blob], nameDoc, { type: blob.type });
@@ -524,6 +537,8 @@ export class AdminDocumentComponent implements OnInit {
     } else {
       sessionStorage.setItem('docId', idDoc);
       sessionStorage.setItem('docName', nameDoc);
+      sessionStorage.setItem('cat', category);
+      sessionStorage.setItem('subcat', subcategories);
       this.showModalNoUserRequireLoginToDownloadDoc = true;
     }
   }
@@ -575,7 +590,12 @@ export class AdminDocumentComponent implements OnInit {
             } else if (data.tipo == 555) this.isUser = true;
 
             this.showModalNoUserRequireLoginToDownloadDoc = false;
-            this.downloadDoc(sessionStorage.getItem('docName'), sessionStorage.getItem('docId'));
+
+            this.downloadDoc(
+              sessionStorage.getItem('docName'),
+              sessionStorage.getItem('docId'),
+              sessionStorage.getItem('cat'),
+              sessionStorage.getItem('subcat'))
           }
 
         });
@@ -613,5 +633,6 @@ export class AdminDocumentComponent implements OnInit {
         });
     });
   }
+
 }
 

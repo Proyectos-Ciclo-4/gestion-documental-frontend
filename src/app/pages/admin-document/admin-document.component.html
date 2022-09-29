@@ -99,22 +99,23 @@
       <td>{{item.dateCreated | date}}</td>
 
       <td class="icons_actions">
-        <button class="boton-menu"
-          (click)="viewModalDetailsDocument(item.name,item.categoryId,item.subCategoryName,item.version,item.dateCreated,item.blockChainId,item.description)">
+        <button class="boton-menu" (click)="viewModalDetailsDocument(item)">
           <img src="/assets/images/circle-plus.svg" alt="" class="icon plus">
         </button>
 
         <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument, item.name)"><img
             src="/assets/images/eye.svg" alt="" class="icon eye"></button>
 
-        <button *ngIf="isAdmin" class="boton-menu" (click)="confirmUpdateDocument(item.uuid)"
+        <button *ngIf="isAdmin" class="boton-menu"
+          (click)="confirmUpdateDocument(item.uuid, item.categoryId, item.subCategoryName)"
           (click)="setNameDocumentToUpdate(item.name)"> <img src="/assets/images/update-alt.svg" alt=""
             class="icon"></button>
 
-        <button class="boton-menu" (click)="downloadDoc(item.name, item.uuid)">
+        <button class="boton-menu" (click)="downloadDoc(item.name, item.uuid, item.categoryId, item.subCategoryName)">
           <img src="/assets/images/download.svg" alt="" class="icon"></button>
 
-        <button *ngIf="isAdmin" class="boton-menu" (click)="confirmDeleteDocument(item.uuid,item.name)"><img
+        <button *ngIf="isAdmin" class="boton-menu"
+          (click)="confirmDeleteDocument(item.uuid,item.name, item.categoryId, item.subCategoryName)"><img
             src="/assets/images/delete.svg" alt="" class="icon"></button>
 
         <button class="boton-menu" (click)="goToHistoryDocument(item.blockChainId)"><img
@@ -148,6 +149,10 @@
         <li><span class="bold">Version:</span> {{modalInfoVersion}}</li>
         <li><span class="bold">Fecha de creación: </span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
         <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'HH:mm:ss':'UTC -5'}}</li>
+
+        <li *ngIf="dateIsEqualsToDownload"><span class="bold">Ultima fecha de descarga: </span> {{modalInfoFechaDownload}}</li>
+        <li *ngIf="!dateIsEqualsToDownload"><span class="bold">Ultima fecha de descarga: </span> {{modalInfoFechaDownload | date:'dd/MM/yyyy'}}</li>
+
         <li><span class="bold">Descripción:</span> {{modalInfoDesription}}</li>
       </ul>
     </div>
