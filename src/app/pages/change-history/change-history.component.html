@@ -1,0 +1,32 @@
+<div class="location_pag">
+  <span>Inicio/ Historial de versiones</span>
+</div>
+<!-- Tabla que contiene los documentos creados -->
+<div>
+
+  <table>
+    <tr>
+      <th>Nombre</th>
+      <th>Categoria</th>
+      <th>SubCategoria</th>
+      <th>Version</th>
+      <!-- <th>Hora creación</th> -->
+      <th>Fecha de creación</th>
+      <!--<th>Fecha de actualizacion</th> -->
+    </tr>
+    <tr *ngFor="let item of [] | paginate: { itemsPerPage: 50, currentPage: page }">
+      <td>A</td>
+      <td>A</td>
+      <td>A</td>
+      <td>A</td>
+      <td>A</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Botones de paginacion de la tabla -->
+<div>
+  <div class="paginacion">
+    <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
+  </div>
+</div>
