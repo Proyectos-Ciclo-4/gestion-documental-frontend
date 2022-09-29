@@ -51,7 +51,7 @@ export class AdminDocumentComponent implements OnInit {
   showModalUpdatedDocument: boolean = false;
   showModalNoUserRequireLoginTolookDoc: boolean = false;
   showModalNoUserRequireLoginToDownloadDoc: boolean = false;
-  showModalNoUserRequireLoginToShowHistoryDoc: boolean=false;
+  showModalNoUserRequireLoginToShowHistoryDoc: boolean = false;
   showModalNoUser: boolean = false;
   showModalNoDocAndName: boolean = false;
   showModalNothingSelected: boolean = false;
@@ -128,6 +128,7 @@ export class AdminDocumentComponent implements OnInit {
         this.showModalUpdatedDocument = false;
         this.showModalNoUserRequireLoginTolookDoc = false;
         this.showModalNoUserRequireLoginToDownloadDoc = false;
+        this.showModalNoUserRequireLoginToShowHistoryDoc = false;
         this.showModalNoUser = false;
       }
 
@@ -171,12 +172,14 @@ export class AdminDocumentComponent implements OnInit {
     const docSubCategory = this.documentForm.get('subcategory');
     const docUpload = this.documentForm.get('upload');
     const pathDocument = res;
+    const id_doc = `${Date.now()}-777`;
 
     this.showModalLoader = true;
 
     this.generateBase64Doc(this.currentDocFile).then((base64: any) => {
 
       const docToSendBlockchain: DocumentModelBlockchain = {
+        _id: id_doc,
         name: docName.value,
         version: 1,
         pathDocument: base64.base,
@@ -186,13 +189,12 @@ export class AdminDocumentComponent implements OnInit {
         subCategoryName: docSubCategory.value
       }
 
-
       this.endPointService.putDataBlockchain(docToSendBlockchain).subscribe((response) => {
 
         const hash = response.hash;
 
         this.endPointService.createDocument({
-
+          _id: id_doc,
           name: docName.value,
           userId: this.controlSesion.getIdUser(),
           categoryId: docCategory.value,
@@ -581,14 +583,15 @@ export class AdminDocumentComponent implements OnInit {
   }
 
   goToHistoryDocument(data: object) {
-    if (this.isUser|| this.isAdmin) {
+    if (this.isUser || this.isAdmin) {
       localStorage.setItem("history_doc", JSON.stringify(data));
       this.router.navigate(['change-history']);
-    }else{
+    } else {
       this.showModalNoUserRequireLoginToShowHistoryDoc = true;
     }
   }
-  loginWithGoogleHistoryDocument(){
+
+  loginWithGoogleHistoryDocument() {
     this.login$.login().then((data) => {
 
       this.endPointService.verifyUser(data.user.email)

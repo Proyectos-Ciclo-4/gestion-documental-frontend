@@ -1,4 +1,5 @@
 export interface DocumentModel {
+  _id: string,
   name: string,
   userId: string,
   categoryId: string,
@@ -10,6 +11,7 @@ export interface DocumentModel {
 }
 
 export interface DocumentModelBlockchain {
+  _id: string,
   name: string,
   version: number,
   pathDocument: string,
