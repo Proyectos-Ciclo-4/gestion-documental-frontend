@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 import { DocumentModel, DocumentModelQuery, DocumentUpdateModel, DocumentModelBlockchain } from 'src/app/models/document.model';
-import { Storage, uploadBytes, getDownloadURL, deleteObject, getMetadata, ref, getBlob } from '@angular/fire/storage';
+import { Storage, uploadBytes, getDownloadURL, deleteObject, ref, getBlob } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { environment } from 'src/environments/environment.prod';
@@ -184,7 +184,7 @@ export class AdminDocumentComponent implements OnInit {
       this.endPointService.putDataBlockchain(docToSendBlockchain).subscribe((response) => {
 
         const hash = response.hash;
-
+        
         this.endPointService.createDocument({
 
           name: docName.value,
