@@ -14,12 +14,12 @@
       <th>Fecha de creación</th>
       <!--<th>Fecha de actualizacion</th> -->
     </tr>
-    <tr *ngFor="let item of [] | paginate: { itemsPerPage: 50, currentPage: page }">
-      <td>A</td>
-      <td>A</td>
-      <td>A</td>
-      <td>A</td>
-      <td>A</td>
+    <tr *ngFor="let item of listDocHistory | paginate: { itemsPerPage: 50, currentPage: page }">
+      <td>{{item.name}}</td>
+      <td>{{item.categoryId}}</td>
+      <td>{{item.subCategoryName}}</td>
+      <td>{{item.version}}</td>
+      <td>{{item.date}}</td>
     </tr>
   </table>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { DocumentModelBlockchain } from 'src/app/models/document.model';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 
 @Component({
@@ -9,27 +9,32 @@ import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
 })
 export class ChangeHistoryComponent implements OnInit {
   page: number = 1;
+  listDocHistory: DocumentModelBlockchain[] = [];
+  listIdBlocks: [] = [];
 
   constructor(
-    private router: Router,
     private endpoint$: EndpointsService
   ) { }
 
   ngOnInit(): void {
-
-    const listIdBlocks = JSON.parse(localStorage.getItem("history_doc"));
-    console.log(listIdBlocks);
-
-    this.endpoint$.getDataBlockchain(listIdBlocks[0]).subscribe({
-      next: (response) => {
-        console.log(response);
-      }
-    })
-
+    this.listIdBlocks = JSON.parse(localStorage.getItem("history_doc"));
+    this.getDocHistory();
+    console.log("lista de id: ",this.listIdBlocks)
   }
 
+  getDocHistory(){
+    this.listIdBlocks.map(item => {
+      this.endpoint$.getDataBlockchain(item).subscribe({
+        next: (response) => {
+          if (response !== null) {
+            this.listDocHistory.push(response)
+          }
+        }
+      })
+
+    })
+    console.log("R:",this.listDocHistory)
 
 
-
-
+  }
 }

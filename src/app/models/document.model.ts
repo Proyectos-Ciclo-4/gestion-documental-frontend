@@ -14,7 +14,9 @@ export interface DocumentModelBlockchain {
   version: number,
   pathDocument: string,
   description: string
-  date: Date
+  date: Date,
+  categoryId: string,
+  subCategoryName: string,
 }
 export interface DocumentModelQuery {
   name: string,

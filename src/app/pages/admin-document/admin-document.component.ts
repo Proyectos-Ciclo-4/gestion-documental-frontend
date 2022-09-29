@@ -180,7 +180,9 @@ export class AdminDocumentComponent implements OnInit {
         version: 1,
         pathDocument: base64.base,
         description: docDescription.value,
-        date: new Date()
+        date: new Date(),
+        categoryId: docCategory.value,
+        subCategoryName: docSubCategory.value
       }
 
 
@@ -338,9 +340,6 @@ export class AdminDocumentComponent implements OnInit {
     this.endPointService.findDocumentBy(docCategoryFilter.value, docSubCategoryFilter.value).subscribe({
       next: (res) => {
         this.documentsList = res;
-
-        console.log(res);
-
       },
       complete: () => {
         this.documentsList.sort((a, b) => {
