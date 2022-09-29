@@ -370,6 +370,11 @@ export class AdminDocumentComponent implements OnInit {
       deleteObject(docRefDelete)
     }
 
+    // NombrePorFin
+    if(name==""){
+      console.log("Name vacio")
+    }
+
     uploadBytes(docRef, docUpload).then(() => {
       getDownloadURL(docRef).then(res => {
 
