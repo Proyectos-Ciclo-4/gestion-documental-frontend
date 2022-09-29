@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ResponseVerify } from 'src/app/models/responseVerify';
 import { environment } from 'src/environments/environment.prod';
-import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
+import { DocumentModel, DocumentModelBlockchain, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { DownloadModel } from 'src/app/models/download.model';
+import { ResponseBlockchainPost } from 'src/app/models/response.blockchain.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,15 +43,17 @@ export class EndpointsService {
   deleteDocumentBy(uuid: string) {
     return this.http.delete(`${environment.host.deleteDocument}/${uuid}`);
   }
-  getDocumentById(id:string){
+
+  getDocumentById(id: string) {
     return this.http.get<DocumentModelQuery>(`${environment.host.getDocumentsById}/${id}`)
   }
   /**
    *Downloads Query and Commands
    */
-  getDownloadByPeriod(startDate:string,finalDate:string){
+  getDownloadByPeriod(startDate: string, finalDate: string) {
     return this.http.get<DownloadModel[]>(`${environment.host.getDownloadsByperiod}/${startDate}/${finalDate}`)
   }
+
   updateDownloads(docId: string, userId: String) {
     const body = {
       "documentId": docId,
@@ -72,22 +75,50 @@ export class EndpointsService {
   getAllCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${environment.host.getCategories}`);
   }
+
   getCategoriesToCompare(categoryName: string): Observable<Category[]> {
     return this.http.get<Category[]>(`${environment.host.getCategoriesToCompareEndPoint}/${categoryName}`);
   }
-    /**
-   * SUBCATEGORY ENDPOINTS
-   * @param subcategory
-   * @returns
+  /**
+ * SUBCATEGORY ENDPOINTS
+ * @param subcategory
+ * @returns
+ */
+  createSubCategory(subcategory: object): Observable<object> {
+    return this.http.post(environment.host.createSubcategory, { ...subcategory });
+  }
+
+  getSubCategories(categoryId: string): Observable<SubCategory[]> {
+    return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}/${categoryId}`);
+  }
+
+  getSubCategoriesToCompare(categoryId: string, subCategoryName: string): Observable<SubCategory[]> {
+    return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}/${subCategoryName}`);
+  }
+
+  /**
+   * Guarda informacion den la blockchain
+   * @param dataToSend Informacion a guardar en la blockchain
+   * @return hash del bloque guardado
    */
-     createSubCategory(subcategory: object): Observable<object> {
-      return this.http.post(environment.host.createSubcategory, { ...subcategory });
+  putDataBlockchain(dataToSend: DocumentModelBlockchain): Observable<ResponseBlockchainPost> {
+    return this.http.post<ResponseBlockchainPost>(environment.blockchain.putData, { ...dataToSend },
+      { headers: this.generateHeaders() });
+  }
+
+  /**
+   * Obtiene los datos guardados con el id de bloque solicitado
+   * @param idBlock hash del bloque del que desea obtener los datos
+   */
+  getDataBlockchain(idBlock: string): Observable<DocumentModelBlockchain> {
+    return this.http.get<DocumentModelBlockchain>(`${environment.blockchain.getData}/${idBlock}`,
+      { headers: this.generateHeaders() });
+  }
+
+  generateHeaders() {
+    return {
+      Authorization: "Bearer My app"
     }
-    getSubCategories(categoryId: string): Observable<SubCategory[]> {
-      return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}`);
-    }
-    getSubCategoriesToCompare(categoryId: string, subCategoryName: string): Observable<SubCategory[]> {
-      return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}/${subCategoryName}`);
-    }
+  }
 
 }

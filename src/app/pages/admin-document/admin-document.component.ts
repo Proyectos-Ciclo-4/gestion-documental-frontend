@@ -4,11 +4,12 @@ import { ControlSesion } from 'src/app/utils/controlSesion';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EndpointsService } from 'src/app/services/endpoints/endpoints.service';
-import { DocumentModel, DocumentModelQuery, DocumentUpdateModel } from 'src/app/models/document.model';
+import { DocumentModel, DocumentModelQuery, DocumentUpdateModel, DocumentModelBlockchain } from 'src/app/models/document.model';
 import { Storage, uploadBytes, getDownloadURL, deleteObject, getMetadata, ref, getBlob } from '@angular/fire/storage';
 import { Category } from 'src/app/models/category.model';
 import { SubCategory } from 'src/app/models/subcategory.model';
 import { environment } from 'src/environments/environment.prod';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'document',
@@ -95,7 +96,7 @@ export class AdminDocumentComponent implements OnInit {
     private endPointService: EndpointsService,
     private storage: Storage,
     private login$: LoginService,
-    private endpoint$: EndpointsService) { }
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     switch (this.controlSesion.getTypeUser()) {
@@ -169,28 +170,76 @@ export class AdminDocumentComponent implements OnInit {
     const docUpload = this.documentForm.get('upload');
     const pathDocument = res;
 
-    this.endPointService.createDocument({
+    this.generateBase64Doc(this.currentDocFile).then((base64: any) => {
 
-      name: docName.value,
-      userId: this.controlSesion.getIdUser(),
-      categoryId: docCategory.value,
-      subCategoryName: docSubCategory.value,
-      version: 1,
-      pathDocument: pathDocument,
-      blockChainId: 'blockChainId1',
-      description: docDescription.value
+      const docToSendBlockchain: DocumentModelBlockchain = {
+        name: docName.value,
+        version: 1,
+        pathDocument: base64.base,
+        description: docDescription.value,
+        date: new Date()
+      }
 
-    }).subscribe(n => {
 
-      docName.setValue("");
-      docCategory.setValue("");
-      docSubCategory.setValue("");
-      docDescription.setValue("");
-      docUpload.setValue("");
-      this.showModalSaveDocument = true;
+      this.endPointService.putDataBlockchain(docToSendBlockchain).subscribe((response) => {
+
+        const hash = response.hash;
+
+        this.endPointService.createDocument({
+
+          name: docName.value,
+          userId: this.controlSesion.getIdUser(),
+          categoryId: docCategory.value,
+          subCategoryName: docSubCategory.value,
+          version: 1,
+          pathDocument: pathDocument,
+          blockChainId: hash,
+          description: docDescription.value
+
+        }).subscribe(n => {
+
+          docName.setValue("");
+          docCategory.setValue("");
+          docSubCategory.setValue("");
+          docDescription.setValue("");
+          docUpload.setValue("");
+          this.showModalSaveDocument = true;
+
+        });
+      })
 
     });
   }
+
+  private generateBase64Doc = async ($event: any) => new Promise((resolve, reject) => {
+
+    try {
+
+      const unsafeDoc = window.URL.createObjectURL($event);
+      const docF = this.sanitizer.bypassSecurityTrustUrl(unsafeDoc);
+      const reader = new FileReader();
+      reader.readAsDataURL($event);
+      reader.onload = () => {
+        resolve({
+          blob: $event,
+          docF,
+          base: reader.result,
+        });
+      };
+      reader.onerror = (error) => {
+        resolve({
+          blob: $event,
+          docF,
+          base: null,
+        });
+      };
+
+    } catch (e) {
+      return null;
+    }
+
+  });
+
 
   /**
    * @Description goToViewSelectedDocument es una funcion que sirve para enviar al usuario al componente de visualizacion de documentos
@@ -471,7 +520,7 @@ export class AdminDocumentComponent implements OnInit {
 
     this.login$.login().then((data) => {
 
-      this.endpoint$.verifyUser(data.user.email)
+      this.endPointService.verifyUser(data.user.email)
         .subscribe(data => {
 
           if (data == null) this.showModalNoUser = true;
@@ -500,7 +549,7 @@ export class AdminDocumentComponent implements OnInit {
 
     this.login$.login().then((data) => {
 
-      this.endpoint$.verifyUser(data.user.email)
+      this.endPointService.verifyUser(data.user.email)
         .subscribe(data => {
 
           if (data == null) this.showModalNoUser = true;
