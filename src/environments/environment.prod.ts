@@ -26,6 +26,7 @@ export const environment = {
     getDownloadsByperiod: 'https://docdoc-gestion.herokuapp.com/downloads'
   },
   blockchain: {
+    token: '481051a4-2b77-42e7-9e48-146fa1517d0a',
     putData: 'https://albertus-main.herokuapp.com/create/block',
     getData: 'https://albertus-view.herokuapp.com/block'
   },

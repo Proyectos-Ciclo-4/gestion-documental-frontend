@@ -122,7 +122,7 @@ export class EndpointsService {
 
   generateHeaders() {
     return {
-      Authorization: "Bearer My app"
+      Authorization: `Bearer ${environment.blockchain.token}`
     }
   }
 
