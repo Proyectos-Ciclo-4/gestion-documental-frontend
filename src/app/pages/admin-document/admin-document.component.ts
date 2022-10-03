@@ -271,10 +271,7 @@ export class AdminDocumentComponent implements OnInit {
     sessionStorage.setItem('name_document', name)
 
     if (this.isUser) {
-
-      let nowurl = location.href;
-      nowurl = nowurl.replace("document", "view-document");
-      window.open(nowurl, "_blank");
+      window.open("/view-document", "_blank");
 
     } else this.showModalNoUserRequireLoginTolookDoc = true;
 
@@ -369,7 +366,6 @@ export class AdminDocumentComponent implements OnInit {
 
   updateDocument() {
 
-    this.showModalLoaderGeneric = true;
     let docNameUpdate = this.updateDocumentForm.get('nameUpdate');
     let docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
     let docUpload = this.updateDocumentForm.get('uploadUpdate');
@@ -381,6 +377,7 @@ export class AdminDocumentComponent implements OnInit {
     if (nothingSelected) this.showModalNothingSelected = true;
     else if (onlyDescriptionChange) {
 
+      this.showModalLoaderGeneric = true;
       this.endPointService.getLastBase64Document(this.documentSelected.blockChainId[this.documentSelected.blockChainId.length - 1])
         .subscribe(response => {
 
@@ -423,6 +420,7 @@ export class AdminDocumentComponent implements OnInit {
         });
 
     } else if (otherDocInput) {
+      this.showModalLoaderGeneric = true;
       this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, docDescriptionUpdate.value)
 
     } else this.showModalNoDocAndName = true;
