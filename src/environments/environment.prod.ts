@@ -31,5 +31,5 @@ export const environment = {
     getData: 'https://albertus-view.herokuapp.com/block'
   },
   paginationmax: 5,
-  production: true,
+  production: false
 };

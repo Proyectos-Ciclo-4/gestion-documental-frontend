@@ -38,3 +38,11 @@
     <pagination-controls (pageChange)="page = $event" previousLabel="Atrás" nextLabel="Siguiente"></pagination-controls>
   </div>
 </div>
+
+<!-- Loader generico -->
+<div class="modal" *ngIf="showModalLoaderGeneric">
+  <div class="modal_body">
+    <div class="loader"></div>
+    <p>Obteniendo datos...</p>
+  </div>
+</div>

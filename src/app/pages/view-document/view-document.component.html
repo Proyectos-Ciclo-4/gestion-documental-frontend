@@ -3,7 +3,16 @@
 </div>
 <div class="visor">
 
-  <ngx-doc-viewer [url]="doc" viewer="google" style="width:100%; height:100vh;">
+  <ngx-doc-viewer [url]="doc" (loaded)="showModalLoaderGeneric = false" viewer="google"
+    style="width:100%; height:100vh;">
   </ngx-doc-viewer>
 
+</div>
+
+<!-- Loader generico -->
+<div class="modal" *ngIf="showModalLoaderGeneric">
+  <div class="modal_body">
+    <div class="loader"></div>
+    <p>Cargando documento...</p>
+  </div>
 </div>

@@ -21,8 +21,6 @@ export class AdminDocumentComponent implements OnInit {
   page: number = 1;
   maxPage = environment.paginationmax;
 
-  idDocumentToUpdate: string;
-
   group: AbstractControl;
   MAX_DOC_SIZE: number = 1000000;
   documentModel: DocumentModel;
@@ -38,6 +36,7 @@ export class AdminDocumentComponent implements OnInit {
   referenceDelte: any;
   disableLoginWithEmail = false;
   nameDocumentToUpdate!: string;
+  documentSelected: DocumentModelQuery;
 
   controlSesion = new ControlSesion();
   isAdmin = false;
@@ -56,9 +55,9 @@ export class AdminDocumentComponent implements OnInit {
   showModalNoDocAndName: boolean = false;
   showModalNothingSelected: boolean = false;
   showModalLoader: boolean = false;
+  showModalLoaderGeneric = false;
+
   fileInAngular: any;
-  cateogryToUpdate: string;
-  subcateogryToUpdate: string;
 
   //ModalInfoVariables
   modalInfoNombre: string;
@@ -161,6 +160,7 @@ export class AdminDocumentComponent implements OnInit {
    */
   protected sendToStorage() {
 
+    this.showModalLoader = true;
     const category: string = this.documentForm.get('category').value;
     const subcategory: string = this.documentForm.get('subcategory').value;
     const name: string = this.documentForm.get('name').value;
@@ -171,7 +171,7 @@ export class AdminDocumentComponent implements OnInit {
         this.saveDocument(res)
         this.reloadDocuments()
       })
-    })
+    }).catch(() => { this.showModalLoader = false; })
   }
 
   saveDocument(res: any) {
@@ -183,8 +183,6 @@ export class AdminDocumentComponent implements OnInit {
     const docUpload = this.documentForm.get('upload');
     const pathDocument = res;
     const id_doc = `${Date.now()}-777`;
-
-    this.showModalLoader = true;
 
     this.generateBase64Doc(this.currentDocFile).then((base64: any) => {
 
@@ -364,15 +362,14 @@ export class AdminDocumentComponent implements OnInit {
     });
   }
 
-  confirmUpdateDocument(uuid: string, cateogryToUpdate: string, subcateogryToUpdate: string) {
-    this.idDocumentToUpdate = uuid;
+  confirmUpdateDocument(doc: DocumentModelQuery) {
     this.showModalActualizarDocument = true;
-    this.cateogryToUpdate = cateogryToUpdate
-    this.subcateogryToUpdate = subcateogryToUpdate
+    this.documentSelected = doc;
   }
 
   updateDocument() {
 
+    this.showModalLoaderGeneric = true;
     let docNameUpdate = this.updateDocumentForm.get('nameUpdate');
     let docDescriptionUpdate = this.updateDocumentForm.get('descriptionUpdate');
     let docUpload = this.updateDocumentForm.get('uploadUpdate');
@@ -381,65 +378,110 @@ export class AdminDocumentComponent implements OnInit {
     const otherDocInput: boolean = ("" + docUpload.value).trim() !== "";
     const nothingSelected: boolean = (("" + docDescriptionUpdate.value).trim() === "") && (("" + docNameUpdate.value).trim() === "") && (("" + docUpload.value).trim() === "");
 
-    if (nothingSelected) {
+    if (nothingSelected) this.showModalNothingSelected = true;
+    else if (onlyDescriptionChange) {
 
-      this.showModalNothingSelected = true;
+      this.endPointService.getLastBase64Document(this.documentSelected.blockChainId[this.documentSelected.blockChainId.length - 1])
+        .subscribe(response => {
 
-    } else if (onlyDescriptionChange) {
+          const base64 = response.pathDocument;
+          const docToSendBlockchain: DocumentModelBlockchain = {
+            _id: this.documentSelected.uuid,
+            name: this.documentSelected.name,
+            version: this.documentSelected.version += 1,
+            pathDocument: base64,
+            description: docDescriptionUpdate.value,
+            date: new Date(),
+            categoryId: this.documentSelected.categoryId,
+            subCategoryName: this.documentSelected.subCategoryName
+          }
 
-      this.endPointService.updateDocument(
-        this.idDocumentToUpdate,
-        {
-          name: null,
-          description: docDescriptionUpdate.value || null,
-          pathDocument: null
-        }
-      ).subscribe(e => {
+          this.endPointService.putDataBlockchain(docToSendBlockchain).subscribe((response) => {
 
-        this.showModalUpdatedDocument = true;
-        this.showModalActualizarDocument = false;
-      });
+            const hash = response.hash;
+
+            this.endPointService.updateDocument(
+              this.documentSelected.uuid,
+              {
+                name: null,
+                description: docDescriptionUpdate.value || null,
+                pathDocument: null,
+                blockChainId: [hash]
+              }
+
+            ).subscribe(e => {
+
+              this.showModalLoaderGeneric = false;
+              this.showModalUpdatedDocument = true;
+              this.showModalActualizarDocument = false;
+              
+              this.reloadDocuments();
+
+            });
+
+          });
+        });
 
     } else if (otherDocInput) {
-      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, this.nameDocumentToUpdate, this.currentDocFile, docDescriptionUpdate.value, this.cateogryToUpdate, this.subcateogryToUpdate)
+      this.sendToStorageVersionUpdateWithNameChange(docNameUpdate.value, docDescriptionUpdate.value)
 
     } else this.showModalNoDocAndName = true;
 
     this.cleanFormUpdate();
   }
 
-  protected sendToStorageVersionUpdateWithNameChange(name: string, lastname: string, docUpload, description, category, subcategory) {
+  protected sendToStorageVersionUpdateWithNameChange(name: string, description: string) {
+
+    const lastName = this.documentSelected.name;
+    const category = this.documentSelected.categoryId;
+    const subcategory = this.documentSelected.subCategoryName;
 
     // Elimina el archivo con el nombre anterior en dado caso sea diferente
-    if (name != lastname && (name != "")) {
-      const docRefDelete = ref(this.storage, `documents/${category}/${subcategory}/${lastname}`);
+    if (name != lastName && (name != "")) {
+      const docRefDelete = ref(this.storage, `documents/${category}/${subcategory}/${lastName}`);
       deleteObject(docRefDelete)
     }
 
     let nameSend = name;
-
-    // NombrePorFin
-    if (name == "") {
-      nameSend = lastname
-      console.log(nameSend);
-    }
+    if (name == "") nameSend = lastName
 
     const docRef = ref(this.storage, `documents/${category}/${subcategory}/${name}`);
 
-    uploadBytes(docRef, docUpload).then(() => {
-      getDownloadURL(docRef).then(res => {
+    uploadBytes(docRef, this.currentDocFile).then(() => {
 
-        this.endPointService.updateDocument(
-          this.idDocumentToUpdate,
-          {
-            name: nameSend || null,
-            description: description || null,
-            pathDocument: res
-          }
-        ).subscribe(e => this.reloadDocuments());
+      this.generateBase64Doc(this.currentDocFile).then((base64: any) => {
 
-        this.showModalUpdatedDocument = true;
-        this.showModalActualizarDocument = false;
+        const docToSendBlockchain: DocumentModelBlockchain = {
+          _id: this.documentSelected.uuid,
+          name: nameSend,
+          version: this.documentSelected.version += 1,
+          pathDocument: base64.base,
+          description: description,
+          date: new Date(),
+          categoryId: category,
+          subCategoryName: subcategory
+        }
+
+        this.endPointService.putDataBlockchain(docToSendBlockchain).subscribe((response) => {
+
+          const hash = response.hash;
+
+          getDownloadURL(docRef).then(res => {
+
+            this.endPointService.updateDocument(this.documentSelected.uuid,
+              {
+                name: nameSend || null,
+                description: description || null,
+                pathDocument: res,
+                blockChainId: [hash]
+              }
+            ).subscribe(e => this.reloadDocuments());
+
+            this.showModalLoaderGeneric = false;
+            this.showModalUpdatedDocument = true;
+            this.showModalActualizarDocument = false;
+          })
+        })
       })
     })
 
@@ -451,10 +493,6 @@ export class AdminDocumentComponent implements OnInit {
       descriptionUpdate: new FormControl(''),
       uploadUpdate: new FormControl('')
     });
-  }
-
-  setNameDocumentToUpdate(nombre: string) {
-    this.nameDocumentToUpdate = nombre;
   }
 
   // Manda a el usuario la pagina de login, guardando en el sessionStorage los datos del filtro que realizo

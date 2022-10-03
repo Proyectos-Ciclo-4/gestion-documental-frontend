@@ -30,12 +30,13 @@ export interface DocumentModelQuery {
   description: string,
   uuid: string,
   dateCreated: Date,
-  lastDateDownload : Date
+  lastDateDownload: Date
 }
 export interface DocumentUpdateModel {
   name: string,
   pathDocument: string,
-  description: string
+  description: string,
+  blockChainId: [string]
 }
 
 export interface DocumentWithDownloads {

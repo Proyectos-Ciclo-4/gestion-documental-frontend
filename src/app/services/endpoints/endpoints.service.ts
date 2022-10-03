@@ -29,11 +29,10 @@ export class EndpointsService {
   }
 
   findDocumentBy(categoryId: string, subCategoryName: string) {
-    if (subCategoryName !== "") {
+    if (subCategoryName !== "")
       return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsBy}/${categoryId}/${subCategoryName}`)
-    } else {
+    else
       return this.http.get<DocumentModelQuery[]>(`${environment.host.getDocumentsByCategory}/${categoryId}/`)
-    }
   }
 
   updateDocument(uuid: string, body: DocumentUpdateModel) {
@@ -98,7 +97,7 @@ export class EndpointsService {
   }
 
   getSubCategoriesToCompare(categoryId: string, subCategoryName: string): Observable<SubCategory[]> {
-    return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}/${subCategoryName}`);
+    return this.http.get<SubCategory[]>(`${environment.host.getSubcategoriesToCompareEndPoint}/${categoryId}/${subCategoryName}`);
   }
 
   /**
@@ -116,6 +115,15 @@ export class EndpointsService {
    * @param idBlock hash del bloque del que desea obtener los datos
    */
   getDataBlockchain(idBlock: string): Observable<DocumentModelBlockchain> {
+    return this.http.get<DocumentModelBlockchain>(`${environment.blockchain.getData}/${idBlock}`,
+      { headers: this.generateHeaders() });
+  }
+
+  /**
+   * Obtiene el ultimo base64 de la blockchain en caso tal el usuario solamente actualice la descripcion del documento
+   * @return retorna el ultimo base64 
+   */
+  getLastBase64Document(idBlock: string): Observable<DocumentModelBlockchain> {
     return this.http.get<DocumentModelBlockchain>(`${environment.blockchain.getData}/${idBlock}`,
       { headers: this.generateHeaders() });
   }

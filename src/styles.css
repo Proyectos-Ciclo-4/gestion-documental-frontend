@@ -60,9 +60,11 @@ ul li {
 /* TABLE */
 
 table {
-    width: 100%;
+    margin: 10px auto;
+    width: 98vw;
     justify-content: center;
     border: 1px solid gray;
+    overflow-x: scroll;
 }
 
 table tr:nth-child(odd) {
@@ -183,7 +185,7 @@ form label {
     align-items: center;
 }
 
-.modal_body{
+.modal_body {
     max-width: 60%;
     max-height: 80%;
     background: white;

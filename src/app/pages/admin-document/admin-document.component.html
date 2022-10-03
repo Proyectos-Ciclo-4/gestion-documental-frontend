@@ -106,10 +106,10 @@
         <button class="boton-menu" (click)="goToViewSelectedDocument(item.pathDocument, item.name)"><img
             src="/assets/images/eye.svg" alt="" class="icon eye"></button>
 
-        <button *ngIf="isAdmin" class="boton-menu"
-          (click)="confirmUpdateDocument(item.uuid, item.categoryId, item.subCategoryName)"
-          (click)="setNameDocumentToUpdate(item.name)"> <img src="/assets/images/update-alt.svg" alt=""
-            class="icon"></button>
+        <!-- (click)="confirmUpdateDocument(item.uuid, item.categoryId, item.subCategoryName)" -->
+
+        <button *ngIf="isAdmin" class="boton-menu" (click)="confirmUpdateDocument(item)"> <img
+            src="/assets/images/update-alt.svg" alt="" class="icon"></button>
 
         <button class="boton-menu" (click)="downloadDoc(item.name, item.uuid, item.categoryId, item.subCategoryName)">
           <img src="/assets/images/download.svg" alt="" class="icon"></button>
@@ -150,8 +150,10 @@
         <li><span class="bold">Fecha de creación: </span> {{modalInfoFecha | date:'dd/MM/yyyy'}}</li>
         <li><span class="bold">Hora de creación: </span> {{modalInfoFecha | date:'HH:mm:ss':'UTC -5'}}</li>
 
-        <li *ngIf="dateIsEqualsToDownload"><span class="bold">Ultima fecha de descarga: </span> {{modalInfoFechaDownload}}</li>
-        <li *ngIf="!dateIsEqualsToDownload"><span class="bold">Ultima fecha de descarga: </span> {{modalInfoFechaDownload | date:'dd/MM/yyyy'}}</li>
+        <li *ngIf="dateIsEqualsToDownload"><span class="bold">Ultima fecha de descarga: </span>
+          {{modalInfoFechaDownload}}</li>
+        <li *ngIf="!dateIsEqualsToDownload"><span class="bold">Ultima fecha de descarga: </span>
+          {{modalInfoFechaDownload | date:'dd/MM/yyyy'}}</li>
 
         <li><span class="bold">Descripción:</span> {{modalInfoDesription}}</li>
       </ul>
@@ -338,6 +340,14 @@
   <div class="modal_body">
     <div class="loader"></div>
     <p>Subiendo archivo...</p>
+  </div>
+</div>
+
+<!-- Loader generico -->
+<div class="modal" *ngIf="showModalLoaderGeneric">
+  <div class="modal_body">
+    <div class="loader"></div>
+    <p>Procesando...</p>
   </div>
 </div>
 

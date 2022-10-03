@@ -11,6 +11,7 @@ export class ChangeHistoryComponent implements OnInit {
   page: number = 1;
   listDocHistory: DocumentModelBlockchain[] = [];
   listIdBlocks: [] = [];
+  showModalLoaderGeneric = false;
 
   constructor(
     private endpoint$: EndpointsService
@@ -19,25 +20,27 @@ export class ChangeHistoryComponent implements OnInit {
   ngOnInit(): void {
     this.listIdBlocks = JSON.parse(localStorage.getItem("history_doc"));
     this.getDocHistory();
-    console.log("lista de id: ",this.listIdBlocks)
   }
 
-  getDocHistory(){
+  getDocHistory() {
+
+    this.showModalLoaderGeneric = true;
     this.listIdBlocks.map(item => {
       this.endpoint$.getDataBlockchain(item).subscribe({
         next: (response) => {
           if (response !== null) {
             this.listDocHistory.push(response)
           }
+        },
+        complete: () => {
+          this.showModalLoaderGeneric = false;
+          this.listDocHistory.sort((a, b) => {
+            if (b.date > a.date) { return 1; }
+            if (b.date < a.date) { return -1; }
+            return 0;
+          })
         }
       })
-
-    })
-    console.log("R:",this.listDocHistory)
-    this.listDocHistory.sort((a, b) => {
-      if (b.date > a.date) { return 1; }
-      if (b.date < a.date) { return -1; }
-      return 0;
     })
   }
 }
