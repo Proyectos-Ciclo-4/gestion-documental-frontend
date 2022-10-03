@@ -93,7 +93,7 @@ export class EndpointsService {
   }
 
   getSubCategoriesToCompare(categoryId: string, subCategoryName: string): Observable<SubCategory[]> {
-    return this.http.get<SubCategory[]>(`${environment.host.getSubcategories}${categoryId}/${subCategoryName}`);
+    return this.http.get<SubCategory[]>(`${environment.host.getSubcategoriesToCompareEndPoint}/${categoryId}/${subCategoryName}`);
   }
 
   /**
